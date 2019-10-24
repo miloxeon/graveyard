@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<title>SMO</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<section>
+		<h2>Одноканальная СМО с отказами в обслуживании</h2>
+		<fieldset>
+			<label for="onechannel_cancel_intensity">(&lambda;) Интенсивность потока заявок (в минуту)</label>
+			<input type="text" name="onechannel_cancel_intensity" id="onechannel_cancel_orders" placeholder="(&lambda;) Интенсивность потока заявок (в минуту)">
+
+			<label for="onechannel_cancel_time">(t) Время обслуживания (мин.)</label>
+			<input type="text" name="onechannel_cancel_time" id="onechannel_cancel_time" placeholder="(t) Время обслуживания (мин.)">
+
+			<input type="button" id="onechannel_cancel_submit" value="Рассчитать">
+		</fieldset>
+		<table>
+			<tr>
+				<td>Интенсивность нагрузки: </td>
+				<td id="onechannel_cancel_load">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность, что канал свободен: </td>
+				<td id="onechannel_cancel_free">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отказа: </td>
+				<td id="onechannel_cancel_busy">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число обслуженных клиентов: </td>
+				<td id="onechannel_cancel_clients">N/A</td>
+			</tr>
+			<tr>
+				<td>Интенсивность потока обслуживания: </td>
+				<td id="onechannel_cancel_intensity">N/A</td>
+			</tr>
+			<tr>
+				<td>Пропускная способность (отн.): </td>
+				<td id="onechannel_cancel_width_r">N/A</td>
+			</tr>
+			<tr>
+				<td>Пропускная способность (абс.): </td>
+				<td id="onechannel_cancel_width_a">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя: </td>
+				<td id="onechannel_cancel_idle">N/A</td>
+			</tr>
+			<tr>
+				<td>Номинальная производительность: </td>
+				<td id="onechannel_cancel_performance_nominal">N/A</td>
+			</tr>
+			<tr>
+				<td>Фактическая производительность: </td>
+				<td id="onechannel_cancel_performance">N/A</td>
+			</tr>
+		</table>
+	</section>
+	<section>
+		<h2>Многоканальная СМО с отказами в обслуживании</h2>
+		<fieldset>
+			<label for="multich_cancel_n">(n) Количество каналов</label>
+			<input type="text" id="multich_cancel_n" placeholder="(n) Количество каналов">
+
+			<label for="multich_cancel_lambda">(&lambda;) Интенсивность потока заявок (ед./мин.)</label>
+			<input type="text" id="multich_cancel_lambda" placeholder="(&lambda;) Интенсивность потока заявок (ед./мин.)">
+
+			<label for="multich_cancel_t">(t) Время обслуживания (мин.)</label>
+			<input type="text" id="multich_cancel_t" placeholder="(t) Время обслуживания (мин.)">
+
+			<input type="button" id="multich_cancel_submit" value="Рассчитать">
+		</fieldset>
+		<table>
+			<tr>
+				<td>Интенсивность потока обслуживания: </td>
+				<td id="multich_cancel_mu">N/A</td>
+			</tr>
+			<tr>
+				<td>Интенсивность нагрузки: </td>
+				<td id="multich_cancel_p">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность того, что канал свободен: </td>
+				<td id="multich_cancel_p0">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность того, что занят</td>
+				<td id="multich_cancel_pn">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отказа: </td>
+				<td id="multich_cancel_p_otk">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность обслуживания: </td>
+				<td id="multich_cancel_p_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Относительная пропускная способность: </td>
+				<td id="multich_cancel_q">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число занятых каналов: </td>
+				<td id="multich_cancel_n_z">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число простаивающих каналов: </td>
+				<td id="multich_cancel_n_pr">N/A</td>
+			</tr>
+			<tr>
+				<td>Коэффициент занятости каналов: </td>
+				<td id="multich_cancel_k_z">N/A</td>
+			</tr>
+			<tr>
+				<td>Абсолютная пропускная способность: </td>
+				<td id="multich_cancel_a">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя СМО: </td>
+				<td id="multich_cancel_t_pr">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя канала: </td>
+				<td id="multich_cancel_t_p_k">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число обслуживаемых заявок: </td>
+				<td id="multich_cancel_l_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время пребывания заявки в СМО: </td>
+				<td id="multich_cancel_t_smo">N/A</td>
+			</tr>
+			<tr>
+				<td>Число заявок, получивших отказ в течение часа: </td>
+				<td id="multich_cancel_refused_per_hour">N/A</td>
+			</tr>
+			<tr>
+				<td>Номинальная производительность СМО: </td>
+				<td id="multich_cancel_perf_nominal">N/A</td>
+			</tr>
+			<tr>
+				<td>Фактическая производительность СМО: </td>
+				<td id="multich_cancel_perf_fact">N/A</td>
+			</tr>
+		</table>
+	</section>
+	<section>
+		<h2>Одноканальная СМО с неограниченной очередью</h2>
+		<fieldset>
+			<label for="onechannel_infinite_intensity">(&lambda;) Интенсивность потока заявок (в минуту)</label>
+			<input type="text" id="onechannel_infinite_intensity" placeholder="(&lambda;) Интенсивность потока заявок (в минуту)">
+
+			<label for="onechannel_infinite_time">(t) Время обслуживания (мин.)</label>
+			<input type="text" id="onechannel_infinite_time" placeholder="(t) Время обслуживания (мин.)">
+
+			<label for="onechannel_infinite_number">(m) Число заявок в очереди</label>
+			<input type="text" id="onechannel_infinite_number" placeholder="(m) Число заявок в очереди">
+
+			<input type="button" id="onechannel_infinite_submit" value="Рассчитать">
+		</fieldset>
+		<table id="onechannel_infinite_table">
+			<tr>
+				<td>Интенсивность потока обслуживания: </td>
+				<td id="onechannel_infinite_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Интенсивность нагрузки: </td>
+				<td id="onechannel_infinite_load">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность, что канал свободен: </td>
+				<td id="onechannel_infinite_free">N/A</td>
+			</tr>
+			<tr>
+				<td>Предельные вероятности: </td>
+				<td id="onechannel_infinite_queue">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отказа: </td>
+				<td id="onechannel_infinite_busy">N/A</td>
+			</tr>
+			<tr>
+				<td>Пропускная способность (отн.): </td>
+				<td id="onechannel_infinite_width_r">N/A</td>
+			</tr>
+			<tr>
+				<td>Пропускная способность (абс.): </td>
+				<td id="onechannel_infinite_width_a">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок в очереди: </td>
+				<td id="onechannel_infinite_idle">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя: </td>
+				<td id="onechannel_infinite_idlel">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число обслуженных клиентов: </td>
+				<td id="onechannel_infinite_clients">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок в системе: </td>
+				<td id="onechannel_infinite_idle_total">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время пребывания заявки в системе: </td>
+				<td id="onechannel_infinite_idlel_total">N/A</td>
+			</tr>
+			<tr>
+				<td>Номинальная производительность: </td>
+				<td id="onechannel_infinite_performance_nominal">N/A</td>
+			</tr>
+			<tr>
+				<td>Фактическая производительность: </td>
+				<td id="onechannel_infinite_performance">N/A</td>
+			</tr>
+		</table>
+	</section>
+	<section>
+		<h2>Многоканальная СМО с неограниченной очередью</h2>
+		<fieldset>
+			<label for="multich_infinite_n">(n) Количество каналов</label>
+			<input type="text" id="multich_infinite_n" placeholder="(n) Количество каналов">
+			
+			<label for="multich_infinite_m">(m) Длина очереди</label>
+			<input type="text" id="multich_infinite_m" placeholder="(m) Длина очереди">
+
+			<label for="multich_infinite_lambda">(&lambda;) Интенсивность потока заявок (в минуту)</label>
+			<input type="text" id="multich_infinite_lambda" placeholder="(&lambda;) Интенсивность потока заявок (в минуту)">
+			
+			<label for="multich_infinite_t">(t) Время обслуживания (мин.)</label>
+			<input type="text" id="multich_infinite_t" placeholder="(t) Время обслуживания (мин.)">
+
+			<input type="button" id="multich_infinite_submit" value="Рассчитать">
+		</fieldset>
+		<table id="multich_infinite_table">
+			<tr>
+				<td>Интенсивность потока обслуживания: </td>
+				<td id="multich_infinite_mu">N/A</td>
+			</tr>
+			<tr>
+				<td>Интенсивность нагрузки: </td>
+				<td id="multich_infinite_p">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность того, что канал свободен: </td>
+				<td id="multich_infinite_p0">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность того, что занят</td>
+				<td id="multich_infinite_pn">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отказа: </td>
+				<td id="multich_infinite_p_otk">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность обслуживания: </td>
+				<td id="multich_infinite_p_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Относительная пропускная способность: </td>
+				<td id="multich_infinite_q">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число занятых каналов: </td>
+				<td id="multich_infinite_n_z">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число простаивающих каналов: </td>
+				<td id="multich_infinite_n_pr">N/A</td>
+			</tr>
+			<tr>
+				<td>Коэффициент занятости каналов: </td>
+				<td id="multich_infinite_k_z">N/A</td>
+			</tr>
+			<tr>
+				<td>Абсолютная пропускная способность: </td>
+				<td id="multich_infinite_a">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя СМО: </td>
+				<td id="multich_infinite_t_pr">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя канала: </td>
+				<td id="multich_infinite_t_p_k">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность образования очереди: </td>
+				<td id="multich_infinite_p_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отсутствия очереди: </td>
+				<td id="multich_infinite_p_ots_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок, находящихся в очереди: </td>
+				<td id="multich_infinite_l_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время ожидания в очереди: </td>
+				<td id="multich_infinite_t_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число обслуживаемых заявок: </td>
+				<td id="multich_infinite_l_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок в системе: </td>
+				<td id="multich_infinite_l_smo">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время пребывания заявки в СМО: </td>
+				<td id="multich_infinite_t_smo">N/A</td>
+			</tr>
+			<tr>
+				<td>Номинальная производительность СМО: </td>
+				<td id="multich_infinite_perf_nominal">N/A</td>
+			</tr>
+			<tr>
+				<td>Фактическая производительность СМО: </td>
+				<td id="multich_infinite_perf_fact">N/A</td>
+			</tr>
+		</table>
+	</section>
+	<section>
+		<h2>Одноканальная СМО с ограниченной очередью</h2>
+		<fieldset>
+			<label for="onechannel_limit_intensity">(&lambda;) Интенсивность потока заявок (в минуту)</label>
+			<input type="text" id="onechannel_limit_intensity" placeholder="(&lambda;) Интенсивность потока заявок (в минуту)">
+
+			<label for="onechannel_limit_time">(t) Время обслуживания (мин.)</label>
+			<input type="text" id="onechannel_limit_time" placeholder="(t) Время обслуживания (мин.)">
+
+			<label for="onechannel_limit_number">(m) Длина очереди</label>
+			<input type="text" id="onechannel_limit_number" placeholder="(m) Длина очереди"> 
+
+			<input type="button" id="onechannel_limit_submit" value="Рассчитать">
+		</fieldset>
+		<table id="onechannel_limit_table">
+			<tr>
+				<td>Интенсивность потока обслуживания: </td>
+				<td id="onechannel_limit_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Интенсивность нагрузки: </td>
+				<td id="onechannel_limit_load">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность, что канал свободен: </td>
+				<td id="onechannel_limit_free">N/A</td>
+			</tr>
+			<tr>
+				<td>Предельные вероятности: </td>
+				<td id="onechannel_limit_queue">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отказа: </td>
+				<td id="onechannel_limit_busy">N/A</td>
+			</tr>
+			<tr>
+				<td>Пропускная способность (отн.): </td>
+				<td id="onechannel_limit_width_r">N/A</td>
+			</tr>
+			<tr>
+				<td>Пропускная способность (абс.): </td>
+				<td id="onechannel_limit_width_a">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок в очереди: </td>
+				<td id="onechannel_limit_idle">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя: </td>
+				<td id="onechannel_limit_idlel">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число обслуженных клиентов: </td>
+				<td id="onechannel_limit_clients">N/A</td>
+			</tr>
+			<tr>
+				<td>Коэффициент простоя заявки в очереди: </td>
+				<td id="onechannel_limit_koef">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок в системе: </td>
+				<td id="onechannel_limit_idle_total">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время пребывания заявки в системе: </td>
+				<td id="onechannel_limit_idlel_total">N/A</td>
+			</tr>
+			<tr>
+				<td>Номинальная производительность: </td>
+				<td id="onechannel_limit_performance_nominal">N/A</td>
+			</tr>
+			<tr>
+				<td>Фактическая производительность: </td>
+				<td id="onechannel_limit_performance">N/A</td>
+			</tr>
+		</table>
+	</section>
+	<section>
+		<h2>Многоканальная СМО с ограниченной очередью</h2>
+		<fieldset>
+			<label for="multich_limit_n">(n) Количество каналов</label>
+			<input type="text" id="multich_limit_n" placeholder="(n) Количество каналов">
+			
+			<label for="multich_limit_m">(m) Длина очереди</label>
+			<input type="text" id="multich_limit_m" placeholder="(m) Длина очереди">
+
+			<label for="multich_limit_lambda">(&lambda;) Интенсивность потока заявок (в минуту)</label>
+			<input type="text" id="multich_limit_lambda" placeholder="(&lambda;) Интенсивность потока заявок (в минуту)">
+			
+			<label for="multich_limit_t">(t) Время обслуживания (мин.)</label>
+			<input type="text" id="multich_limit_t" placeholder="(t) Время обслуживания (мин.)">
+
+			<input type="button" id="multich_limit_submit" value="Рассчитать">
+		</fieldset>
+		<table id="multich_limit_table">
+			<tr>
+				<td>Интенсивность потока обслуживания: </td>
+				<td id="multich_limit_mu">N/A</td>
+			</tr>
+			<tr>
+				<td>Интенсивность нагрузки: </td>
+				<td id="multich_limit_p">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность того, что канал свободен: </td>
+				<td id="multich_limit_p0">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность того, что занят</td>
+				<td id="multich_limit_pn">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отказа: </td>
+				<td id="multich_limit_p_otk">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность обслуживания: </td>
+				<td id="multich_limit_p_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Относительная пропускная способность: </td>
+				<td id="multich_limit_q">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число занятых каналов: </td>
+				<td id="multich_limit_n_z">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число простаивающих каналов: </td>
+				<td id="multich_limit_n_pr">N/A</td>
+			</tr>
+			<tr>
+				<td>Коэффициент занятости каналов: </td>
+				<td id="multich_limit_k_z">N/A</td>
+			</tr>
+			<tr>
+				<td>Абсолютная пропускная способность: </td>
+				<td id="multich_limit_a">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя СМО: </td>
+				<td id="multich_limit_t_pr">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время простоя канала: </td>
+				<td id="multich_limit_t_p_k">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность образования очереди: </td>
+				<td id="multich_limit_p_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Вероятность отсутствия очереди: </td>
+				<td id="multich_limit_p_ots_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок, находящихся в очереди: </td>
+				<td id="multich_limit_l_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время ожидания в очереди: </td>
+				<td id="multich_limit_t_och">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число обслуживаемых заявок: </td>
+				<td id="multich_limit_l_obs">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее число заявок в системе: </td>
+				<td id="multich_limit_l_smo">N/A</td>
+			</tr>
+			<tr>
+				<td>Среднее время пребывания заявки в СМО: </td>
+				<td id="multich_limit_t_smo">N/A</td>
+			</tr>
+			<tr>
+				<td>Номинальная производительность СМО: </td>
+				<td id="multich_limit_perf_nominal">N/A</td>
+			</tr>
+			<tr>
+				<td>Фактическая производительность СМО: </td>
+				<td id="multich_limit_perf_fact">N/A</td>
+			</tr>
+		</table>
+	</section>
+	
+	<!-- <small>&copy; Волосков Милослав, Фалько Елизавета 2016</small> -->
+	<script type="text/javascript" src="js/onech_with_refuses.js" async></script>
+	<script type="text/javascript" src="js/onech_infinite.js" async></script>
+	<script type="text/javascript" src="js/onech_limited.js" async></script>
+
+	<script type="text/javascript" src="js/multich_with_refuses.js" async></script>
+	<script type="text/javascript" src="js/multich_infinite.js" async></script>
+	<script type="text/javascript" src="js/multich_limited.js" async></script>
+</body>
+</html>

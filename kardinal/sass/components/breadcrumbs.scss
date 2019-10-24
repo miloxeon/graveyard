@@ -1,0 +1,36 @@
+@import 'mixins/units';
+@import 'mixins/colors';
+
+.breadcrumbs {
+
+	margin: units(1) units(.5);
+	line-height: 1.5;
+
+	> a {
+		display: inline-block;
+		text-decoration: none;
+
+		&[href]:hover {
+			text-decoration: underline;
+		}
+
+		&:visited {
+			color: $blue;
+		}
+
+		&:not(:last-child)::after {
+			content: "❯";
+			display: inline-block;
+			vertical-align: middle;
+			
+			margin-left: units(1);
+			margin-right: units(.5);
+			
+			color: black;
+			font-size: units(1);
+
+			pointer-events: none;
+			user-select: none;
+		}
+	}
+}

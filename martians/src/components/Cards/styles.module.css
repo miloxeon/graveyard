@@ -1,0 +1,12 @@
+@value c-border: #cfcfcf;
+
+.root {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border-left: 1px dashed c-border;
+}
+
+.root.mobile {
+  border-left: none;
+  width: 100%;
+}

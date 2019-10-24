@@ -1,0 +1,18 @@
+html {
+	height: 100%;
+    background-color: rgba(0, 0, 0, .2);
+    border-left: 10px solid rgba(0, 0, 0, .2);
+    border-right: 10px solid rgba(0, 0, 0, .2);
+
+    /* Comment this to enable light backround */
+    background-color: rgba(0, 0, 0, .8);
+}
+
+body {
+    background-color: transparent;
+    margin: 0 auto;
+    margin-top: 50px;
+    
+    /* Edit this to adjust container width */
+    max-width: 400px;
+}

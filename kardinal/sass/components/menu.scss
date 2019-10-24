@@ -1,0 +1,28 @@
+@import 'mixins/units';
+@import 'mixins/colors';
+
+.menu {
+
+	line-height: normal;
+
+	@supports (overflow: auto) {
+		white-space: nowrap;
+		overflow: auto;
+		line-height: 2.5;
+	}
+
+	> a[href] {
+		display: inline-block;
+		margin-left: units(.5);
+		margin-right: units(.5);
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&:visited {
+			color: $blue;
+		}
+	}
+}

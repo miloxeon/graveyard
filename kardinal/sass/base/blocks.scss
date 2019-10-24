@@ -1,0 +1,18 @@
+@import 'mixins/units';
+
+body {
+
+	> header,
+	> footer {
+		margin-top: units(5);
+		margin-bottom: units(5);
+	}
+}
+
+main {
+	> section,
+	> article {
+		margin-top: units(4);
+		margin-bottom: units(4);
+	}
+}

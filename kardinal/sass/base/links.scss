@@ -1,0 +1,42 @@
+@import 'mixins/units';
+@import 'mixins/colors';
+
+// colors
+$link: $blue;
+$visited: $purple;
+$hover: lighten($blue, 20%);
+$active: $red;
+
+
+a[href] {
+	&:link {
+		color: $link;
+	}
+
+	&:visited {
+		color: $visited;
+	}
+
+	&:hover {
+		color: $hover;
+	}
+
+	&:active {
+		color: $active;
+	}
+}
+
+
+:root,
+body,
+body > header,
+body > footer,
+aside,
+nav,
+section,
+article {
+	> a[href] {
+		display: inline-block;
+		margin: 0 units(.5);
+	}
+}

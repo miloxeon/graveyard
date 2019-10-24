@@ -1,0 +1,82 @@
+// inspired by https://github.com/ilyabirman/Likely
+
+@import 'mixins/units';
+@import 'mixins/colors';
+
+$fade-out-duration: .2s;
+
+@mixin createButton($name, $background-color, $color) {
+	button#{'.' + $name} {
+
+		color: $color;
+		background: $background-color;
+
+		&:hover {
+			background: lighten($background-color, 7%);
+		}
+
+		&:active {
+			background: darken($background-color, 10%);
+		}
+	}
+}
+
+button {
+	font-size: units(2);
+	line-height: 1;
+	padding: units(1) units(1.5);
+
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background $fade-out-duration ease-out; 
+
+	&:hover {
+		transition: none;
+	}
+}
+
+button[disabled] {
+	transition: none;
+	cursor: not-allowed;
+	color: darken($disabled, 30%) !important;
+	background: $disabled !important;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+// default button
+
+button {
+	color: darken($silver, 90%);
+	background: $silver;
+
+	&:hover {
+		background: lighten($silver, 7%);
+	}
+
+	&:active {
+		background: darken($silver, 10%);
+	}
+}
+
+// @include createButton(rgb(231, 231, 231), black);	//default
+@include createButton('navy', $navy, lighten($navy, 70%));
+@include createButton('blue', $blue, lighten($blue, 50%));
+@include createButton('olive', $olive, lighten($olive, 50%));
+@include createButton('orange', $orange, lighten($orange, 50%));
+@include createButton('red', $red, lighten($red, 50%));
+@include createButton('fuchsia', $fuchsia, lighten($fuchsia, 50%));
+@include createButton('purple', $purple, lighten($purple, 70%));
+@include createButton('maroon', $maroon, lighten($maroon, 80%));
+@include createButton('gray', $gray, lighten($gray, 50%));
+
+@include createButton('aqua', $aqua, darken($aqua, 70%));
+@include createButton('teal', $teal, darken($teal, 50%));
+@include createButton('green', $green, darken($green, 50%));
+@include createButton('lime', $lime, darken($lime, 50%));
+@include createButton('yellow', $yellow, darken($yellow, 50%));
+
+@include createButton('black', $black, white);

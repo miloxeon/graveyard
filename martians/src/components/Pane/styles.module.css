@@ -1,0 +1,58 @@
+@value c-black: #333;
+@value c-grey: #a6a6a6;
+
+.root {
+  margin-bottom: 25px;
+}
+
+.root:first-of-type {
+  margin-top: 0;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+
+  margin: 25px 20px;
+}
+
+.mobile .header {
+  flex-direction: column;
+}
+
+.heading {
+  font-size: 30px;
+  color: c-black;
+  margin: 10px;
+}
+
+.day {
+  font-size: 16px;
+  color: c-grey;
+  margin: 10px;
+}
+
+.left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin: -10px;
+}
+
+.root:first-of-type.mobile .left {
+  max-width: 235px;
+}
+
+.stats {
+  margin: 5px 0;
+}
+
+.content {
+  margin: 20px;
+}
+
+.mobile .content {
+  margin: 0;
+}

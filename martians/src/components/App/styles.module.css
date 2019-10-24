@@ -1,0 +1,33 @@
+@font-face {
+  font-family: 'Stem';
+  src: url('./fonts/Stem-Regular.woff2') format('woff2'),
+       url('./fonts/Stem-Regular.woff')  format('woff');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Stem';
+  src: url('./fonts/Stem-Bold.woff2') format('woff2'),
+       url('./fonts/Stem-Bold.woff')  format('woff');
+  font-weight: bold;
+}
+
+.root {
+  font-family:
+    'Stem',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol';
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  height: 100%;
+}

@@ -1,0 +1,45 @@
+@import 'mixins/units';
+@import 'mixins/colors';
+
+$text-color: $black;
+
+:root {
+	color: $text-color;
+}
+
+p {
+	min-width: units(10);
+	line-height: 1.5;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.center {
+	text-align: center;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.monospace {
+	font-family: monospace;
+}

@@ -1,0 +1,48 @@
+@value c-background: #f5f5f5;
+@value c-text: #2a2a2a;
+
+.root {
+  display: block;
+
+  padding: 35px;
+
+  border: none;
+
+  font-size: 16px;
+  line-height: 1.25;
+  color: c-text;
+
+  background: c-background;
+  cursor: inherit;
+}
+
+.root.mobile {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 15px;
+
+  font-size: 13px;
+}
+
+.root:hover,
+.root:active,
+.root:focus {
+  outline: none;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.mobile .label {
+  margin-bottom: 0;
+}
+
+.time {
+  font-weight: bold;
+}

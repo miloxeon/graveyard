@@ -1,0 +1,63 @@
+@value time: .4s;
+@value time-faster: .2s;
+@value t-smooth: cubic-bezier(.25, .8, .25, 1);
+
+.root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+
+  min-height: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 30px;
+
+  overflow-x: hidden;
+}
+
+.root.mobile {
+  height: 100%;
+  padding: 0;
+}
+
+.root.hidden {
+  pointer-events: none;
+}
+
+.root.mobile.hidden {
+  will-change: opacity;
+}
+
+.pearl.mobile.hidden {
+  transform: translateX(100%);
+  pointer-events: none;
+  will-change: transform;
+  transition: transform time t-smooth;
+}
+
+.pearl.mobile {
+  transform: translateX(0);
+  pointer-events: all;
+  will-change: transform;
+  transition: transform time t-smooth;
+}
+
+.pearl:not(.mobile).hidden {
+  pointer-events: none;
+  will-change: opacity;
+  opacity: 0;
+  transition: opacity time-faster t-smooth;
+}
+
+.pearl:not(.mobile) {
+  pointer-events: all;
+  opacity: 1;
+  will-change: opacity;
+  transition: opacity time-faster t-smooth;
+}

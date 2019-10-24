@@ -1,0 +1,26 @@
+@keyframes bounce {
+  from {
+    transform: rotateZ(5deg);
+  }
+  to {
+    transform: rotateZ(-5deg);
+  }
+}
+
+.preloader {
+  display: inline-block;
+  animation: bounce .3s infinite alternate linear;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container > * {
+  min-width: 8px;
+  min-height: 8px;
+  margin: 2px;
+  background-color: gainsboro;
+  font-size: 8px;
+}

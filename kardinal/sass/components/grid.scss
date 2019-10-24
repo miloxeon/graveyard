@@ -1,0 +1,36 @@
+@import 'mixins/units';
+@import 'config';
+
+.grid {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: baseline;
+
+	> [class*="grid-"] {
+		flex-grow: 1;
+	}
+
+	> .grid-1 {
+		flex-basis: units($body-max-width / 12);
+	}
+
+	> .grid-2 {
+		flex-basis: units($body-max-width / 6);
+	}
+
+	> .grid-3 {
+		flex-basis: units($body-max-width / 4);
+	}
+
+	> .grid-4 {
+		flex-basis: units($body-max-width / 3);
+	}
+
+	> .grid-6 {
+		flex-basis: units($body-max-width / 2);
+	}
+
+	> .grid-12 {
+		flex-basis: units($body-max-width);
+	}
+}

@@ -1,0 +1,59 @@
+.root {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.content {
+  position: absolute;
+
+  padding: 10px;
+  padding-top: 30px;
+  margin: 5px 0;
+
+  background: #f8f8f6;
+  border-radius: 5px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, .12),
+    0 1px 2px rgba(0, 0, 0, .24);
+
+  overflow: auto;
+  z-index: 2;
+
+  white-space: break-word;
+}
+
+/* I'm not using a 'hidden' HTML attribute because hidden is not always display: none */
+.hidden {
+  display: none;
+}
+
+.close {
+  position: absolute;
+  padding: 5px;
+  top: 0;
+  right: 0;
+  font-size: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.close:focus,
+.close:active {
+  outline: none;
+}
+
+.icon {
+  stroke: #799088;
+  transform: scale(1);
+  transition: transform .2s cubic-bezier(.25, .8, .25, 1);
+  will-change: transform;
+}
+
+.close:hover .icon,
+.close:focus .icon,
+.close:active .icon {
+  stroke: #0074d9;
+  transform: scale(1.3);
+}

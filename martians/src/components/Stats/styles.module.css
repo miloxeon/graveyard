@@ -1,0 +1,42 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.wrapper {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 20px;
+  width: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart {
+  transform: rotate(-90deg);
+  height: 20px;
+  width: 20px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+}
+
+.stat + .stat {
+  margin-left: 10px;
+}
+
+.wrapper {
+  margin-right: 5px;
+}

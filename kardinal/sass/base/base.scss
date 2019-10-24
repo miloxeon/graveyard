@@ -1,0 +1,43 @@
+@import 'mixins/units';
+@import 'config';
+
+:root {
+	-webkit-font-smoothing: antialiased;
+  	-moz-osx-font-smoothing: grayscale;
+  	text-rendering: optimizeLegibility;
+	font-size: $grid-cell-size * 2;
+	word-wrap: break-word;
+	font-family: -apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		'Roboto',
+		'Oxygen-Sans',
+		'Ubuntu',
+		'Cantarell',
+		'Helvetica Neue',
+		sans-serif;
+}
+
+body {
+	max-width: units($body-max-width);
+	margin: 0 auto;
+	padding: 0 units(.5);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+input,
+button,
+pre,
+textarea,
+form,
+table {
+	padding: 0;
+	margin: units(1) units(.5);
+	margin-top: units(1.5);
+}

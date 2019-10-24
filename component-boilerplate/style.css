@@ -1,0 +1,52 @@
+/*  Please, see README first!  */
+
+.card {
+    padding: 1rem;
+    border-radius: .5rem;
+    
+    font-family: sans-serif;
+    background: linear-gradient(to bottom, #e8e8e8, #dddddd);
+    
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
+}
+
+.card__heading {
+    margin-bottom: 1rem;
+}
+
+.card__text {
+    line-height: 1.25;
+}
+
+.card__button {
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: .5rem;
+    
+    color: white;
+    line-height: 1.25;
+    
+    background: hsl(198, 51%, 49%);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
+    
+    transition:
+        background .1s linear,
+        box-shadow .1s linear;
+}
+
+.card__button:hover,
+.card__button:focus {
+    background: hsl(198, 51%, 56%);
+    box-shadow: 0 0 4px rgba(0, 0, 0, .3);
+    
+    outline: none;
+}
+
+.card__button:active {
+    background: hsl(198, 51%, 66%);
+    outline: none;
+}
+
+.card__button--monospace {
+    font-family: monospace;
+}

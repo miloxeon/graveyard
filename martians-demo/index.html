@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>Martians speedy demo</title>
+  </head>
+  <body>
+    <p>
+      Caution, these demos are really heavy!
+    </p>
+    <p>
+      <a href="default.html">Initial variant</a>. Hangs up after while, still finishes though (39 sec, 248 mb ram)
+    </p>
+    <p>
+      <a href="nodes.html">innerHTML replaced with DOM nodes</a>. Same performance (39 sec, 251 mb ram)
+    </p>
+    <p>
+      <a href="timeout.html">Asynchronous rendering</a>. Slower overall but far more usable (18 seconds until responsive, around 3000 nodes rendered and going just fine, 321 mb ram)
+    </p>
+    <p>
+      <a href="long.html">avoiding long function freezing</a>.
+    </p>
+  </body>
+</html>

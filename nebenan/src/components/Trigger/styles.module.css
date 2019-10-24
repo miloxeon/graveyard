@@ -1,0 +1,26 @@
+.root {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+}
+
+.root:hover,
+.root:focus,
+.root:active {
+  outline: none;
+  color: #0074d9;
+}
+
+.icon {
+  transform: rotate(0deg);
+  will-change: transform;
+  transition: .2s transform cubic-bezier(.25, .8, .25, 1);
+}
+
+.flip {
+  transform: rotate(180deg);
+}

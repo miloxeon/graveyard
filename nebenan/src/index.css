@@ -1,0 +1,49 @@
+html {
+  background-color: #edeee9;
+  color: #333;
+}
+
+body {
+  margin: 30px 0;
+  padding: 0;
+  font-family:
+    -apple-system,
+    blinkmacsystemfont,
+    "segoe ui",
+    "roboto",
+    "oxygen",
+    "ubuntu",
+    "cantarell",
+    "fira sans",
+    "droid sans",
+    "helvetica neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  position: relative;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+code {
+  display: block;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  margin: 10px 0;
+  word-break: break-all;
+  
+}
+
+.spaced {
+  margin: 20px 0;
+}
+
+.spaced-v {
+  margin-top: 40px;
+}

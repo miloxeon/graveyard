@@ -1,0 +1,112 @@
+@value c-grey: #f5f5f5;
+@value c-white: #fff;
+
+@value c-border: #cfcfcf;
+
+@value t-smooth: cubic-bezier(.25, .8, .25, 1);
+@value time-to: .1s;
+@value time-from: .3s;
+
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 200px;
+  height: 200px;
+
+  border: none;
+  border-right: 1px dashed c-border;
+  border-bottom: 1px dashed c-border;
+
+  font-size: 16px;
+  line-height: 1.25;
+  padding: 0;
+
+  z-index: 1;
+  will-change: box-shadow;
+  transition:
+    box-shadow time-to t-smooth,
+    z-index .01s .02s t-smooth,
+    border-color .01s .02s t-smooth;
+
+  cursor: pointer;
+}
+
+.root.opaque {
+  border-right-style: solid;
+  border-bottom-style: solid;
+  box-shadow: -1px 0 0 0 c-border;
+  background-color: c-white;
+}
+
+.root.subtle {
+  background-color: c-grey;
+}
+
+.root.mobile {
+  width: 100%;
+  height: auto;
+  border-right: none;
+  will-change: auto;
+  transition: none;
+}
+
+.root::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed c-border;
+}
+
+.root.opaque::before {
+  border-top-style: solid;
+}
+
+.root:not(.mobile):hover,
+.root:not(.mobile):focus,
+.root:not(.mobile):active {
+  outline: none;
+  border-color: transparent;
+
+  z-index: 2;
+
+  transition:
+    box-shadow time-from t-smooth,
+    z-index .01s t-smooth,
+    border-color .01s t-smooth;
+}
+
+.root.opaque:hover,
+.root.opaque:focus,
+.root.opaque:active {
+  box-shadow:
+    0 0 0 10px c-white,
+    0 0 0 11px c-border,
+    0 1px 31px 11px rgba(0, 0, 0, .1);
+}
+
+.root.subtle:hover,
+.root.subtle:focus,
+.root.subtle:active {
+  box-shadow:
+    0 0 0 10px c-grey,
+    0 0 0 11px c-border,
+    0 1px 31px 11px rgba(0, 0, 0, .1);
+}
+
+
+.root:not(.mobile):hover::before,
+.root:not(.mobile):focus::before,
+.root:not(.mobile):active::before {
+  border-color: transparent;
+}
+
+.root.mobile:hover,
+.root.mobile:focus,
+.root.mobile:active {
+  box-shadow: none;
+}

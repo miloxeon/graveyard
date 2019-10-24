@@ -1,0 +1,50 @@
+/*    Axiomatic CSS, man    */
+body {
+	font-family: sans-serif;
+	width: 80%;
+	margin: 0 auto;
+
+	display: flex;
+	flex-wrap: wrap;
+}
+
+section {
+	width: 40%;
+	min-width: 400px;
+	margin: 0 auto;
+}
+
+fieldset {
+	display: flex;
+	flex-flow: column;
+	width: 100%;
+	border: none;
+	padding: 0;
+}
+
+fieldset > input {
+	font-size: 16px;
+	margin-bottom: 10px;
+	padding: 10px 20px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+fieldset > input:last-child {
+	margin-bottom: 0;
+	width: 50%;
+	min-width: 120px;
+}
+
+fieldset > label {
+	display: none;
+}
+
+table {
+	margin-top: 30px;
+}
+
+td:nth-child(2n) {
+	padding-left: 30px;
+	font-weight: bold;
+}

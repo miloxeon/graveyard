@@ -1,0 +1,5 @@
+@import 'config';
+
+@function units($number) {
+	@return $grid-cell-size * $number;
+}

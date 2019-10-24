@@ -1,0 +1,145 @@
+@value c-white: #fff;
+@value c-blue: #4a90e2;
+@value c-black: #2a2a2a;
+
+@value t-smooth: cubic-bezier(.25, .8, .25, 1);
+@value time-to: .1s;
+@value time-from: .3s;
+
+.root {
+  display: block;
+  width: 100%;
+  text-align: left;
+
+  padding: 15px;
+
+  border: none;
+
+  font-size: 13px;
+  line-height: 1.25;
+  color: c-black;
+
+  background: c-white;
+}
+
+.root.mobile {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.pillbox_container {
+  position: relative;
+  flex-grow: 2;
+  height: 20px;
+}
+
+.mobile .pillbox_container {
+  display: none;
+}
+
+.pillbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex-basis: 20px;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  overflow: auto;
+
+  opacity: 1;
+  will-change: opacity;
+  transition: opacity time-from t-smooth;
+}
+
+.pillbox_active {
+  opacity: 0;
+}
+
+.mobile .pillbox_active {
+  display: none;
+}
+
+.root:not(.mobile):hover .pillbox,
+.root:not(.mobile):focus .pillbox,
+.root:not(.mobile):active .pillbox {
+  opacity: 0;
+}
+
+.root:not(.mobile):hover .pillbox_active,
+.root:not(.mobile):focus .pillbox_active,
+.root:not(.mobile):active .pillbox_active {
+  opacity: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mobile .header {
+  flex-direction: row-reverse;
+  margin-bottom: 0;
+}
+
+.text {
+  display: block;
+  position: relative;
+  word-wrap: break-word;
+  height: 130px;
+  overflow: hidden;
+  white-space: pre-line;
+}
+
+.text::after {
+  content: '';
+  display: block;
+
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+
+  height: 30px;
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
+}
+
+.mobile .text {
+  height: auto;
+  max-height: 100px;
+}
+
+.mobile .text::after {
+  height: 100%;
+  background: linear-gradient(rgba(255, 255, 255, 0) 60%, #fff);
+  background-size: 100% 100px;
+}
+
+.time {
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.mobile .time {
+  margin-right: 0;
+}
+
+.small {
+  margin-left: 5px;
+}
+
+.published:not(.mobile) .time::after,
+.published.mobile .time::before {
+  background: url('./assets/ok.svg') no-repeat;
+  width: 22px;
+  height: 15px;
+  transform: scale(.5);
+  content: '';
+  display: inline-block;
+  vertical-align: top;
+}
