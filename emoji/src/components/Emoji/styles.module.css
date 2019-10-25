@@ -1,0 +1,26 @@
+.emoji {
+  user-select: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 7px;
+  margin: 1px;
+  font-size: 24px;
+  border-radius: 8px;
+  transition: background-color 500ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.emoji:hover,
+.emoji:focus {
+  outline: none;
+  background-color: #f2f3f5;
+  transition: background-color 0.1ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.emoji:active {
+  outline: none;
+  background-color: #f0f0f2;
+}

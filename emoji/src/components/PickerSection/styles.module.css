@@ -1,0 +1,19 @@
+.pickerSection {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  padding: 0 16px;
+}
+
+.subheading {
+  font-size: 15px;
+  margin: 0;
+  line-height: 1.9;
+}
+
+.stickyContainer {
+  position: sticky;
+  top: 0;
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+}
