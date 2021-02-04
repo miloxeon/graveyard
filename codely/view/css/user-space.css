@@ -1,0 +1,33 @@
+.user-space-avatar {
+	max-width: 250px;
+	max-height: auto;
+
+	/*width: auto;
+	height: auto;*/
+
+	overflow: hidden;
+	border-radius: 50%;
+	margin-top: 40px;
+	text-align: center !important;
+}
+
+.user-space-nickname {
+	font-family: "Poiret One", "Arial", sans-serif;
+	color: white;
+	text-align: center;
+}
+
+.favorite--materials {
+	margin-bottom: 40px;
+	text-align: center;
+	
+}
+
+.favorite--materials:hover {
+	
+}
+
+.article-est {
+	margin-top: 40px;
+	text-align: center;
+}

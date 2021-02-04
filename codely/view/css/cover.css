@@ -1,0 +1,184 @@
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+	color: #fff;
+}
+
+/* Custom default button */
+.button-like {
+	display: inline-block;
+	
+	font-size: 24px;
+	line-height: 1;
+	padding: 20px 50px;
+	
+	color: white;
+	
+	text-shadow: none;
+	
+	border: 3px solid white;
+	border-radius: 7px;
+	transition: all .2s;
+}
+
+.button-like:hover {
+	text-decoration: none;
+	background-color: rgb(109, 250, 157);
+	border-color: rgb(109, 250, 157);
+	border-bottom-color: rgb(96, 203, 132);
+}
+
+.button-like:focus {
+	text-decoration: none;
+}
+
+.button-like:visited {
+	text-decoration: none;
+}
+
+.button-like:active {
+	color: black;
+	background-color: rgb(96, 203, 132);
+	border-color: rgb(96, 203, 132);
+}
+
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+	height: 100%;
+	background-color: #333;
+}
+body {
+	color: #fff;
+	text-align: center;
+	text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+
+/*
+ * Header
+ */
+.masthead-brand {
+	margin-top: 10px;
+	margin-bottom: 10px;
+/*		#cff0da, #dadbdb, #88dba3*/
+}
+
+.masthead-nav > li {
+	display: inline-block;
+}
+.masthead-nav > li + li {
+	margin-left: 20px;
+}
+.masthead-nav > li > a {
+	padding-right: 0;
+	padding-left: 0;
+	font-size: 16px;
+	font-weight: bold;
+	color: #fff; /* IE8 proofing */
+	color: rgba(255,255,255,.75);
+	border-bottom: 2px solid transparent;
+}
+.masthead-nav > li > a:hover,
+.masthead-nav > li > a:focus {
+	background-color: transparent;
+	border-bottom-color: #a9a9a9;
+	border-bottom-color: rgba(255,255,255,.25);
+}
+.masthead-nav > .active > a,
+.masthead-nav > .active > a:hover,
+.masthead-nav > .active > a:focus {
+	color: #fff;
+	border-bottom-color: #6dfa9d;
+}
+
+@media (min-width: 768px) {
+	.masthead-brand {
+		float: left;
+	}
+	.masthead-nav {
+		float: right;
+	}
+}
+
+
+header {
+	width: 100%;
+	
+	padding: 20px;
+	
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	
+	position: fixed;
+	top: 0;
+}
+
+
+.inner {
+	max-width: 70%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	height: 50%;
+}
+
+
+.page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 200px;
+}
+
+
+.page-1 {
+	background-image: url(../img/photo-143.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+
+/*
+ * Affix and center
+ */
+
+@media (min-width: 768px) {
+	/* Pull out the header and footer */
+	.masthead {
+		position: fixed;
+		top: 0;
+	}
+	.mastfoot {
+		position: fixed;
+		bottom: 0;
+	}
+	/* Start the vertical centering */
+	.site-wrapper-inner {
+		vertical-align: middle;
+	}
+
+	.masthead,
+	.mastfoot,
+	.cover-container {
+		width: 100%; 
+	}
+}
+
+@media (min-width: 992px) {
+	.masthead,
+	.mastfoot,
+	.cover-container {
+		width: 700px;
+	}
+}

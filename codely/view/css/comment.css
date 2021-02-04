@@ -1,0 +1,17 @@
+#hide-create-comment {
+	display: none;
+}
+
+label[for="hide-create-comment"] {
+	cursor: pointer;
+	font-weight: 300;
+	color: #337ab7;
+}
+
+.form-group {
+	display: none;
+}
+
+#hide-create-comment:checked ~ .form-group {
+	display: block;
+}

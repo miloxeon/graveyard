@@ -1,0 +1,41 @@
+.comment {
+	display: flex;
+	flex-direction: column;
+	padding: 30px 20px;
+	margin-left: 40px;
+	margin-top: 20px;
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 4px; 
+}
+
+.control {
+	margin-bottom: 10px;
+}
+
+.comment__nickname {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.comment__part:nth-child(1) {
+	margin-top: 0;
+}
+
+.comment__part {
+	margin: 10px 0;
+}
+
+.comment__part:last-child {
+	margin-bottom: 0;
+}
+
+.comment__footer {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.comment_avatar {
+	overflow: hidden;
+	border-radius: 50%;
+}

@@ -1,0 +1,9 @@
+// .container {
+// 	width: 40%;
+// 	padding: 20px;
+// 	min-width: 600px;
+// }
+
+.control-group + .control-group {
+	margin-top: 20px;
+}
