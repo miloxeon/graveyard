@@ -1,0 +1,8 @@
+{
+  "appId": "com.milofoundation.productivitydashboard",
+  "appName": "productivity-dashboard",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "build",
+  "cordova": {}
+}
