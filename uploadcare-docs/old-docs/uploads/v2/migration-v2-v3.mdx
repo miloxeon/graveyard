@@ -1,0 +1,217 @@
+---
+  title: Migrating Uploadcare Widget From v2 to v3
+  description:
+    Learn more about migrating Uploadcare Widget from v2 to v3. Uploadcare Widget
+    v2 is in many aspects compatible with v3, find out how you can easily migrate
+    in Uploadcare Docs.
+---
+
+import { Messages, Message } from '@uploadcare/docs-components'
+
+
+# Migrating Uploadcare Widget From v2 to v3
+
+Uploadcare Widget v2 is in many aspects compatible with v3:
+settings and `input` didn’t change at all while JavaScript API was modified just a bit.
+However, v3 has many changes related to [the HTML markup](#html) and [styles](#styles) of the widget.
+Also, we’ve completely removed external `.png` files like `icons-active@2x.png`: instead, we use SVG.
+
+<Messages>
+  <Message>
+    In case you used the widget and its JavaScript API without customizing any styles,
+    you can update to the third version right away.
+  </Message>
+</Messages>
+
+You can always check out the complete widget changelog [here][file-uploader-github-changelog].
+If you’re willing to learn more about installing Uploadcare Widget, check out our [docs][file-uploader-install].
+
+
+* [HTML markup](#html)
+* [Styles](#styles)
+* [Icons](#icons)
+
+
+## HTML markup of widget UI
+{id="html"}
+
+With Uploadcare Widget v3 we used [the classical BEM][ext-the-classical-bem] methodology.
+BEM (Block, Element, Modifier) is a component-based approach to web development.
+UI of the widget, therefore, was divided into independent blocks,
+like [`widget`](#widget), [`dialog`](#dialog), [`file`](#file), etc.
+
+All classes now have **the `uploadcare--` prefix.**
+
+Since we’ve implemented many changes, you might first want
+to take a look at the stylesheets under the [blocks][file-uploader-github-blocks] folder.
+This will update you on all kinds of redesigned blocks and elements.
+
+
+
+Also, you can [drop us a line][mail-help]:
+we’ll gladly answer your questions.
+
+* [Widget](#widget)
+* [Page](#page)
+* [Dialog](#dialog)
+* [Panel](#panel)
+* [Menu](#menu)
+* [Tab](#tab)
+* [File](#file)
+* [Others](#others)
+
+
+### Widget
+
+The widget now has the `uploadcare--widget` class instead of the `uploadcare-widget` class.
+
+The widget has also a `uploadcare--widget_status_*` class for different states:
+`ready`, `loaded`, `started`, `error`.
+
+The buttons inside the widget are **`button`** instead `div` now with
+class `uploadcare--widget__button` and also can be on of three type:
+  * `uploadcare--widget__button_type_open`,
+  * `uploadcare--widget__button_type_cancel`,
+  * `uploadcare--widget__button_type_remove`.
+
+These elements are now parts of the widget:
+  * `uploadcare--widget__dragndrop-area`,
+  * `uploadcare--widget__progress`,
+  * `uploadcare--widget__text`.
+
+When a file gets uploaded (widget is switched to the `loaded` state),
+`uploadcare--widget__text` holds `uploadcare--widget__file-name`
+and `uploadcare--widget__file-size`.
+
+
+### Page
+
+When the dialog is opened, the `uploadcare--page` class is added to `body` and `html`
+instead of the `uploadcare-dialog-opened` class.
+
+
+### Dialog
+
+The dialog now has the `uploadcare--dialog` class instead of the `uploadcare-dialog` class.
+The `uploadcare-responsive-panel` class removed, the dialog is responsive by default.
+
+The different dialog states (`active`, `inactive`)
+are now defined within `uploadcare--dialog_state_*` class.
+
+Here are the elements that the dialog contains:
+
+* `uploadcare--dialog__container` (v2:&nbsp;`uploadcare-dialog-inner-wrap`),
+* `uploadcare--dialog__close` — the button in the top right corner (closes the dialog)
+  (v2:&nbsp;`uploadcare-dialog-close`),
+* `uploadcare--dialog__panel` — [panel](#panel),
+* `uploadcare--dialog__powered-by` (v2:&nbsp;`uploadcare-dialog-footer`).
+
+
+### Panel
+
+The panel is the main block holding the menu, tabs and content.
+When you call [`uploadcare.openPanel`][api-reference-js-widget-open-dialog]
+your placeholder is replaced with the panel.
+
+The panel now has the `uploadcare--panel` class instead of the `uploadcare-dialog-panel` class.
+If panel is inside the [dialog](#dialog), it also has the `uploadcare--dialog__panel` class.
+
+The panel contains the following elements:
+
+* `panel__content`,
+* `panel__icon` (v2:&nbsp;`uploadcare-dialog-icon`),
+* `panel__menu` (v2:&nbsp;`uploadcare-dialog-tabs`).
+
+If the widget doesn’t have tabs, the `panel__menu` element has the `panel__menu_hidden` class.
+
+If you turn [the `multiple` option][file-uploader-option-multiple] **on,**
+the panel has the `uploadcare--panel_multiple` class (v2:&nbsp;`uploadcare-dialog-multiple`)
+and contains the following elements:
+
+* `panel__done` (v2:&nbsp;`uploadcare-dialog-source-base-done`),
+* `panel__file-counter` (v2:&nbsp;`uploadcare-panel-footer-counter`),
+* `panel__footer` (v2:&nbsp;`uploadcare-panel-footer`),
+* `panel__message` (v2:&nbsp;`uploadcare-panel-footer-text`),
+* `panel__show-files` (v2:&nbsp;`uploadcare-dialog-source-base-show-files`).
+
+
+### Menu
+
+The menu now has the`uploadcare--menu` class instead of the `uploadcare-dialog-tabs` class.
+
+The menu contains the following elements:
+* `uploadcare--menu__toggle`,
+* `uploadcare--menu__toggle-icon`,
+* `uploadcare--menu__items`,
+* `uploadcare--menu__item` (v2:&nbsp;`uploadcare-dialog-tab`),
+* `uploadcare--menu__icon`.
+
+
+### Tab
+
+The tab now has the `uploadcare--tab` class instead of the `uploadcare-dialog-tabs-panel` class.
+
+The tab contains the following elements:
+
+* `uploadcare--tab__header`
+* `uploadcare--tab__content`
+* `uploadcare--tab__title`
+* `uploadcare--tab__footer`
+* `uploadcare--tab__action-button`
+* `uploadcare--tab__iframe`
+
+
+### File
+
+The file now has the `uploadcare--file` class instead of the `uploadcare-file-item` class.
+
+The different file states are now defined within `uploadcare--file_*` class:
+`error`, `uploading`, `uploaded`.
+
+The file contains the following elements:
+
+* `uploadcare--file__description`,
+* `uploadcare--file__error` (v2:&nbsp;`uploadcare-file-item__error`),
+* `uploadcare--file__icon`,
+* `uploadcare--file__name` (v2:&nbsp;`uploadcare-file-item__name`),
+* `uploadcare--file__preview` (v2:&nbsp;`uploadcare-file-item__preview`),
+* `uploadcare--file__progressbar` (v2:&nbsp;`uploadcare-file-item__progressbar`),
+* `uploadcare--file__remove` (v2:&nbsp;`uploadcare-file-item__remove`),
+* `uploadcare--file__size` (v2:&nbsp;`uploadcare-file-item__size`).
+
+### Others blocks
+{id="others"}
+
+As it was already mentioned above, we implemented lots of changes into the widget markup.
+In this article, we described the most significant ones, not all of them.
+Check out our [templates][file-uploader-github-blocks] and [stylesheets][file-uploader-github-stylesheets] folders for more details.
+Or, [contact our support][mail-help]
+in case of any specific issues.
+
+
+## Styles
+
+All styles have been rewritten.
+We use [flexbox][ext-flexbox] for layout and [PostCSS][ext-flexbox-flexbox-for-layout-and-postcss] for post processing.
+See our stylesheets [folder][file-uploader-github-stylesheets] and [PostCSS config][file-uploader-github-postcss-config] for more details.
+
+
+## Icons
+
+We quit using PNG files. Instead, we now use SVG sprites inside `uploadcare--panel`.
+
+For example, here’s the Facebook icon for the menu:
+
+```html
+<svg width="32" height="32" role="presentation" class="uploadcare--icon uploadcare--menu__icon">
+  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#uploadcare--icon-facebook"></use>
+</svg>
+```
+
+Or, the “Remove” button that appears in the list of files when the multiple option is turned on:
+
+```html
+<svg role="presentation" width="32" height="32" class="uploadcare--icon">
+  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#uploadcare--icon-remove"></use>
+</svg>
+```

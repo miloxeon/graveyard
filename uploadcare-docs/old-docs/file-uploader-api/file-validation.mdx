@@ -1,0 +1,116 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: File Validation'
+  description:
+    You can set which file types, formats, sizes, or resolution can be
+    uploaded with our JavaScript API. Sign up for free and find more
+    info in Uploadcare Docs!
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — File Validation
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#validation' />
+  <Migration />
+</Messages>
+
+Validators allow restricting user choice to certain kinds of files. For example,
+you may want to only accept files less than 2MB in size or just PDF documents.
+With our API, a validator is a function that receives a `fileInfo` object for
+every uploaded file and throws an exception if that file does not meet your set
+requirements.
+
+```js
+function imagesOnly(fileInfo) {
+  if (fileInfo.isImage === false) {
+    throw new Error('image');
+  }
+}
+```
+
+Validators can be called once the info on file becomes available. All unknown
+fields used for validation have `null` values when a validator is called. This
+means a single validator can be called several times for a single file, each
+time testing if the required field is not `null`.
+
+```js
+function maxDimensions(width, height) {
+  return function(fileInfo) {
+    var imageInfo = fileInfo.originalImageInfo;
+    if (imageInfo !== null) {
+      if (imageInfo.width > width || imageInfo.height > height) {
+        throw new Error('dimensions');
+      }
+    }
+  };
+}
+```
+
+## Validation inside File Uploader
+{id="widget-based"}
+
+Validators can also be added to the file uploader through its `validators` property.
+This works for both single-file and multi-file file uploaders.
+
+```js
+var widget = uploadcare.Widget('#uploadcare-file');
+widget.validators.push(imagesOnly);
+```
+
+`widget.validators` is a regular javascript array. One file uploader can be assigned
+several validators, and one validator can be assigned several file uploaders.
+
+```js
+firstWidget.validators.push(imagesOnly);
+secondWidget.validators.push(imagesOnly);
+firstWidget.validators.push(maxSize(1024 * 1024));
+firstWidget.validators.push(maxDimensions(800, 600));
+firstWidget.validators; // [function imagesOnly(){...}, function () {...}, function () {...}]
+```
+
+Note, you can’t rewrite validators with another object, you need to remove them
+from an original array.
+
+```js
+// Leave only first two validators:
+widget.validators = widget.validators.splice(0, 2); // WRONG!
+widget.validators.splice(2);  // Correct.
+
+// Remove all validators:
+widget.validators = [];       // WRONG!
+widget.validators.length = 0; // Correct.
+```
+
+## Validation in JS API
+{id="js-based"}
+
+You can add a `validators` array to a Settings object of any API function where
+it makes sense:
+
+```js
+uploadcare.openDialog(null, {
+  validators: [
+    imagesOnly,
+    maxSize(1024 * 1024),
+    minDimensions(800, 600)
+  ]
+});
+```
+
+The list of such functions includes but is not limited to: `openDialog`,
+`openPanel`, `fileFrom`, `filesFrom`, `dragdrop.uploadDrop`, `dragdrop.receiveDrop`.
+
+It is better to use validators instead of checking file properties in
+`widget.onChange` and `widget.onUploadComplete` callbacks. Validators are
+activated before a dialog gets closed thus improving your UX.
+
+## Error messages
+{id="error-messages"}
+
+Each argument in the `Error` constructor is a key in your locale file. Such keys
+are mapped to messages shown to your users. The keys and messages can either be
+[predefined][file-uploader-locale-github-preset] like `size`, `image`, or
+[custom][file-uploader-locale-custom].

@@ -1,0 +1,82 @@
+---
+  title: 'Uploadcare Delivery'
+  description:
+    'Uploadcare features a powerful and secure CDN, which allows CDN on-the-fly operations and powers our Adaptive Delivery technology and Proxy.'
+---
+import { LeadParagraph } from '@uploadcare/docs-components'
+
+# Delivery
+
+<LeadParagraph>Every uploaded file is immediately available on the Uploadcare CDN.</LeadParagraph>
+
+The network provides fast and reliable file delivery across the world via
+500,000 nodes. Each file at Uploadcare has a UUID by which it’s available on the
+CDN:
+
+```cdn
+https://ucarecdn.com/017162da-e83b-46fc-89fc-3a7740db0a82/
+```
+
+## Image transformations
+
+Uploadcare CDN isn’t just a file delivery network. It can process images on the
+fly, which means that transformations are applied instantly when requested.
+
+Resize proportionally:
+
+```cdn
+https://ucarecdn.com/017162da-e83b-46fc-89fc-3a7740db0a82/-/preview/400x400/
+```
+
+Enhance and apply filters:
+
+```cdn
+https://ucarecdn.com/017162da-e83b-46fc-89fc-3a7740db0a82/-/preview/-/enhance/-/filter/vevera/
+```
+
+Optimize:
+
+```cdn
+https://ucarecdn.com/017162da-e83b-46fc-89fc-3a7740db0a82/-/preview/-/quality/smart/
+```
+
+[Image Transformations &rarr;][transformations-image]
+
+## Proxy
+
+Deliver files from your server via Uploadcare CDN without manually uploading
+to Uploadcare.
+
+Original file:
+
+```cdn{noAutoLinker}
+https://yoursite.com/assets/image.jpg
+```
+
+Deliver via Proxy:
+
+```cdn{noAutoLinker}
+https://625111d86790863bd231.ucr.io/https://yoursite.com/assets/image.jpg
+```
+
+Apply transformations:
+
+```cdn{noAutoLinker}
+https://625111d86790863bd231.ucr.io/-/crop/320x302/https://yoursite.com/assets/image.jpg
+```
+
+[Proxy &rarr;][delivery-proxy]
+
+## Adaptive Delivery
+
+Make all images on your website responsive automatically. Adaptive Delivery is a
+JavaScript tool that requests correctly sized and compressed images from
+Uploadcare CDN based on page layout and the visitor’s screen.
+
+[Adaptive Delivery &rarr;][delivery-adaptive]
+
+## Secure Delivery
+
+Control who can access uploaded files by authenticating URLs.
+
+[Secure Delivery &rarr;][secure-delivery]

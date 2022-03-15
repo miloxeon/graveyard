@@ -1,0 +1,140 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: File Groups'
+  description:
+    File groups help keep your Uploadcare projects organized, this section
+    covers handling groups via JavaScript API. Sign up for free and find
+    more info in Uploadcare Docs.
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — File Groups
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#file-group' />
+  <Migration />
+</Messages>
+
+A group is an ordered collection of [file instances][api-reference-js-file].
+Groups are immutable: once created, they can not be changed. However, you do not
+have to create a new group every time you delete a file: groups can hold `null`
+values.
+
+* [Create a new group instance](#new-instance)
+* [Get group info](#upload-info)
+* [Get files in group as array](#files-as-array)
+* [Get file groups from CDN](#get-from-cdn)
+* [Object overview, `fileGroupInfo`](#file-group-info)
+
+## Create a new group instance
+{id="new-instance"}
+
+You can create a new group from an array of files and/or other groups.
+
+```js
+var fileGroup = uploadcare.FileGroup([file1, fileGroup1, file2]);
+```
+
+After a group instance is created, it can be pushed to Uploadcare by calling
+the `promise` method.
+
+## Get group info
+{id="upload-info"}
+
+You can subscribe to group upload events to let your app know when all files are
+uploaded, and a new group is created.
+
+```js
+var groupPromise = fileGroup.promise();
+groupPromise.done(function(fileGroupInfo) {
+  // Upload successfully completed and all files in the group are ready.
+});
+groupPromise.fail(function(error, fileGroupInfo) {
+  // Upload failed, or something else went wrong.
+});
+```
+
+There is also a way to check out you group upload progress. Make use of the
+`progress` function:
+
+```js
+groupPromise.progress(function(uploadInfo) {
+  // State of upload is updated.
+  // This callback is invoked at least once with current state,
+  // immediately after assignment.
+});
+```
+
+## Get files in group as array
+{id="files-as-array"}
+
+Here is how you get files stored in a group as array:
+
+```js
+var arrayOfFiles = fileGroup.files();
+```
+
+Get file info on a first-ready-first-served basis:
+
+```js
+$.each(arrayOfFiles, function(i, file) {
+  // Wait for file uploading.
+  file.done(function(fileInfo) {
+    // i is file positon in group.
+    console.log(i, fileInfo);
+  });
+});
+```
+
+Get file info in line with their positions in a group:
+
+```js
+$.when.apply(null, arrayOfFiles).done(function() {
+  // Info for each file will be passed as an argument.
+  var fileInfos = arguments;
+  $.each(fileInfos, function(i, fileInfo) {
+    // i is file position in the group.
+    console.log(i, fileInfo);
+  });
+});
+```
+
+
+## Get file groups from CDN
+{id="get-from-cdn"}
+
+Our JavaScript API provides a method to load a file group from CDN via either its
+[identifier][api-reference-rest-groups] or CDN URL.
+
+```js
+uploadcare.loadFileGroup('cdf2fe62-3d43-47d4-9288-c3951561f5c7~2')
+  .done(function(fileGroup) {
+    // Group creation completed successfully.
+  })
+  .fail(function() {
+    // Something went wrong.
+  });
+```
+
+## Object overview, `fileGroupInfo`
+{id="file-group-info"}
+
+This is how the structure of `fileGroupInfo` looks like,
+
++----------+---------+---------------------------------------------------------------+
+| Property |  Type   |                             Value                             |
++==========+=========+===============================================================+
+| uuid     | string  | File group [identifier][api-reference-rest-groups].           |
++----------+---------+---------------------------------------------------------------+
+| name     | string  | Localized group size string, e.g. “5 files”.                  |
++----------+---------+---------------------------------------------------------------+
+| size     | number  | Total file size in bytes.                                     |
++----------+---------+---------------------------------------------------------------+
+| isStored | boolean | `true` if all files in a group are stored, `false` otherwise. |
++----------+---------+---------------------------------------------------------------+
+| isImage  | boolean | `true` if all files in a group are images, `false` otherwise. |
++----------+---------+---------------------------------------------------------------+
+| cdnUrl   | string  | File group [CDN URL][api-reference-rest-groups].              |
++----------+---------+---------------------------------------------------------------+

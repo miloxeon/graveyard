@@ -1,0 +1,170 @@
+---
+layoutPreset: integrations
+title: WordPress File Uploader and Adaptive Delivery Plugin
+description:
+  Upload large files from many sources including social media and cloud
+  services. Insert them to WordPress posts and serve responsive lazy loaded
+  images with Uploadcare CDN to improve your WordPress site performance.
+---
+
+import { Video } from '@uploadcare/docs-components'
+
+# WordPress File Uploader and Adaptive Delivery Plugin
+
+[WordPress platform][ext-wordpress-platform] is open-source and free to use,
+yet it's just a CMS part of your blog or a website. It doesn't come with a free
+hosting plan. For example, [wordpress.com][ext-wordpress-home] offers
+[paid][ext-wordpress-plans] hosting.
+
+Uploadcare, all-round media upload, storage, management, and delivery solution,
+breaks many WordPress Media Library limitations. Upload large files from many
+sources including social media and cloud services. Insert them to WordPress
+posts and serve responsive lazy loaded images with Uploadcare CDN to improve
+your WordPress site performance.
+
+This plugin allows WordPress authors upload images and other files with
+Uploadcare File Uploader while creating posts and pages. You can migrate your
+current Media Library to your Uploadcare storage, use Adaptive Delivery and
+other Uploadcare features.
+
+## Features
+
+* Upload files of any type (image, video, document, archive) and size (up to 5
+  TB).
+* Upload from your device, URL, social network (Facebook, Instagram, VK,
+  Flickr), and cloud (Dropbox, Google Drive, Google Photos, OneDrive, Box,
+  Huddle, Evernote).
+* Insert images into your posts, and place other files and archives for
+  download.
+* Uploadcare CDN serves images faster in all parts of the world. Adaptive
+  Delivery analyzes users’ context and serves images in a suitable format,
+  resolution, compression, which closes all image-related frontend tasks.
+* Transfer your existing Media Library to your Uploadcare storage with no risk
+  of data loss.
+* Specify your custom CDN domain, and use a Secure Uploading feature to control
+  who and when can upload files.
+* Compatible with a standard WordPress image editor.
+
+<div style="position: relative; padding-bottom: 56.25%;">
+<iframe width="100%" height="100%" src="https://www.youtube.com/embed/7Nc7GyD6_AE" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style="position: absolute;" /></div>
+<div style="position: relative; padding-bottom: 2vw;"/>
+
+## Prerequisites
+
+An installed [WordPress instance][ext-wordpress-platform] or a paid plan at
+[WordPress.com][ext-wordpress-home] that supports plugins.
+
+The current version of the Uploadcare plugin 3.x works with the latest WordPress
+versions 5.x and supports the new visual [Gutenberg][ext-gutenberg] post editor.
+Also, it brings Uploadcare features, such as
+[Adaptive Delivery][adaptive-delivery-product-page] into your WordPress.
+
+[An account at Uploadcare][account-signup]. For testing purposes, you can use
+both a Free plan or a Trial to any of the paid plans. Learn how to [sign
+up][uploadcare-signup] at Uploadcare.
+
+## Installation
+
+Log in to your WordPress admin panel `https://yoursite.com/wp-admin`.
+
+There is an official [Uploadcare plugin][ext-wordpress-plugins-uploadcare] for
+WordPress that you can find in the plugin list.
+
+<Video fullWidth>
+  <source
+    src='https://ucarecdn.com/86bdfcc0-d2c6-4da8-9279-cccda59c1319/InstallUCpluginforWP.mp4'
+    type='video/mp4'
+  />
+</Video>
+
+To install the plugin, go to **Plugins**, **Add New**, and search for
+"Uploadcare". **Install** and **Activate** it.
+
+## Settings
+
+Now, you need to link your WordPress plugin with your Uploadcare account. There
+are API Keys for that (Public and Secret Keys). Get them from your Uploadcare
+projet's [Dashboard][dashboard] and insert them into the respective fields
+in the Plugin settings.
+
+<Video fullWidth>
+  <source
+    src='https://ucarecdn.com/7da31d20-01c0-4e4f-af2e-4d60303c09d0/SetupUCpluginforWP.mp4'
+    type='video/mp4'
+  />
+</Video>
+
+Go to **Settings** > **Uploadcare**. Open your project's **Dashboard** in a new
+tab. Copy your **Public Key** from the upper-right corner and paste it in the
+respective field of your WordPress settings tab.
+
+Next, go back to your Dashboard for **a Secret Key**. Select **API keys** from
+the left menu and generate a new Secret Key. Copy it (or download it as a text
+file) and use it with your WordPress.
+
+Tip: The rule of thumb is that one **Secret Key** works for one integration
+with a service (e.g., WordPress). Generate more keys are delete them as you
+need. This is how you manage integrations.
+
+## Use Uploadcare Image
+
+While editing a post, you can add a new block, select **Uploadcare image**.
+
+<Video fullWidth>
+  <source
+    src='https://ucarecdn.com/4333a670-0ac5-4f2d-8df7-14ec5db78517/InsertUCimageintoWPpost.mp4'
+    type='video/mp4'
+  />
+</Video>
+
+Use the desired upload source: local files, social networks, etc. This image
+upload will go to your project storage at Uploadcare that you've integrated with
+WordPress. Also, it'll be listed in your WordPress Media Library as well.
+
+Edit images after uploading or anytime later. You can customize the
+[File Uploader][feature-file-uploader] in the plugin settings. For example,
+select only upload sources you're going to use. Also, you can customize the
+[Editing features][fxtab].
+
+### Preview
+
+Uploaded images will be delivered via Uploadcare CDN on preview and when you
+publish the post. The [Adaptive Delivery][adaptive-delivery-product-page]
+feature kicks in here and optimizes images on the fly depending on the
+client's device and browser. It includes `srcset` auto-creation for responsive
+images, lazy loading, etc.
+
+Check out the stats for this page. All WordPress text and script content is
+loaded from the original domain, and the image is loaded from ucarecdn.com. It's
+size is 105.70 KB while the original file was 9.9 MB.
+
+<img src="https://ucarecdn.com/7730ad5c-ec61-4273-8344-c511f141ec32/WPpoststats.png" alt="Safari stats on WordPress page with CDN image" title="File and image upload WordPress plugin in action" style="padding-bottom: 20px;" />
+
+## Managing Media Library
+
+It's also possible to do file and image uploading via Uploadcare right from your
+Media Library.
+
+<Video fullWidth>
+  <source
+    src='https://ucarecdn.com/d61c62ba-8785-4d61-98b2-3883ac2c252a/InsertUCimageintoWPMediaLibrary.mp4'
+    type='video/mp4'
+  />
+</Video>
+
+Either way, Uploadcare images will be stored in your project's storage and
+listed in Media Library as external images.
+
+## Summary
+
+With the Uploadcare plugin, you can upload large files, insert images and edit
+them right in your WordPress posts. It powers up your WordPress content creation
+experience and backs up with a secure cloud storage and CDN delivery.
+
+Learn more about Uploadcare concepts in our [docs][concepts] and check the
+[WordPress Codex][ext-wordpress-codex] for any topics related to WordPress. You
+can also check out the [WPArena article][ext-wparena-article] on accelerating
+WordPress media with Uploadcare when building a photoblog.
+
+If you have any questions, feel free to post them in our [community
+area][community].

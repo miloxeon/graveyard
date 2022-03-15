@@ -1,0 +1,83 @@
+---
+  layoutPreset: integrations
+  title: Meteor File Uploader
+  description:
+    Integrate File Uploader Widget into Your Meteor App to Accept Files
+    From Users in a Fast and Reliable Way.
+---
+
+# Meteor File Uploader
+
+Receive files from your users with a clean, lightweight and easy-to-integrate
+widget. This Meteor integration helps you integrate
+[Uploadcare Widget][feature-file-uploader] into your Meteor app natively.
+
+[GitHub &rarr;][meteor-github]
+
+## Features
+
+* Upload files from a local disk, camera, and cloud source (up to 5 TB)
+* Multipart uploading for large files
+* Bulk file uploading
+* In-browser image editing
+* Uploading network to speed uploading jobs (like CDN)
+
+## Installation
+
+`meteor add uploadcare:uploadcare-widget`
+
+## Usage
+### Public key
+
+Discover your Uploadcare
+[public key](https://uploadcare.com/documentation/keys/)
+and use
+[Meteor application settings](https://guide.meteor.com/deployment.html#environment)
+to set the key for Meteor.
+
+Add `uploadcare` to your settings under a `public` key, this will make
+Uploadcare settings available for your Meteor client.
+
+For example, `settings.json` file:
+
+```json
+{
+  "public": {
+    "uploadcare": {
+      "publicKey": "YOUR_PUBLIC_KEY"
+    }
+  }
+}
+```
+
+Run Meteor application with `settings.json` as settings file:
+
+```
+meteor --settings settings.json
+```
+
+### HTML element
+
+Place the following `input` element somewhere into your templates.
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" />
+```
+
+This `input` HTML tag will define where the widget will be positioned on a page.
+Don't forget about the `name` attribute to further fine-tune your elements
+behavior.
+
+The library looks for inputs with the `role` attribute, and places widgets
+there. As soon as a file gets uploaded, this `input` receives a CDN link with
+file UUID.
+
+## Full documentation
+
+Read the full documentation on [GitHub][meteor-github].
+
+## Related guides
+
+* [Meteor example app][meteor-guide]
+* [File Uploader][file-uploader]
+* [File Uploader API reference][api-reference-js-widget]

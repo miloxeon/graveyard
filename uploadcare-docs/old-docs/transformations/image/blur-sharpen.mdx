@@ -1,0 +1,203 @@
+---
+  title: 'Uploadcare Image Transformations — blur and sharpen'
+  description:
+    'Uploadcare allows applying Image Transformations on the fly with a set of CDN operations that can change image size, compression, colors, as various image modifications.'
+---
+
+# Blur & Sharpen
+{id="operation-blur-sharp"}
+
+## Blur
+{id="operation-blur"}
+
+`cdn›-/blur/`<br/>
+`cdn›-/blur/:strength/`
+
+Blurs images by the `:strength` factor. The filtering mode is Gaussian Blur,
+where `:strength` parameter sets the blur radius — effect intensity. Technically,
+`:strength` controls the Gaussian Blur standard deviation multiplied by ten.
+The value of `:strength` might come up to 5000, while the default value is 10.
+Note, different `:strength` values do not affect the operation performance.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/440x440/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image. 17Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/-/blur/10/" target="_blank">
+        <img src="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/220x220/-/blur/10/" alt="Blurred image"/></a><br/>
+      <code>/blur/20/</code> 10Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/-/blur/100/" target="_blank">
+        <img src="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/220x220/-/blur/100/" alt="Max image blur"/></a><br/>
+      <code>/blur/100/</code> 6Kb
+    </td>
+  </tr>
+</table>
+
+## Blur Region
+{id="operation-blur-region"}
+
+`cdn›-/blur_region/:two_dimensions/:two_coords/`
+`cdn›-/blur_region/:two_dimensions/:two_coords/:strength/`
+
+Blurs the specified region of the image by the `:strength` factor. The filtering mode is Gaussian Blur,
+where `:strength` parameter sets the blur radius — effect intensity. Technically,
+`:strength` controls the Gaussian Blur standard deviation multiplied by ten.
+The value of `:strength` might come up to 5000, while the default value is determined
+automatically based on the size of the region.
+Note, larger `:strength` values do not affect the operation performance.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/440x440/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/440x440/-/quality/lighter/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/440x400/-/blur_region/130x180/220,25/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/440x400/-/blur_region/130x180/220,25/-/quality/lighter/" alt="Blurred image region at coordinates"/></a><br/>
+      <code>/blur_region/130x180/220,25/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/440x400/-/blur_region/30px80p/50p,10p/20/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/440x400/-/blur_region/30px80p/50p,10p/20/-/quality/lighter/" alt="Smart object blur on an image"/></a><br/>
+      <code>/blur_region/30%x80%/50%,10%/20/</code>
+    </td>
+  </tr>
+</table>
+
+## Blur Faces
+{id="operation-blur-region-faces"}
+
+`cdn›-/blur_region/faces/`<br/>
+`cdn›-/blur_region/faces/:strength/`
+
+When `faces` is specified the regions are selected automatically by utilizing face detection.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/" target="_blank">
+        <img src="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/quality/lighter/" alt="Original image (face)"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/blur_region/faces/" target="_blank">
+        <img src="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/blur_region/faces/-/quality/lighter/" alt="Face image blur"/></a><br/>
+      <code>/blur-regions/faces/</code><br/>
+      default strength
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/blur_region/faces/250/" target="_blank">
+        <img src="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/blur_region/faces/250/-/quality/lighter/" alt="Max face image blur"/></a><br/>
+      <code>/blur-regions/faces/250/</code><br/>
+      <code>stength 250</code>
+    </td>
+  </tr>
+</table>
+
+## Unsharp Masking
+{id="operation-blur-mask"}
+
+`cdn›-/blur/:strength/:amount/`
+
+There is no specific operation for unsharp masking. Instead, you can adjust the
+`:amount` of the blur applied. `:amount` can be set in the range from –200 to
+100 and defaults to 100.
+
+Where the `:amount` of:
+
+* 100 stands for the opaque blur image.
+* 0 stands for no changes in the image, the output is equal to the original.
+* Any negative number would mean subtracting the difference between the blurred
+  and original images from the original. That is the unsharp masking behavior.
+
+You can implement unsharp masking with a large blur `:strength` (100;300) and a
+small negative `:amount` (–50;–10) to increase local contrast. Fine-tuned local
+contrast gives a “pop” to an image and mimics the look created by camera
+lenses. Local contrast enhancements let you minimize the effects of haze, lens
+flare, and “dull look.”
+
+When implemented with a small `:strength`, unsharp masking increases image
+sharpness. For instance, the `cdn›/blur/10/-200/` transformation is the full
+equivalent of `cdn›/sharp/20/` with the exception that [`sharp`](#operation-sharp)
+operates much faster.
+
+You can combine unsharp masking with the [`sharp`](#operation-sharp) operation
+to increase both local contrast and sharpness.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/880x600/" target="_blank">
+        <img src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image. 16Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/880x600/-/blur/200/-50/" target="_blank">
+        <img src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/blur/100/-50/" alt="Unsharp masking (reduce blur)"/></a><br/>
+      <code>/blur/100/-50/</code> 19Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/880x600/-/blur/200/-120/" target="_blank">
+        <img src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/blur/100/-120/" alt="Unsharp masking (reduce blur)"/></a><br/>
+      <code>/blur/100/-120/</code> 22Kb
+    </td>
+  </tr>
+</table>
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/880x600/-/sharp/20/" target="_blank">
+        <img src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/sharp/20/" alt="Sharpen"/></a><br/>
+      <code>/sharp/20/</code> 20Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/880x600/-/blur/10/-200/" target="_blank">
+        <img src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/blur/10/-200/" alt="Reduce blur"/></a><br/>
+      <code>/blur/10/-200/</code> 20Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/880x600/-/sharp/10/-/blur/180/-50/" target="_blank">
+        <img src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/sharp/10/-/blur/90/-50/" alt="Sharp and blur"/></a><br/>
+      <code>/sharp/10/-/blur/90/-50/</code> 21Kb
+    </td>
+  </tr>
+</table>
+
+## Sharpen
+{id="operation-sharp"}
+
+`cdn›-/sharp/`<br/>
+`cdn›-/sharp/:strength/`
+
+Sharpens an image, might be especially useful with images that were subjected to
+downscaling. `:strength` can be in the range from 0 to 20 and defaults to the
+value of 5.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/600x600/" target="_blank">
+        <img src="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/220x220/" alt="Downscaled image"/></a><br/>
+      Downscaled image. 15Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/600x600/-/sharp/10/" target="_blank">
+        <img src="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/220x220/-/sharp/10/" alt="Sharpen"/></a><br/>
+      <code>/sharp/10/</code> 17Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/600x600/-/sharp/20/" target="_blank">
+        <img src="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/220x220/-/sharp/20/" alt="Max sharpen"/></a><br/>
+      <code>/sharp/20/</code> 19Kb
+    </td>
+  </tr>
+</table>

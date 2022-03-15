@@ -1,0 +1,210 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: Uploading Files'
+  description:
+    This section covers handling single-file uploading and requesting
+    file info via JavaScript API. Sign up for free and find more
+    info in Uploadcare Docs!
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — Uploading Files
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#file' />
+  <Migration />
+</Messages>
+
+Uploadcare File Uploader and JavaScript API work with file instances, which implement
+the [jQuery promise interface][ext-jquery-promise-interface]. You can create a
+file instance via a new upload or by addressing existing files.
+
+* [Creating a new file instance](#file-new-instance)
+  * [File instance from URL](#file-from-url)
+  * [File instance from native object](#file-from-native)
+  * [File instance from DOM](#file-from-dom)
+  * [File instance from UUID or CDN URL](#file-from-cdn)
+* [Wait until a file is available](#file-wait-when-ready)
+* [Checking the progress of a file upload](#file-uploading-progress)
+* [Cancelling a file upload](#file-cancel-uploading)
+* [Object overview, `fileInfo`](#file-info)
+* [Object overview, `uploadInfo`](#upload-info)
+
+## Creating a new file instance
+{id="file-new-instance"}
+
+A new file instance can be constructed by calling the `fileFrom` function. Where
+the first argument is one of the predefined identifiers, and the second argument
+holds a file source. Depending on the passed identifier, the function can start
+a new upload or return an instance of an existing file.
+
+Note, you can also pass a `settings` [object][file-uploader-config-object] to
+`fileFrom` as its third parameter.
+
+### File instance from URL
+{id="file-from-url"}
+
+Uploading a file from URL is done by passing the `url` identifier to the
+`fileFrom` function:
+
+```js{noAutoLinker}
+var file = uploadcare.fileFrom('url', 'http://example.com/image.png');
+```
+
+### File instance from native object
+{id="file-from-native"}
+
+Our JavaScript API supports uploading new files from
+[native file objects][ext-native-file-object]. This is done by passing the
+`object` identifier to the `fileFrom` function.
+
+```js
+var file = uploadcare.fileFrom('object', input.files[0]);
+```
+
+This method supports large file uploads (> 100MB) and checking upload progress.
+However, it will not work in outdated browsers, see
+[browser support][ext-caniuse-fileapi].
+
+### File instance from DOM
+{id="file-from-dom"}
+
+You can also upload files from input DOM elements. This is done by passing the
+`input` identifier to `fileFrom`. Uploading from such inputs works in all browsers
+but does not support large files and checking upload progress.
+
+```js
+var file = uploadcare.fileFrom('input', input);
+```
+
+### File instance from UUID or CDN URL
+{id="file-from-cdn"}
+
+That is the case when a file instance is created from an existing file that has
+a UUID and hence a CDN URL. Any of those can be used as a file source in
+`fileFrom`. The proper identifier to pass to the function, here, is `uploaded`:
+
+```js
+var file = uploadcare.fileFrom('uploaded', '61783708-7090-4d6a-b82b-81f98e40a327');
+```
+
+## Wait until a file is available
+{id="file-wait-when-ready"}
+
+Quite often, you want to ensure a file is there and ready before getting its
+instance. That is what the function is all about. It returns a
+[fileInfo][api-reference-js-file-info] object.
+
+```js
+file.done(function(fileInfo) {
+  // Upload has successfully completed and a file is ready.
+}).fail(function(error, fileInfo) {
+  // Upload failed, or something else went wrong, a file is not ready.
+});
+```
+
+The `error` argument in the `fail` callback is one of the following values,
+or a user-defined custom value, raised via [validators][api-reference-js-file-validation].
+
+* `'baddata'`, invalid argument passed to file constructor
+* `'size'`, file size is too large
+* `'upload'`, error during upload
+* `'user'`, upload was canceled
+* `'info'`, error when fetching file information
+* `'deleted'`, file was deleted, also applicable to groups and files within
+
+## Checking the progress of a file upload
+{id="file-uploading-progress"}
+
+When handling larger files, there is a sense in checking their upload progress.
+The `progress` function does exactly that and returns an
+[uploadInfo][api-reference-js-upload-info] object.
+
+```js
+file.progress(function(uploadInfo) {
+  // State of your upload gets updated.
+  // The callback is invoked at least once with a current state,
+  // right after assignment.
+});
+```
+
+You can also show a file uploading progress via a
+[jQuery UI progressbar][ext-jquery-ui-progressbar].
+
+```js
+file.progress(function(uploadInfo) {
+  $('#progress').progressbar('value', uploadInfo.progress);
+});
+```
+
+## Cancelling a file upload
+{id="file-cancel-uploading"}
+
+Just use `cancel` in case you want to immediately stop any in-progress upload and
+all the events.
+
+```js
+file.cancel();
+```
+
+## Object overview, `fileInfo`
+{id="file-info"}
+
+Here is how a `fileInfo` object is structured,
+
++---------------------+---------+-------------------------------------------------------------------------+
+|      Property       |  Type   |                                  Value                                  |
++=====================+=========+=========================================================================+
+| `uuid`              | string  | File UUID.                                                              |
++---------------------+---------+-------------------------------------------------------------------------+
+| `name`              | string  | Original filename.                                                      |
++---------------------+---------+-------------------------------------------------------------------------+
+| `size`              | number  | File size in bytes.                                                     |
++---------------------+---------+-------------------------------------------------------------------------+
+| `isStored`          | boolean | `true`, if the file is stored in Uploadcare,                            |
+|                     |         | `false` otherwise.                                                      |
++---------------------+---------+-------------------------------------------------------------------------+
+| `isImage`           | boolean | `true`, if the file is an image,                                        |
+|                     |         | `false` otherwise.                                                      |
++---------------------+---------+-------------------------------------------------------------------------+
+| `cdnUrl`            | string  | Public CDN URL related to a file,                                       |
+|                     |         | may contain [processing operations][transformations-image].             |
++---------------------+---------+-------------------------------------------------------------------------+
+| `cdnUrlModifiers`   | string  | A string holding existing URL modifiers, i.e.                           |
+|                     |         | [processing operations][transformations-image] in case those are        |
+|                     |         | present. Null otherwise.                                                |
++---------------------+---------+-------------------------------------------------------------------------+
+| `originalUrl`       | string  | Original file CDN URL with no modifiers.                                |
++---------------------+---------+-------------------------------------------------------------------------+
+| `originalImageInfo` | object  | Object holding original image properties, if your file is an image,     |
+|                     |         | null otherwise. Properties:<br/><br/>                                   |
+|                     |         | * `width` and `height`                                                  |
+|                     |         | * `format` — JPEG, PNG, etc.                                            |
+|                     |         | * `datetime_original`, `geo_location` and `orientation` from EXIF       |
+|                     |         | * `dpi` — from either format properties or EXIF, if available           |
++---------------------+---------+-------------------------------------------------------------------------+
+| `sourceInfo`        | object  | Object holding the info about a file source. For example, this can be   |
+|                     |         | a name of a social media, public URL, etc.                              |
+|                     |         |                                                                         |
+|                     |         | We do not store such information hence it is only available on the page |
+|                     |         | where your file uploading happens.                                      |
++---------------------+---------+-------------------------------------------------------------------------+
+
+
+## Object overview, `uploadInfo`
+{id="upload-info"}
+
+Here is how an `uploadInfo` object is structured,
+
++------------------+--------+---------------------------------------------------------------------------+
+|     Property     |  Type  |                                   Value                                   |
++==================+========+===========================================================================+
+| `state`          | string | Current upload states: `'uploading'`, `'uploaded'`, or `'ready'`.         |
++------------------+--------+---------------------------------------------------------------------------+
+| `uploadProgress` | number | Upload progress as a value ranging from 0 to 1.                           |
++------------------+--------+---------------------------------------------------------------------------+
+| `progress`       | number | File ready state combines the progress of both upload and preparing info, |
+|                  |        | as a value ranging from 0 to 1.                                           |
++------------------+--------+---------------------------------------------------------------------------+

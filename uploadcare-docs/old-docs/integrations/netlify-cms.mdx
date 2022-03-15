@@ -1,0 +1,127 @@
+---
+  layoutPreset: integrations
+  title: Serverless Media for Netlify CMS
+  description:
+    Learn how to optimize media handling with Uploadcare in Netlify CMS.
+    Move your files from Git repositories to the Uploadcare cloud and get
+    your media seamlessly cached on CDN nodes globally.
+---
+
+# Serverless Media for Netlify CMS
+
+## Netlify CMS and Git Workflow
+{id="netlify-git"}
+
+[Netlify CMS][ext-netlify-home] is an open source <abbr title="Content Management System">CMS</abbr>
+for your [Git][ext-git-home] workflow. It enables you to provide content
+editors with a friendly UI and intuitive user experience.
+
+Your content gets stored in a Git repository alongside your code for easier
+versioning, multi-channel publishing, and the option to handle content updates
+directly in Git. You can use Netlify CMS with any static site generator like
+[Jekyll][ext-jekyll-home] or [Hugo][ext-hugo-home] to create faster, more
+flexible web projects.
+
+## Git as Media Storage
+{id="git-storage"}
+
+While storing files in a Git repo can be a solid workflow, some issues exist:
+
+* Storing too many binary files or simply huge files can lead to long waits
+  needed to clone the repository.
+* When handling images, only include the ones you need in the repo. Stick with
+  original image versions (not their derivatives) and carefully choose which
+  ones to keep and which to drop.
+
+Using Git repository is hard to scale, especially when it gets to
+receiving user-generated media. Uploadcare integration helps you detach file
+infrastructure routines at scale from your Netlify workflow.
+
+As an end-to-end file handling platform, we handle content uploads, storage,
+optimization, and CDN delivery. Every file on Uploadcare immediately gets to our
+smart storage and is cached by our [CDN][delivery-cdn] to be further rapidly and
+reliably delivered across 220k servers in 130+ countries.
+
+Once your files are on Uploadcare, you then operate with either their CDN URLs
+or UUIDs:
+
+```cdn
+https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/
+
+or
+
+c4b32a69-f817-48be-b918-7eb6718f7aca
+```
+
+Combined with our media processing engine that is especially
+useful for image content which can be [transformed][transformations-image] on the fly
+by including URL directives. Hence, you can store original CDN URLs in a Git
+repository, while all the derivatives will be generated whenever you need them.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/preview/480x480/" alt="Original image"/>
+      </a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/2000x1325/center/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/2000x1325/center/-/preview/480x480/-/quality/lightest/" alt="Cropped and centered image"/>
+      </a><br/>
+      <code>/crop/2000x1325/center/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/640x424/2560,830/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/640x424/2560,830/-/preview/480x480/-/quality/lightest/" alt="Cropped to area image"/>
+      </a><br/>
+      <code>/crop/960x636/2400,700/</code>
+    </td>
+  </tr>
+</table>
+
+## Integrating Uploadcare into Netlify CMS
+{id="integrating"}
+
+Integrating Uploadcare [File Uploader][file-uploader] into
+Netlify CMS is quick and here’s how you do it:
+
+1. Make sure you’re using Netlify CMS 2.1.0+, [upgrade][ext-netlify-upgrade-version]
+   if necessary.
+2. Create an Uploadcare [account][account-signup].
+3. Define a target project for uploads by discovering its [API key][settings-keys].
+4. Remove the `media_folder` property from your CMS configuration file.
+5. Add the following to your CMS configuration file:
+
+```ruby
+media_library:
+  name: uploadcare
+  config:
+    publicKey: demopublickey # replace with your Public API key or use for testing env only
+```
+
+That’s it; you can now add media to your content via Uploadcare File Uploader in the
+admin panel of your Netlify website. There’s no need to push any files to your
+repo anymore: they now go to the Uploadcare storage and get delivered from our
+CDN.
+
+<a href="https://ucarecdn.com/f8d1a567-3c2b-48e5-be3a-ea62f2db76c6/-/preview/netlify.jpg" target="_blank">
+  <img src="https://ucarecdn.com/f8d1a567-3c2b-48e5-be3a-ea62f2db76c6/-/preview/-/resize/680x/netlify.jpg"
+    srcSet="https://ucarecdn.com/f8d1a567-3c2b-48e5-be3a-ea62f2db76c6/-/preview/-/resize/1360x/-/quality/lightest/netlify.jpg 2x"
+    alt="Uploadcare File Uploader integrated into Netlify CMS" />
+</a><br/>
+
+## On-the-fly Image Transformations
+{id="processing"}
+
+In case you want to edit any image on Uploadcare, you don’t have to upload its
+updated version. We handle [Image Transformations][feature-image-processing]
+on the fly via URL directives. Just include the supported ones in your image
+CDN URLs.
+
+## Further Reading
+{id="read-on"}
+
+That’s it! In case you want to learn more, check out the Netlify CMS
+[docs][ext-netlify-docs-uploadcare] on integrating Uploadcare.

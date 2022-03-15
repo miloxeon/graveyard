@@ -1,0 +1,308 @@
+---
+  title: 'Uploadcare Document Conversion'
+  description:
+    'Convert your documents into DOC, PDF, JPEG, PNG, etc. with an API. Integrate document conversion routines into your business flows.'
+---
+
+# Document Conversion
+
+Uploadcare can convert documents from all popular formats via
+[REST API][api-reference-rest].
+
+The input document file formats:
+- Microsoft: DOC, DOCX, XLS, XLSX, PPS, PPSX, PPT, PPTX, VSD, VSDX, SKW, WPD,
+  WPS, XLR, PUB, MPP.
+- Apple: KEY, MSG, NUMBERS, PAGES.
+- OpenDocument: ODT, ODS, ODP.
+- Text: TXT, RTF, PDF, DJVU, EML.
+- Data: CSV, XPS, PS, EPS.
+
+The output: DOC, DOCX, XLS, XLSX, ODT, ODS, RTF, TXT, PDF, JPG, PNG.
+
+Note:
+* When converting multi-page documents to an image format (`jpg` or `png`),
+the output will be a `zip` archive with one image per page.
+* Use an `enhanced.jpg` output format for PDF documents with inline fonts.
+
+## How it works
+{id="workflow"}
+
+Document Conversion requires you to create a conversion job beforehand (unlike
+with [Image Transformations][transformations-image] that are applied on the fly
+at the time of a user (cold) request).
+
+The Document Conversion workflow is as follows:
+1. `POST` a conversion job. The conversion params are passed in a request together with a source file UUID. 
+2. Wait until the conversion job status becomes `finished`.
+3. The converted target file can now be addressed via its UUID passed in a response.
+
+Document Conversion doesn't alter your input files: it creates converted
+outputs as separate files.
+
+## REST API workflow
+{id="rest-api"}
+
+Here you can find detailed API references for
+[document conversion][api-reference-rest-document-conversion].
+
+All API requests should be [authorized][api-reference-rest-auth].
+
+The endpoint for your requests is:
+
+```
+https://api.uploadcare.com/convert/document/
+```
+
+The converted document becomes addressable via a CDN URL alias you provided in the request:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/document/-/format/:target-format/
+```
+
+CDN URL aliases are interchangeable with respective processed file UUIDs.
+
+### `POST` a conversion job
+{id="convert"}
+
+`POST /convert/document/` — **сheck out detailed [conversion API reference][api-reference-rest-document-conversion].**
+
+The conversion params are passed together with a source file UUID. These two request parameters are mandatory:
+* `paths`, an array of UUIDs of your source documents to convert together with the [specified target format](#convert-url-formatting).
+* `store`, a flag indicating if Uploadcare should [store][api-reference-rest-file-store] your outputs.
+
+When applying the same set of conversion parameters to a previously converted
+document, older conversion results will be replaced with the new ones
+(`variations` parameter will change).
+
+Before:
+
+```json{noAutoLinker}
+{
+  ...
+  "uuid": "dd7c1d17-ff16-4ae1-8b25-6b776b4a6425",
+  "variations": {
+    "document/-/format/doc/": "a46a4e66-fac8-4440-b426-37b662ae96d3"
+  },
+  ...
+}
+```
+
+After:
+
+```json{noAutoLinker}
+{
+  ...
+  "uuid": "dd7c1d17-ff16-4ae1-8b25-6b776b4a6425",
+  "variations": {
+    "document/-/format/doc/": "0efdf844-2c63-4268-a908-fc56ae3a8078"
+  },
+  ...
+}
+```
+
+#### Input file identifier formatting
+{id="convert-url-formatting"}
+
+Your source file identifiers should be formatted as follows:
+
+```cdn
+/:uuid/document/
+```
+
+The output format should be specified after the `/-/` delimiter:
+
+```cdn
+/:uuid/document/-/format/:target-format/
+```
+
+Also, you can provide a complete CDN URL. When the conversion is done, it can
+be used as an alias to your converted file UUID:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/document/-/format/:target-format/
+```
+
+`:uuid` identifies the input file. `:uuid` should be followed by
+`cdn›/document/`, otherwise, your request will return an
+[error][api-reference-rest-document-conversion].
+
+<!-- `/-/` is a mandatory delimiter that helps the API tell file identifiers from
+the [processing][transformations-image] operations. -->
+
+The following operations are available for the conversion job:
+* `cdn›/format/:target-format/` defines the target conversion format.
+* `cdn›/page/:number/` converts a single page of a multi-paged document to either `jpg` or `png`. This method won't work for other target formats. `:number` is a one-based number for a page to convert.
+
+In case the `cdn›/format/` operation was not found, your input document will be
+converted to PDF.
+
+### Checking conversion job status
+{id="status"}
+
+`GET /convert/document/status/:token/` — **check out detailed [job status API reference][api-reference-rest-document-status].**
+
+Once you get a conversion job result, you can get a conversion job status via
+`token`. Just put it in your request URL as `:token`.
+
+Alternatively, you can subscribe to the `file.uploaded` event via the
+webhooks REST API endpoint. This way, you'll know when conversion routines are
+complete without checking your conversion job status. Learn more about
+[webhooks][api-reference-rest-webhooks].
+
+## Examples
+### Requesting to convert a single document
+{id="convert-example-single"}
+
+Make sure to use your own project keys instead of `PUBLIC_KEY`, `SECRET_KEY`;
+the keys should point to an Uploadcare project with the [enabled](#billing)
+Document Conversion feature. The `:uuid` of the source file to convert should
+belong to the project specified by `PUBLIC_KEY`.
+
+Request:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/vnd.uploadcare-v0.5+json" \
+     -H "Authorization: Uploadcare.Simple PUBLIC_KEY:SECRET_KEY" \
+     -d '{"paths": [":uuid/document/-/format/:target-format/"], "store": "1"}' \
+     "https://api.uploadcare.com/convert/document/"
+```
+
+Response:
+
+```json
+{
+  "problems": {},
+  "result": [
+    {
+      "original_source": ":uuid/document/-/format/:target-format/",
+      "token": 3724130,
+      "uuid": ":uuid-converted"
+    }
+  ]
+}
+```
+
+A JSON response object holds the following parameters:
+* `problems`, problems related to your conversion job, if any.
+* `result`, info related to your converted output(-s):
+  * `original_source`, source file identifier including a target format,
+    if present.
+  * `token`, a conversion job token that can be used to get a
+    [job status](#status).
+  * `uuid`, a UUID of your converted document.
+
+Technically, when the document is converted, you get two UUIDs: the first is
+included in `original_source`, and the second sits in `uuid`. It happens because
+there are two methods to address converted files:
+* `https://ucarecdn.com/:uuid/document/-/format/:target-format/` works as a CDN URL _alias_ for a converted file,
+* `:uuid-converted` — the actual file identifier is used with other [REST API routines][api-reference-rest].
+
+### Converting multiple documents
+{id="convert-example-multi"}
+
+When posting a multi-file conversion job, you get separate results and status
+tokens for each source.
+
+Request:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/vnd.uploadcare-v0.5+json" \
+     -H "Authorization: Uploadcare.Simple PUBLIC_KEY:SECRET_KEY" \
+     -d '{"paths": [
+          ":uuid/document/",
+          ":uuid/document/-/format/jpg/-/page/1/",
+          ":uuid"], "store": "1"}' \
+     "https://api.uploadcare.com/convert/document/"
+```
+
+Response:
+
+```json
+{
+  "problems": {
+    ":uuid": "Bad path \":uuid\". Use :uuid/document/",
+  },
+  "result": [
+    {
+      "original_source": ":uuid/document/-/format/jpg/-/page/1/",
+      "token": 445630631,
+      "uuid": ":uuid-processed"
+    },
+    {
+      "original_source": ":uuid/document/",
+      "token": 445630637,
+      "uuid": ":uuid-processed"
+    }
+  ]
+}
+```
+
+As you can see, there is a problem with one of the inputs in this example.
+The problem is caused by the incorrect entry in `paths`: no `/document/` is
+included in the third item.
+
+### Get conversion job status
+{id="status-request"}
+
+Request:
+
+```bash
+curl -X GET \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/vnd.uploadcare-v0.5+json" \
+     -H "Authorization: Uploadcare.Simple PUBLIC_KEY:SECRET_KEY" \
+     "https://api.uploadcare.com/convert/document/status/:token/"
+```
+
+Response:
+
+```json
+{
+  "status": "processing",
+  "error": null,
+  "result": {
+    "uuid": ":uuid-processed"
+  }
+}
+```
+
+A conversion job output is a JSON object holding the following parameters:
+* `status`, conversion job status, can have one of the following values:
+  * pending — a source file is being prepared for conversion.
+  * processing — conversion is in progress.
+  * finished — the conversion is finished.
+  * failed — we failed to convert the source, see `error` for details.
+  * canceled — the conversion was canceled.
+* `error`, holds a conversion error if it was unable to handle your file.
+* `result`, repeats the contents of your conversion output.
+* `uuid`, a UUID of a converted target file.
+
+Once your conversion job is `finished`, you are free to add any
+[RFC3986 compliant][delivery-filename] filename when accessing your
+outputs via their [CDN URL aliases](#workflow), here is an example:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/document/-/format/pdf/report-converted.pdf
+```
+
+## Billing
+{id="billing"}
+
+The feature is available on all paid plans. We charge for document
+conversions separately:
+
+* Document Conversion is billed in units.
+* The total amount of spent conversion units can be found in
+  [your dashboard][dashboard].
+* The single conversion unit costs 0.045 USD.
+* One unit accounts for 50 MB of a file subjected to conversion.
+* Conversion outputs are put to your Uploadcare project; this affects your
+  _storage limits_ that you can also monitor in [your dashboard][dashboard].
+* Each conversion operation takes one _upload unit_. Document conversions are
+  applied externally, so we upload an output to your account once it is
+  generated.
+* Your _traffic limits_ are left intact.

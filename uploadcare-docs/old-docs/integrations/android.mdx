@@ -1,0 +1,299 @@
+---
+  layoutPreset: integrations
+  title: Android API Client for Upload & Management, and Uploader UI
+  description:
+    Android Uploadcare API client for Fast & Reliable File Uploads; File, Group,
+    Project Operations; Video + Document Conversion; File Uploader integration.
+---
+
+# Android API Client and File Uploader
+
+Android (Kotlin and Java) integration handles uploads and file operations by
+wrapping Uploadcare [Upload API][api-reference-upload] and [REST API][api-reference-rest].
+This comprehensive API client lets you use most of the Uploadcare features from
+within your Android app. It also includes a native File Uploader widget.
+
+[GitHub &rarr;][android-github]
+
+## Features
+
+Concise and easy-to-use library without extra resources and drawables.
+
+Upload features:
+* Upload files from a file, byte array, URL, URI and cloud sources (up to 5 TB)
+* Multipart uploading for large files
+* Uploading network to speed uploading jobs (like CDN)
+
+File Uploader UI:
+* Upload files from a local disk, camera, and cloud sources
+* Track, pause and continue multipart uploading
+* Background uploading
+* Bulk file uploading
+* Material design Uploader appearance customization and styles
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+* Convert documents
+* Encode and transform videos
+* Paginated resource fetching
+* Synchronous and asynchronous operation modes
+* CDN path builder
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+* Secure delivery (authenticated URLs)
+
+## Installation from jCenter
+
+The latest stable versions are available at jCenter.
+
+To include API client and File Uploader Widget in your Android project, add
+this line to the 'gradle.build' file:
+
+```
+implementation 'com.uploadcare.android.library:uploadcare-android:3.1.0'
+implementation 'com.uploadcare.android.widget:uploadcare-android-widget:3.1.0'
+```
+
+## Initialization
+
+REST API requires both public and secret keys. If you use Upload API only, you
+can specify just "YOUR_PUBLIC_KEY". Get your Public and Secret API Keys in your
+project's [Dashboard][dashboard].
+
+Kotlin
+```kotlin
+val uploadcare = UploadcareClient("YOUR_PUBLIC_KEY", "YOUR_SECRET_KEY")
+```
+Java
+```java
+UploadcareClient uploadcare = new UploadcareClient("YOUR_PUBLIC_KEY", "YOUR_SECRET_KEY");
+```
+
+For File Uploader Widget, place your Uploadcare public/private keys into ../res/strings.xml file:
+
+```xml
+<resources>
+    <!--Replace with your public/private keys to use UploadcareWidget. Private key is optional, required only if you use Rest API features.-->
+    <string name="uploadcare_public_key" translatable="false">place_uploadcare_public_key_here</string>
+    <string name="uploadcare_private_key" translatable="false">place_uploadcare_private_key_here</string>
+</resources>
+```
+
+## Using REST API
+
+You can use both synchronous and asynchronous operations.
+
+### File info
+#### Asynchronous file info fetch
+
+Kotlin
+```kotlin
+uploadcare.getFileAsync(
+        context, // Context
+        "YOUR_FILE_UUID", // File UUID
+        object : UploadcareFileCallback {
+            override fun onFailure(e: UploadcareApiException) {
+                // Handle errors.
+            }
+
+            override fun onSuccess(result: UploadcareFile) {
+                // Successfully fetched file.
+            }
+        })
+```
+
+Java
+```java
+uploadcare.getFileAsync(
+        context, // Context
+        "YOUR_FILE_UUID", // File UUID
+        new UploadcareFileCallback() {
+            @Override
+            public void onFailure(@NotNull UploadcareApiException e) {
+                // Handle errors.
+            }
+
+            @Override
+            public void onSuccess(@NonNull UploadcareFile result) {
+                // Successfully fetched file.
+            }
+        });
+```
+
+#### Synchronous file info fetch
+
+Kotlin
+```kotlin
+val file = uploadcare.getFile("YOUR_FILE_UUID")
+```
+
+Java
+```java
+UploadcareFile file = uploadcare.getFile("YOUR_FILE_UUID");
+```
+
+Find out more examples in the
+[API client documentation for Android][android-github-api] at GitHub.
+
+## Using Upload API
+
+You can use both synchronous and asynchronous operations.
+
+### Upload file
+#### Asynchronous file upload
+
+Kotlin
+```kotlin
+val context = ...// Context
+val fileUri = ...//resource representing file (File/Uri/InputStream/ByteArray/String types are supported).
+val uploader = FileUploader(uploadcare, fileUri, context) // Use "MultipleFilesUploader" for multiple files.
+    .store(true)
+    // Other upload parameters.
+
+uploader.uploadAsync(object : UploadFileCallback {
+    override fun onFailure(e: UploadcareApiException) {
+        // Handle errors.
+    }
+
+    override fun onProgressUpdate(
+                        bytesWritten: Long,
+                        contentLength: Long,
+                        progress: Double) {
+        // Upload progress info.
+    }
+
+    override fun onSuccess(result: UploadcareFile) {
+        // Successfully uploaded file to Uploadcare.
+    }
+})
+
+// Cancel upload in progress.
+uploader.cancel()
+```
+
+Java
+```java
+Context context = ...// Context
+Uri fileUri = ...//resource representing file (File/Uri/InputStream/ByteArray/String types are supported).
+Uploader uploader = new FileUploader(uploadcare, fileUri, context) // Use "MultipleFilesUploader" for multiple files.
+    .store(true);
+    // Other upload parameters.
+
+uploader.uploadAsync(new UploadFileCallback() {
+    @Override
+    public void onFailure(UploadcareApiException e) {
+        // Handle errors.
+    }
+
+    @Override
+    public void onProgressUpdate(
+                        Long bytesWritten,
+                        Long contentLength,
+                        Double progress) {
+        // Upload progress info.
+    }
+
+    @Override
+    public void onSuccess(UploadcareFile file) {
+        // Successfully uploaded file to Uploadcare.
+    }
+});
+
+// Cancel upload in progress.
+uploader.cancel();
+```
+
+#### Synchronous file upload
+
+Kotlin
+```kotlin
+val context = ...// Context
+val fileUri = ...//resource representing file (File/Uri/InputStream/ByteArray/String types are supported).
+val uploader = FileUploader(uploadcare, fileUri, context) // Use "MultipleFilesUploader" for multiple files.
+    .store(true)
+    // Other upload parameters.
+
+try {
+    val file = uploader.upload()
+    // Successfully uploaded file to Uploadcare.
+} catch (e: UploadFailureException) {
+    // Handle errors.
+}
+```
+
+Java
+```java
+Context context = ...// Context
+Uri fileUri = ...//resource representing file (File/Uri/InputStream/ByteArray/String types are supported).
+Uploader uploader = new FileUploader(uploadcare, fileUri, context) // Use "MultipleFilesUploader" for multiple files.
+    .store(true);
+    // Other upload parameters.
+
+try {
+    UploadcareFile file = uploader.upload();
+    // Successfully uploaded file to Uploadcare.
+} catch (UploadFailureException e) {
+    // Handle errors.
+}
+```
+
+Find out more examples in the
+[API client documentation for Android][android-github-api] at GitHub.
+
+## Using File Uploader Widget
+### Select and upload file from any available local file/camera/external source from Activity/Fragment
+
+Kotlin
+```kotlin
+// Launch UploadcareWidget
+val fragment = this //or val activity = this;
+UploadcareWidget.getInstance()
+                .selectFile(fragment)
+                //set other parameters for upload
+                .launch()
+
+// Handle result
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    val result = UploadcareWidgetResult.fromIntent(data)
+    result?.let {
+        //handle result.
+    }
+}
+```
+
+Java
+```java
+// Launch UploadcareWidget
+Fragment fragment = this; //or Activity activity = this;
+UploadcareWidget.getInstance()
+                .selectFile(fragment)
+                //set other parameters for upload
+                .launch();
+
+// Handle result
+@Override
+public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    UploadcareWidgetResult result = UploadcareWidgetResult.fromIntent(data);
+    if(result != null){
+        //handle result.
+    }
+}
+```
+
+Find out more examples in the
+[File Uploader Widget documentation for Android][android-github-widget] at
+GitHub.
+
+## Related guides
+
+ * [Integration with Java][guide-java]
+ <!-- * [Integration with Kotlin][guide-kotlin] -->

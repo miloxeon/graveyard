@@ -1,0 +1,47 @@
+---
+  layoutPreset: guides
+  title: Access to Canvas Pixels
+  description:
+    Uploadcare is a powerful tool even when it comes to the details.
+    Learn more about access to canvas pixels and make use of the advanced feature in minutes with this article.
+---
+
+import { Badge, BadgesBox ,CodePen } from "@uploadcare/docs-components";
+
+# Access to Canvas Pixels
+{id="access-canvas-pixels"}
+
+<BadgesBox>
+  <Badge>11 Minutes to Integrate</Badge>
+</BadgesBox>
+
+It is a great idea to use images from our CDN on HTML canvas.
+Unfortunately browsers restrict access to canvas if an image was downloaded
+from untrusted source. By default only images from the same origin
+are treated as trusted. If you’ll draw the image from other origins,
+the canvas will be marked as “dirty” and no pixel read will be possible
+from the canvas.
+
+Calling `getImageData()` or `toDataURL()` will lead to `SecurityError`:
+
+```js
+canvas.toDataURL();
+// Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
+canvas.getContext('2d').getImageData(0, 0, 100, 100);
+// Uncaught DOMException: Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The canvas has been tainted by cross-origin data.
+```
+
+One of solutions is using `crossOrigin` image property
+to ask browser to request the image in a safe way.
+
+<!-- https://codepen.io/uploadcare/pen/oRWrdq -->
+<CodePen id="oRWrdq" title="Access to canvas pixels example #1`" />
+
+Unfortunately this property is available only in Chrome and Firefox.
+But it is very easy to make such request manually with the help of
+`XMLHttpRequest`.
+
+<!-- https://codepen.io/uploadcare/pen/VObJBd -->
+<CodePen id="VObJBd" title="Access to canvas pixels example #2" />
+
+This works well in Chrome 19+, Firefox 6+, IE 10+, Safari 6+ and Opera 15+.

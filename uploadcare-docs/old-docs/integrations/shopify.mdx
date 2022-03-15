@@ -1,0 +1,389 @@
+---
+  layoutPreset: integrations
+  title: Shopify Integration
+  description:
+    Shopify lets you add static item images only. Integrated Uploadcare File
+    Uploader methods help you add, e.g., picture frames dynamically.
+---
+
+# Shopify Integration
+
+This guide covers adding customizable products to a [Shopify][ext-shopify-home]
+store by integrating Uploadcare [Uploadcare File Uploader][feature-file-uploader]
+and implementing [JavaScript API][api-reference-javascript] to allow product
+customizations. We’ll also make use of [Image Transformations][transformations-image]
+to render resized image previews of your customized Shopify products.
+
+[Shopify][ext-shopify-home] is an ecommerce platform that allows you to build
+online stores. However, you can add static item images only for your items.
+Uploadcare can help you create custom-print sweatshirts, mugs with a logo, etc.
+Specifically, we’ll be building a product page for a customizable framed print:
+
+<img src="https://ucarecdn.com/cc925f02-4ddb-47df-b9b3-808943246550/shopifyscr09.png"
+     alt="Shopify Product Page"
+     title="We can now see the elements we’ve added in this guide." />
+
+A user uploads an image and selects a frame template. After making any changes,
+users will see a preview of the product updated in real time.
+
+Let’s get started.
+
+* [Before We Begin](#preparations)
+  * [Shopify](#preparations-shopify)
+  * [Uploadcare Account](#preparations-uc)
+* [Step 1. Preparing Assets](#preparing-assets)
+* [Step 2. Setting Up the Product](#setting-up-the-product)
+* [Step 3. Adding the File Uploader](#adding-the-widget)
+* [Step 4. Adding a Frame Selector](#adding-frame-selector)
+* [Step 5. Making Live Preview Work](#making-preview-work)
+* [Step 6. Customizing the Cart](#customizing-cart)
+* [Results](#results)
+* [Conclusion](#conclusion)
+
+## Before We Begin
+{id="preparations"}
+
+### Make a Shopify Account
+{id="preparations-shopify"}
+
+If you don’t have one yet, create a Shopify account. It’s free for a 14-day
+period. We’ll go with the [Debut theme][ext-theme-debut], but you can pick any
+one you like. 🦄
+
+### Create an Uploadcare Account
+{id="preparations-uc"}
+
+Same here: if you aren’t with us yet, [sign up][account-signup]. Once you have
+an account, navigate to your [Dashboard][dashboard] to create a new
+[Project][settings-projects] or discover [API keys][settings-keys] for an
+existing one. To go through the steps of this guide, you will need the [Public
+API Key][settings-keys-public], which tells Uploadcare which project your file
+uploads should go to. The key can be found either in the API Keys tab or in the
+top right corner of your project’s dashboard.
+
+<img src="https://ucarecdn.com/43e4e524-5da8-4b58-accb-21ef10bc6212/shopifyscr01.png"
+     alt="A screenshot of Uploadcare Project Dashboard"
+     title="You can easily grab the Public API Key from the project’s dashboard." />
+
+Now that everything is set up, we should prepare some assets.
+
+## Step 1. Preparing Assets
+{id="preparing-assets"}
+
+Let’s say the physical dimensions of the framed print are 200×300 mm and the
+frame width is 20 mm. The pixel dimensions are 400x600px and 40px, respectively.
+We’ll be using three frame templates for our product. Here’s what the frames
+look like (by the way, we generated these previews with Uploadcare 🙌):
+
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/f183f49b-f7b6-4022-ade9-b331d51f4ced/-/preview/-/format/auto/frame1.png" target="_blank">
+        <img src="https://ucarecdn.com/f183f49b-f7b6-4022-ade9-b331d51f4ced/-/preview/-/format/auto/-/scale_crop/220x220/frame1.png"
+          srcSet="https://ucarecdn.com/f183f49b-f7b6-4022-ade9-b331d51f4ced/-/preview/-/format/auto/-/scale_crop/440x440/-/quality/lightest/frame1.png 2x"
+          alt="Frame template #1 (brown, cherry wood)" />
+      </a><br/>
+      Frame Template 1, 400x600px
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/bb7d9d18-bd20-4526-8c76-476ba93aae7c/-/preview/-/format/auto/frame2.png" target="_blank">
+        <img src="https://ucarecdn.com/bb7d9d18-bd20-4526-8c76-476ba93aae7c/-/preview/-/format/auto/-/scale_crop/220x220/frame2.png"
+          srcSet="https://ucarecdn.com/bb7d9d18-bd20-4526-8c76-476ba93aae7c/-/preview/-/format/auto/-/scale_crop/440x440/-/quality/lightest/frame2.png 2x"
+          alt="Frame template #2 (white, maple wood)" />
+      </a><br/>
+      Frame Template 2, 400x600px
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/029821da-d203-468f-a777-5af3558e3383/-/preview/-/format/auto/frame3.png" target="_blank">
+        <img src="https://ucarecdn.com/029821da-d203-468f-a777-5af3558e3383/-/preview/-/format/auto/-/scale_crop/220x220/frame3.png"
+          srcSet="https://ucarecdn.com/029821da-d203-468f-a777-5af3558e3383/-/preview/-/format/auto/-/scale_crop/440x440/-/quality/lightest/frame3.png 2x"
+          alt="Frame template #3 (dark, walnut wood)" />
+      </a><br/>
+      Frame Template 3, 400x600px
+    </td>
+  </tr>
+</table><br/>
+
+Now, grab the frame images and upload them to your Uploadcare project. There are
+[many ways][uploads] to do that, but we’ll use the quick one.
+
+Go to your [Dashboard][dashboard], select one of your projects, and hit
+**Files** in the sidebar. You will see the list of files uploaded to that
+project. Hit **Upload a file** to add the prepared assets. If you don’t have any
+files uploaded yet, you can drag and drop the images onto the page.
+
+<img src="https://ucarecdn.com/f8c51f4c-5a48-4d72-afac-4ca6cfae327b/shopifyscr02.png"
+     alt="A screenshot of the drag and drop interface"
+     title="There’s a specialized area to upload your files via drag-and-drop." />
+
+We’ll use one Uploadcare project for both storing our frame templates and
+uploading the print images. That’s necessary for the [Overlay Transformation][transformations-image-overlays]
+to work properly. Once your assets are in place, find their [CDN URLs][delivery-cdn]
+and save them somewhere. To do this, hover your mouse over a single frame and
+use the Copy URL button.
+
+<img src="https://ucarecdn.com/47d360c0-ec38-4842-b6a0-a76bfa0d7145/shopifyscr03.png"
+     alt="A screenshot of an Uploadcare Image URL"
+     title="We will use these URLs later." />
+
+Now it’s time to get the ball rolling with Shopify.
+
+## Step 2. Setting Up the Product
+{id="setting-up-the-product"}
+
+Navigate to the Shopify admin panel to create your product. Go to the
+**Products** section and hit the **Add product** button. Fill out all the
+necessary fields such as product name, description, price, etc. Now, let’s use
+Shopify’s built-in uploader to upload a product image. Click **Add media from URL,**
+select **Add image from URL** and upload a frame image from a CDN URL you
+saved previously. You’ll only have to do this for a single image. Use Frame
+Template 1; we’ll need the other two later.
+
+<img src="https://ucarecdn.com/3e846dca-7e47-41c7-81bf-1f97dd1f53dc/shopifyscr04.png"
+     alt="Shopify’s product editor page"
+     title="Add images from your Uploadcare Project via URL." />
+
+Fill in the inventory so we can add the item to the cart later. Also, make sure
+that **Product Status** is set to **Active** to make it actually appear in the
+store. Click **Save** to apply the changes.
+ 
+You’ll also need to disable the image zoom effect for the uploaded product
+pictures to ensure our customized products will work correctly. Go to the
+**Admin panel** → **Online store** → **Сustomize.** Click on the section
+selector in the header and pick **Product pages.** Hit **Product pages** in the sidebar
+and uncheck **Enable image zoom.** This way Shopify won’t interfere with our
+upcoming image resize feature.
+
+<img src="https://ucarecdn.com/524a7608-9dd0-4e34-a78e-8b92974d76a7/shopifyscr05.png"
+     alt="Shopify Image Zoom"
+     title="Shopify image zoom" />
+
+We’ve just added a product to your shop! 🚀 Now let’s make it customizable.
+
+## Step 3. Adding the File Uploader
+{id="adding-the-widget"}
+
+Now, we’ll need some prints to customize. Your users will upload them, so we
+need to add the File Uploader by including the Uploadcare library.
+ 
+Shopify allows modifying themes, so let’s add some code. It’s quite simple: go
+to the **Admin panel,** hit **Online store,** **Actions,** and select
+**Edit code.** Create a new file in the **Snippets** section. Name it
+`uploadcare-settings.liquid`, and add the uploader `<script>` element followed by
+another element containing your [Public API Key][settings-keys-public]. The
+following lines will do the trick:
+
+```html
+<script charset="utf-8" src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'your_public_key';
+</script>
+```
+
+Add another snippet named `uploadcare-fields.liquid`. We’ll be adding an
+`<input>` element that'll become the uploader button. Put the following lines in
+the snippet:
+
+```html
+<p class="cart-attribute__field uploader-debut">
+  <input id="uploader" type="hidden" data-images-only='true' data-crop="8:13" role="uploadcare-uploader" name="properties[custom image]" value="{{ properties['custom image'] }}">
+</p>
+```
+
+As you see, our `<input>` comes with some attributes. Here’s what they do:
+
+* `data-images-only` tells the file uploader to accept
+  [images only][file-uploader-option-images-only].
+* `data-crop` defines the aspect ratio of the file uploader [image crop][file-uploader-option-crop].
+  `8:13` stands for the aspect ratio of the
+  rectangle within our frame templates.
+* `value="{{ properties['custom image'] }}` defines the default image you see
+  when the file uploader dialog opens. The file uploader works as a form field;
+  it gets the CDN URL of the uploaded file as a value. Using Shopify liquid
+  syntax, we can link the input value with a product [line item][ext-shopify-line-item].
+
+Add the following lines to the `theme.liquid` file placed in the **Layout**
+section right before the closing `</body>` tag:
+
+```html
+{% if template == 'product' %}
+{% include 'uploadcare-settings' %}
+{% endif %}
+```
+
+Discover the `product-template.liquid` file under the **Sections** category,
+find the `<form>` element, and put the following somewhere within it:
+
+```html
+{% include 'uploadcare-fields' %}
+```
+
+In this example, we decided to put the snippet right before the variants
+selector dropdown like in the screenshot below:
+
+<img src="https://ucarecdn.com/7568f16d-ec7e-448c-8c50-79847fb59c62/shopifyscr06.png"
+     alt="Shopify’s code editor"
+     title="A snippet placed into the Shopify template code." />
+
+There you go! You’ve just added the file uploader to your product page. Users
+can now add their prints; our next step will let them pick frames.
+
+## Step 4. Adding Frame Selector
+{id="adding-frame-selector"}
+
+Let’s add a selector that will allow users to pick a frame for an uploaded
+print. In product-template.liquid, add the following within the form:
+
+In `product-template.liquid` add the following within `<form>`:
+
+```html
+<div class="selector-wrapper product-form__item">
+    <label for="frame">Frame</label>
+    <select required class="required product-form__input" id="frame" name="properties[Frame]" >
+      <option data-frame-id="frame_1_UUID" value="Frame 1">Frame 1</option>
+      <option data-frame-id="frame_2_UUID" value="Frame 2">Frame 2</option>
+      <option data-frame-id="frame_3_UUID" value="Frame 3">Frame 3</option>
+    </select>
+</div>
+```
+
+<img src="https://ucarecdn.com/c10dce89-0671-410e-8a10-c04d8bcb7911/shopifyscr07.png"
+     alt="Shopify Code Editor"
+     title="To make things easier, let’s put the code right next to our previous snippet." />
+
+Replace the `frame_N_UUID` entries with the frame image UUIDs you uploaded
+previously. You can copy those almost the same way we did with the URLs:
+
+<img src="https://ucarecdn.com/8b43833f-d8e4-48d2-985e-e74d1b62e338/shopifyscr08.png"
+     alt="Uploadcare Dashboard"
+     title="Open a single image’s options and copy the UUID from there." />
+
+`frame_1_UUID` should then contain the UUID of your product title image. What we
+just did was link the selector value with the Frame inline property. It’s
+necessary to make the live preview option work, which is the next step.
+
+## Step 5. Making Live Preview Work
+{id="making-preview-work"}
+
+In this step, we’ll be adding JavaScript code that changes the product image
+every time a user uploads a print and picks a frame.
+
+Navigate back to `uploadcare-settings.liquid` and add the following lines
+to the `<script>` element:
+
+```js
+  var widget = uploadcare.Widget('[role=uploadcare-uploader]');
+  var productImage = document.querySelector('.product-featured-img');
+  var frameSelector = document.getElementById('frame');
+  var uploadedImage = null;
+  var currentFrame = frameSelector.options[frameSelector.selectedIndex].dataset.frameId;
+```
+
+Here's what we've got:
+
+* A file uploader instance.
+* Elements to interact with.
+* Variables containing uploaded image URLs and UUID of a selected frame.
+
+Add the following next:
+
+```js
+widget.onUploadComplete(function (fileInfo) {
+    uploadedImage = fileInfo.cdnUrl;
+    productImage.src = uploadedImage + '-/scale_crop/320x520/-/stretch/fill/-/scale_crop/400x600/-/overlay/' + currentFrame + '/';
+    // clears the default srcset of the product image
+    productImage.dataset.srcset = productImage.srcset = '';
+});
+
+frameSelector.addEventListener('change', function (e) {
+    currentFrame = e.target.options[e.target.selectedIndex].dataset.frameId;
+    if (uploadedImage !== null) {
+      productImage.src = uploadedImage + '-/scale_crop/320x520/-/stretch/fill/-/scale_crop/400x600/-/overlay/' + currentFrame + '/';
+    }
+});
+```
+
+When a user uploads an image or selects a frame, this snippet above gets the
+value (UUID) of that frame and layers it over the uploaded image, if any.
+
+Here are some details:
+
+* `uploadedImage` holds the URL of the uploaded print image. We will be layering
+  a frame over it, but we need to add extra surrounding pixels first.
+* To do that , we’ll use a combination of `resize` and `stretch`
+  transformations. First, we resize the image to the size of the in-frame
+  rectangle. Then we stretch it back to the frame rectangle.
+* `stretch/fill` prevents the resizing and fills the surrounding area with white
+  pixels.
+* We then apply `overlay` to add a new layer containing the frame.
+
+## Step 6. Customizing the Cart
+{id="customizing-cart"}
+
+The cart page shows the title image as a product preview by default.
+Head over to `cart-template.liquid` and find the following line:
+
+```html
+<img class="cart__image{% if item.image == null %} hide{% endif %}" src="{{ item | img_url: 'x190' }}" alt="{{ item.image.alt | escape }}" ata-cart-item-image>
+```
+
+Replace it with:
+
+```html
+<img class="cart__image{% if item.image == null %} hide{% endif %}" src="{{ item.properties['custom image'] | append: '-/resize/150x/' }}" alt="{{ item.image.alt | escape }}" data-cart-item-image>
+```
+
+Let’s show the print image reference and the name of the selected frame. In the
+same file, find the `ul` element with the `product-details` class.
+
+```html
+<ul class="product-details...
+...
+</ul>
+```
+
+Replace its contents with:
+
+```html
+{% for p in item.properties %}
+{% unless p.last == blank %}
+  <div>
+    {{ p.first }}:
+    {% if p.last contains 'https://' %}
+      <a href="{{ p.last }}">Link</a>
+    {% else %}
+      {{ p.last }}
+    {% endif %}
+  </div>
+{% endunless %}
+{% endfor %}
+```
+
+You can also apply the same changes to Shopify email templates, for instance, to
+the order confirmation email (**Store settings** → **Notifications** →
+**Order confirmation**).
+
+## Results
+{id="results"}
+
+If everything is correct, your product page should now look like this:
+
+<img src="https://ucarecdn.com/cc925f02-4ddb-47df-b9b3-808943246550/shopifyscr09.png"
+     alt="Shopify Product Page"
+     title="We can now see the elements we’ve added in this guide." />
+
+You should now see the uploaded image and custom product fields:
+
+<img src="https://ucarecdn.com/c1514197-4aa1-4c78-ae0c-0eb2dd44d107/shopifyscr10.png"
+     alt="Shopify Cart Page"
+     title="We can now see the uploaded image used as a custom product picture." />
+
+## Conclusion
+{id="conclusion"}
+
+Yay! You have just created a customizable product. The flexibility of Uploadcare
+is now enhancing your Shopify store.
+ 
+We’re always here to help. If you have any questions, just post them in our
+[community area][community].

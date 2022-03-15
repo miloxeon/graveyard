@@ -1,0 +1,238 @@
+---
+  layoutPreset: integrations
+  title: Serverless File Uploads for JotForm
+  description:
+    Learn how to enable serverless file uploads in JotForm by integrating
+    Uploadcare. Pick allowed upload sources or otherwise customize your
+    File Uploader. Start receiving files from your users in minutes.
+---
+
+# Serverless File Uploads for JotForm
+
+[JotForm][ext-jotform-my-forms] is an easy-to-use online form builder bundled with
+lots of convenient integrations. The Uploadcare [integration][ext-jotform-uploader]
+adds the features of our [File Uploader][feature-file-uploader] to any form:
+serverless file uploads and in-browser image editing. We are proud our File
+Uploader is top-rated by the JotForm community 👏
+
+The File Uploader is a highly customizable file uploader that adapts to your flows and
+layouts.
+
+By the way, every file uploaded via Uploadcare gets instantly cached on our CDN
+and swiftly and reliably delivered across 130+ countries.
+
+In this guide, we are going to create a form that collects speaker candidate
+data before some conference. We will use a combination of JotForm fields and two
+file uploaders. The first one deals with uploading a candidate photo and making some
+edits, and the second one will be up to collecting slides for a presentation.
+
+It should take you about _17 minutes_ to build a form like that using our
+File Uploader integration.
+
+Here is a preview of what we are going to build,
+
+<img src="https://ucarecdn.com/650626d7-31e8-4049-8257-8e53bb8bdc6d/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/jotform-demo.jpg"
+    srcSet="https://ucarecdn.com/650626d7-31e8-4049-8257-8e53bb8bdc6d/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/jotform-demo@2x.jpg 2x"
+    alt="The form we are going to build" />
+
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"50%"}}>
+      <a href="https://ucarecdn.com/88df05d4-9539-4e01-9f3c-699c516e32d5/-/preview/-/crop/1300x1300/374,230/-/format/auto/-/progressive/yes/pic1a.jpg" target="_blank">
+        <img src="https://ucarecdn.com/88df05d4-9539-4e01-9f3c-699c516e32d5/-/preview/-/crop/1300x1300/374,230/-/format/auto/-/progressive/yes/pic1a.jpg" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"50%"}}>
+      <a href="https://ucarecdn.com/cdcca1ac-6916-418d-8e9c-2a4d03f04553/-/preview/-/crop/1300x1300/374,230/-/format/auto/-/progressive/yes/pic1b.jpg" target="_blank">
+        <img src="https://ucarecdn.com/cdcca1ac-6916-418d-8e9c-2a4d03f04553/-/preview/-/crop/1300x1300/374,230/-/format/auto/-/progressive/yes/pic1b.jpg" alt="Processed image, enhance"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"50%"}}>
+      Original
+    </td>
+    <td style={{width:"50%"}}>
+      Processed, <a href="/features/effects_tab/">Effects Tab</a>
+    </td>
+  </tr>
+</table>
+
+* [Step 1. Create Uploadcare Account](#make-uc-account)
+* [Step 2. Grab your Public API Key](#get-key)
+* [Step 3. Create a Form and Add the Uploader File Uploader](#make-form)
+  * [Creating a Form](#creating-form)
+  * [Adding the Uploader](#adding-uploader)
+* [Step 4. Configure the File Uploader](#configure-widget)
+* [Step 5. Publish the Form and Test It](#publish)
+
+## Step 1. Create Uploadcare Account
+{id="make-uc-account"}
+
+Feel free to skip the step if you’ve already got an Uploadcare account.
+Otherwise, here’s how you make one:
+
+* Go to our [Sign Up][account-signup] page
+* Provide your email and choose a password
+* Confirm your email by clicking the validation link in your inbox
+
+## Step 2. Get a Public API Key
+{id="get-key"}
+
+You will need to define a Public API Key in the File Uploader settings to set
+a project your files will go to. So, navigate to your [dashboard][dashboard]
+and create a new [project][settings-projects] or discover a
+[Public API Key][settings-keys] for an existing one.
+
+## Step 3. Create a Form and Add the Uploader
+{id="make-form"}
+
+The step is about creating a form. If you aren’t registered with JotForm, please
+look through the [FAQ][ext-jotform-faq] and sign up on the JotForm’s
+[main page][ext-jotform-start-page].
+
+### Creating a form
+{id="creating-form"}
+
+Once you’re in JotForm, navigate to the [my forms][ext-jotform-my-forms] tab.
+
+<img src="https://ucarecdn.com/3e3ce5e0-1de1-44f5-b014-e656843b9839/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-2-my-forms.jpg"
+    srcSet="https://ucarecdn.com/3e3ce5e0-1de1-44f5-b014-e656843b9839/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-2-my-forms@2x.jpg 2x"
+    alt="JotForm My Forms tab" />
+
+The tab holds all the forms you’ve ever created with JotForm. You can see our
+form is there and named “Become a speaker.” Let’s see what’s inside by checking
+a box to the left of the form title. Hit “Edit Form,” and you are in.
+
+<img src="https://ucarecdn.com/46334de9-ff87-4804-81ce-788313b018ee/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-3-editing-form.jpg"
+    srcSet="https://ucarecdn.com/46334de9-ff87-4804-81ce-788313b018ee/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-3-editing-form@2x.jpg 2x"
+    alt="Form edit state" />
+
+As you can see, there are two buttons for uploading files: one is called
+“Choose an image” and another “Upload images.” Here’s how you add those.
+
+### Adding the uploader
+{id="adding-uploader"}
+
+Click “Add form element.” Navigate to “Widgets” and type in “File Uploader” to
+run a quick search for our integration,
+
+<img src="https://ucarecdn.com/f38deb96-e92a-4d0d-b68b-dab6dc46f146/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-4-adding-widgets.jpg"
+    srcSet="https://ucarecdn.com/f38deb96-e92a-4d0d-b68b-dab6dc46f146/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-4-adding-widgets@2x.jpg 2x"
+    alt="Adding a file uploader" />
+
+Here it is, hit the yellow logo, and our file uploader gets added to your form.
+It is added with default settings and needs some configuration.
+
+## Step 4. Configure the File Uploader
+{id="configure-widget"}
+
+The first thing here is setting the label for your new file uploader. It is done by
+clicking the gear icon to the right and navigating to the “Advanced” tab. Modify
+the field called “Question text.” Your file uploader label will change,
+
+<img src="https://ucarecdn.com/ca0956ab-5aae-4117-a16e-955a646b1a53/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-5-advanced-settings.jpg"
+    srcSet="https://ucarecdn.com/ca0956ab-5aae-4117-a16e-955a646b1a53/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-5-advanced-settings@2x.jpg 2x"
+    alt="Changing file uploader label" />
+
+Now, let us get more advanced and click the magic wand icon to the right. That
+opens the file uploader settings, let’s dig in.
+
+<img src="https://ucarecdn.com/5f28952e-795b-4ef4-88be-eb0fdbf245db/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-6-widget-settings.jpg"
+    srcSet="https://ucarecdn.com/5f28952e-795b-4ef4-88be-eb0fdbf245db/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-6-widget-settings@2x.jpg 2x"
+    alt="Widget settings" />
+
+First of, let’s paste your Public API Key into the respective field. We are
+using `YOUR_PUBLIC_KEY` as a placeholder.
+
+We are going to configure the file uploader to get speaker candidate photos. We just
+need a single photo, so we can set “Multiple” to “No.” We want to show a preview
+of an uploaded image, “Preview step” to “Yes.” It is also important to ensure
+uploaded files are images, “Images only” to “Yes,”
+
+<img src="https://ucarecdn.com/19a69868-3700-49b9-9985-c7a0eb0a02f5/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-7-more-settings.jpg"
+    srcSet="https://ucarecdn.com/19a69868-3700-49b9-9985-c7a0eb0a02f5/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-7-more-settings@2x.jpg 2x"
+    alt="More file uploader settings" />
+
+We also want to allow form users to edit their photos on upload. Let’s use
+[“Effects Tab”][feature-fxtab] for it. When switched to “Yes,” this setting
+allows you to choose which effects can be applied on image upload,
+
+<img src="https://ucarecdn.com/f9529406-fa73-4883-9f89-5103066378fc/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-8-allowed-effects.jpg"
+    srcSet="https://ucarecdn.com/f9529406-fa73-4883-9f89-5103066378fc/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-8-allowed-effects@2x.jpg 2x"
+    alt="Effects Tab" />
+
+By default, the plugin removes the original trailing filename from the URL.
+`add filenames` provides the opposite behavior and leaves your filename in place.
+
+This could be useful when passing URLs to a third-party system for further
+processing, for instance.
+
+<p>
+  <img src="https://ucarecdn.com/aee0e096-e830-46db-b93a-158b8baf886e/-/preview/-/resize/340x/-/format/auto/-/progressive/yes/jotform-widget-add-filenames.jpg"
+    srcSet="https://ucarecdn.com/aee0e096-e830-46db-b93a-158b8baf886e/-/preview/-/resize/680x/-/quality/lightest/-/format/auto/-/progressive/yes/jotform-widget-add-filenames@2x.jpg 2x"
+    alt="Add filenames option" />
+</p>
+
+You can also add a set of [Image Transformations][feature-image-processing]
+to a CDN URL automatically. `custom string` would be the field holding a string
+to further append to your CDN URLs.
+
+<p>
+  <img src="https://ucarecdn.com/f3d2d357-9065-4515-abeb-8a519592e3fe/-/preview/-/resize/340x/-/format/auto/-/progressive/yes/jotform-widget-add-custom-string.jpg"
+    srcSet="https://ucarecdn.com/f3d2d357-9065-4515-abeb-8a519592e3fe/-/preview/-/resize/680x/-/quality/lightest/-/format/auto/-/progressive/yes/jotform-widget-add-custom-string@2x.jpg 2x"
+    alt="Add custom string" />
+</p>
+
+Last but not least, you might want to change the button caption. That is done by
+modifying “Additional global settings.” We added a simple example of what you
+can do with those. See the complete list of file uploader settings at the
+[File Uploader Options][file-uploader-options] docs page.
+
+<img src="https://ucarecdn.com/f28f31f6-4412-4aa8-82f3-56f71cc75edd/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-9-globals.jpg"
+    srcSet="https://ucarecdn.com/f28f31f6-4412-4aa8-82f3-56f71cc75edd/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-9-globals@2x.jpg 2x"
+    alt="Additional global settings" />
+
+Now, add another file uploader and configure it to accept multi uploads of image-only
+files. Play with changing its label and button caption. It will allow form
+users to upload slides for their presentation. In fact, you might want to create
+a separate Uploadcare project (and specify another Public API Key for the second
+file uploader) to get those slides: this helps organize content in your account.
+
+Now, once we are ready to roll, let’s publish the form and test how it performs.
+
+## Step 5. Publish the Form and Test It
+{id="publish"}
+
+Publishing a form is as easy as hitting “Publish.” That will provide you with
+a direct link to your form. We can then send that link to our candidates,
+
+<img src="https://ucarecdn.com/a3383a8c-ac36-4478-b6e5-a8c6853f1364/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-10-publish.jpg"
+    srcSet="https://ucarecdn.com/a3383a8c-ac36-4478-b6e5-a8c6853f1364/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-10-publish@2x.jpg 2x"
+    alt="Publishing a form" />
+
+To test the form, click “Open in new tab.” That shows how your users will see
+the form. Fill in some fields and upload a photo or two,
+
+<img src="https://ucarecdn.com/97627500-17f8-4b23-8c1f-bc78f4605335/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-11-test.jpg"
+    srcSet="https://ucarecdn.com/97627500-17f8-4b23-8c1f-bc78f4605335/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-11-test@2x.jpg 2x"
+    alt="Testing a form" />
+
+Get back to “My Forms” and click the sheet icon to the left of your form title.
+This will open a list of your form submissions. You can navigate through those
+by clicking arrows in the top-right.
+
+<img src="https://ucarecdn.com/a6f1cef1-81e4-4ca5-9581-5049e578c52c/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/pic-12-iterate.jpg"
+    srcSet="https://ucarecdn.com/a6f1cef1-81e4-4ca5-9581-5049e578c52c/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/pic-12-iterate@2x.jpg 2x"
+    alt="Check out form submissions" />
+
+Note, files uploaded by form users become either a single URL for an avatar
+photo or a list of those for slides. Those are your file permalinks. You do not
+need to have any storage for uploaded files: just put those links in your
+database. Check out [this article][delivery-cdn-operations] to learn more about
+how those URLs are made and what they mean.
+
+That’s it. We have just powered a form with serverless file uploads in 5 simple
+steps ✨
+
+If you have any questions, ask those in our [Community Area][community].

@@ -1,0 +1,200 @@
+---
+  title: 'Uploadcare Image Editor'
+  description:
+    'Editing images right in a browser is the closest path for your app to receive better images.'
+---
+
+import { Video } from '@uploadcare/docs-components'
+
+# Image editor
+
+Editing images right in a browser is the closest path for your app to receive
+better images. And those, in turn, provide higher engagement rates and
+conversions. The quality of visuals becomes an even greater concern when you
+want to perfect images sent by your users before they get to your site or app.
+
+Uploadcare features a [custom tab][file-uploader-custom-tabs] for the
+[File Uploader][file-uploader] that allows enhancing and editing
+images in any browser, mobile included. The tab is called
+[Effects Tab][feature-fxtab].
+
+<Video fullWidth withShadow>
+  <source src="https://ucarecdn.com/e64c0385-d379-4a9e-9c85-ca8266502701/video/-/size/1200x/-/format/webm/in_browser.webm" type="video/webm" />
+  <source src="https://ucarecdn.com/e64c0385-d379-4a9e-9c85-ca8266502701/video/-/size/1200x/in_browser.mp4" type="video/mp4" />
+</Video>
+
+There are nine on-the-fly effects you can apply right in the file uploader UI:
+crop, rotate, enhance, sharpen, blur, mirror, flip, grayscale, and invert.
+
+You can configure which effects are enabled and change the tab behavior in other
+ways.
+
+## How it works
+{id="info"}
+
+Image operations available for applying in the file uploader dialog are based on our
+[Image Processing][transformations-image] feature. Effects Tab outputs a CDN URL
+holding image [UUIDs][concepts-uploads] and operations applied by a user
+while editing in form of URL directives. You can learn more about our Image
+Processing and available operations [here][transformations-image].
+
+Technically, every image first gets to your Uploadcare
+[project][settings-projects]. Then we show an image preview in the file uploader
+dialog via a CDN URL provided on file upload. When a user applies image
+processing operations, we inject the corresponding URL directives. Once the
+editing is complete, Effect Tab outputs the new CDN URL which includes all the
+applied operations.
+
+For example, if a user chose to apply `grayscale` and clicked `rotate` once,
+here is what we will get in the output:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:UUID/-/preview/-/grayscale/-/rotate/270/
+```
+
+Note, the `preview` operation will appear in the output URL by default due to
+the Image Processing [limitations][transformations-image-limits].
+
+## Requirements
+{id="requirements"}
+
+In-browser image editing is carried out via a
+[custom file uploader tab][file-uploader-custom-tabs] called [Effects Tab][feature-fxtab].
+
+The only requirement is [integrating Uploadcare File Uploader][file-uploader-install] before
+using Effects Tab.
+
+## Install
+{id="install"}
+
+Choose from the install methods listed below.
+
+### NPM
+
+Get Effects Tab:
+
+```
+npm i uploadcare-widget-tab-effects --save
+```
+
+Import the tab it in your module:
+
+```javascript
+import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
+```
+
+### CDN
+
+You can either install the minified Effects Tab version:
+
+```html
+<script src="https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.min.js" charset="utf-8"></script>
+```
+
+Or go with a bundled version without minification:
+
+```html
+<script src="https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.js" charset="utf-8"></script>
+```
+
+#### Usage
+{id="usage"}
+
+Start using Effects Tab by adding it to your file uploader:
+
+```javascript
+uploadcare.registerTab('preview', uploadcareTabEffects)
+```
+
+## Configuration
+{id="config"}
+
+There are multiple ways to configure the set of effects enabled in Effects Tab.
+
+### Global Variables
+
+You can either go with a string holding coma-separated effect names:
+
+```html
+<script>
+  UPLOADCARE_EFFECTS = 'blur,sharp,grayscale'
+</script>
+```
+
+or use another approach:
+
+```html
+<script>
+  UPLOADCARE_EFFECTS = ['blur', 'sharp', 'grayscale']
+</script>
+```
+
+### Local Attributes
+
+The set of enabled effects for a specific file uploader instance can be controlled
+via the `data-effects` attribute.
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="content"
+  data-effects="blur,sharp,grayscale"
+/>
+```
+
+### Settings Object
+
+Following the file uploader concept, the allowed effects can be provided as the
+`settings` [object][file-uploader-config-object].
+
+```javascript
+uploadcare.start({
+  effects: 'blur,sharp,grayscale',
+})
+```
+
+or
+
+```javascript
+uploadcare.start({
+  effects: ['blur', 'sharp', 'grayscale'],
+})
+```
+
+## Options
+{id="options"}
+
+### Effects `string|array`
+
+Global: `UPLOADCARE_EFFECTS` <br/>
+Local: `data-effects` <br/>
+Object key: `effects` <br/>
+
+Default value: `crop,rotate,enhance,sharp,grayscale`.
+
+This allows you to configure the set of enabled effects. It also controls
+**the order of effects** in the tab: however, `crop` will always placed first in
+the set.
+
+`effects` can either be a string holding one or more comma-separated effects or
+an array of strings, JS only. You can also **enable all effects**
+by setting the option to `all`.
+
+Available effects:
+
+* `crop`, crops images freely or using set aspect ratios
+* `rotate`, rotates images
+* `mirror`, provides image-mirroring capabilities
+* `flip`, allows flipping images
+* `blur`, filters images via Gaussian Blur
+* `sharp`, allows adjusting image sharpness
+* `enhance`, makes images look better via auto levels, auto contrast, and
+  saturation sharpening
+* `grayscale`, desaturates images
+* `invert`, inverts image colors
+
+## Localization
+{id="locale"}
+
+You can choose one of the existing [tab locales][fxtab-github-locale] or
+contribute a new one. This can be done by forking the
+[main repository][fxtab-github-repo] followed by adding a new localization file
+to the [list][fxtab-github-locale].

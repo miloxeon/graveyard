@@ -1,0 +1,47 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: File Uploader Styling'
+  description:
+    You can easily customize how our file uploader and dialog appear
+    on your pages by modifying their CSS stylesheet. Sign up
+    for free and find more info in Uploadcare Docs!
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — File Uploader Styling
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#sources-style' />
+  <Migration />
+</Messages>
+
+You can easily adapt our file uploader or dialog to your page style by modifying the
+respective [CSS stylesheet][file-uploader-styling]. However, some tabs are
+opened in an `iframe` from our domain, e.g., Facebook tab, Instagram, etc.
+For those tabs you can customize, please use the following methods.
+
+## Adding plain CSS
+{id="add-plain-css"}
+
+You can add some plain CSS code to tabs. Use classes to identify a tab you want
+to modify.
+
+```js
+var style = ".source-facebook .main-content {background: #98AFD5;}";
+uploadcare.tabsCss.addStyle(style);
+```
+
+## Adding CSS file
+{id="add-css-file"}
+
+Another option is adding a CSS file to your tabs via an absolute file URL.
+
+```js{noAutoLinker}
+uploadcare.tabsCss.addUrl("https://site.com/styles/uc.tabs.css");
+```
+
+Note, tabs are opened via HTTPS. Hence there is no way to add a CSS file through
+HTTP. If your site does not support HTTPS, you can use a third-party hosting
+providing HTTPS support for such files. Amazon S3 is a good option.

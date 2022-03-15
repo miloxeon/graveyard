@@ -1,0 +1,119 @@
+---
+  layoutPreset: integrations
+  title: Rust API Client for File Upload and Management
+  description:
+    Rust Uploadcare API client for Fast & Reliable File Uploads; File, Group,
+    Project Operations; Video + Document Conversion & More.
+---
+
+# Rust API Client
+
+Rust integration handles uploads and file operations by wrapping Uploadcare
+[Upload API][api-reference-upload] and [REST API][api-reference-rest]. This
+comprehensive API client lets you use most of the Uploadcare features from within
+your Rust app.
+
+[GitHub &rarr;][rust-github]
+
+## Features
+
+Upload features:
+* Upload files from local storage and URLs (up to 5 TB)
+* Multipart uploading for large files
+* Uploading network to speed uploading jobs (like CDN)
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+* Convert documents
+* Encode and transform videos
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+* Secure delivery (authenticated URLs)
+
+## Requirements
+
+- rustc 1.43   
+- cargo 1.43
+
+## Installation
+
+Install uploadcare-go with:
+
+```toml
+[dependencies]
+uploadcare = "^0.1"
+```
+
+## Configuration 
+
+By default the `full` is enabled (REST and Upload API).
+
+To reduce the code size, disable default features and enable just the APIs you use:
+
+```toml
+# Example: REST API only
+uploadcare = { version = "*", default-features = false, features = ["rest"] }
+```
+
+Creating a client:
+
+```rust
+use ucare;
+use ucare::file;
+use ucare::upload;
+
+let creds = ucare::apicreds {
+    secret_key: "your_project_secret_key",
+    pub_key: "your_project_pub_key",
+};
+
+// creating rest client
+let config = ucare::RestConfig {
+    sign_based_auth: true,
+    api_version: ucare::RestApiVersion::v06,
+};
+let rest_client = ucare::RestClient::new(config, creds).unwrap();
+
+// creating upload client
+let config = ucare::UploadConfig {
+    sign_based_upload: true,
+};
+let upload_client = ucare::UploadClient::new(config, creds).unwrap();
+```
+
+## Usage example
+
+For a comprehensive list of examples, check out the [API documentation](https://docs.rs/uploadcare/).
+Below are a few usage examples:
+
+```rust
+let file_svc = file::new_svc(&rest_client);
+
+let file_id = "b7c1bf20-0f4c-4ba4-b3a8-a74ebc663752";
+let file_info = file_svc.info(file_id).unwrap();
+println!("{}: {:?}", file_id, file_info);
+
+let upload_svc = upload::new_svc(&upload_client);
+
+let params = upload::FileParams {
+    path: "/path/to/file".to_string(),
+    name: "filename".to_string(),
+    to_store: Some(upload::ToStore::Auto),
+};
+let file = upload_svc.file(params).unwrap();
+println!("uploaded: {:?}", file.id);
+
+```
+
+## Full documentation
+
+Read the full documentation on [GitHub][rust-github].
+
+## Related guides
+
+* [Golang API client][guide-golang]

@@ -1,0 +1,196 @@
+---
+  title: 'Uploadcare Settings'
+  description:
+    'Get to learn more about your Uploadcare account, projects, API Keys, files, advanced settings, and billing.'
+---
+
+import { Video } from '@uploadcare/docs-components'
+
+# Settings
+
+This article covers handling your Uploadcare account, it explains how to create,
+manage, and configure “Projects.”
+
+To access an account, [sign up for Uploadcare][account-signup] and navigate to
+your [dashboard][dashboard].
+
+<!-- TODO: apply regex for all the files -->
+<!-- (<H2 )anchor="(.*)">(.*)(</H2>) -->
+<!-- ## $3\n{id="$2"} -->
+
+<!-- Roma: WTF is that ^ -->
+
+## Projects
+{id="projects"}
+
+The Uploadcare experience is centered around the concept of a project.
+Projects are separate environments that can hold different sets of files and
+settings. For instance, you could use one project to receive user-generated
+content, another for implementing advanced security features, and a third one
+to serve your frontend assets.
+
+When you sign up for a new Uploadcare account, we add one default project. So,
+explicitly adding another project is optional: you can stick with the default
+one for creating a test environment and going through every other section of
+this article.
+
+## Project API Keys
+{id="keys"}
+
+Uploadcare APIs and API clients (e.g., [File Uploader][file-uploader-configure])
+tell your projects from one another by their API keys.
+
+We provide the two kinds of API keys: [public](#keys-public) and
+[secret](#keys-secret). In this documentation, we refer to those as `public_key`
+and `secret_key`, respectively.
+
+To discover API keys for an Uploadcare project, navigate to the
+respective section on the project overview page in
+your [dashboard][dashboard].
+
+Depending on which Uploadcare features you want to use, you will implement
+either your `public_key` or a key pair.
+
+### Public API Key
+{id="keys-public"}
+
+The main use of a `public_key` is to identify a target project for your uploads.
+It is required when using [Upload API][api-reference-upload] or its clients such
+as the [File Uploader][file-uploader].
+
+### Secret API Keys
+{id="keys-secret"}
+
+A `secret_key` is required when using our [REST API][api-reference-rest] to
+manage files within a project or implement [Video Processing][transformations-video],
+[Document Conversion][transformations-docs] or [Object Recognition][intelligence-object-recognition],
+or when using [Secure Uploading][api-reference-signed-uploads]. You can add
+multiple secret API keys to a single Uploadcare project to ensure extended
+control options over your environments.
+
+## Project Files
+{id="project-settings-files"}
+
+The Files section allows viewing the set of files associated with the project.
+You can add new files, search the set for entries, copy individual file URLs or
+UUIDs, and delete files from a project.
+
+<Image uuid="84ccc304-9fde-467d-aa09-a7a36a514886" desc="Project settings, Files" />
+
+While the Files view allows you to implement basic files management, use our
+[REST API][api-reference-rest] for more sophisticated scenarios like integrating
+Uploadcare with your product’s API.
+
+## Project Advanced Settings
+{id="project-settings-advanced"}
+
+Under the Settings section, you can find more sophisticated options. Change
+those when setting up specific file flows; the deafults are perfectly fine for
+the majority of appliances.
+
+### Automatic File Storing
+{id="project-settings-advanced-autostore"}
+
+<!-- TODO: Rewrite here -->
+When you Store files on Uploadcare, you make them permanent as opposed to
+temporary ones that are deleted from your account in 24 hours after the upload.
+By default, Uploadcare automatically stores every uploaded file. You can change
+the behavior by disallowing “Automatic file storing.”
+
+<Image uuid="03206e16-951c-4d83-a225-8577e0528eeb" desc="Project settings, Uploads, Automatic File Storing" />
+
+Then, every file will be treated as temporary unless you explicitly Store a file
+by making a request to our [REST API][api-reference-rest-store].
+
+### Secure Uploading
+{id="project-settings-signed-uploads"}
+
+You can further enhance the security of your file uploading by generating a
+special token on your backend and requiring our API to check token validity.
+This will allow you to implement access and control management in file uploading
+flows. This sections allows you to turn on the behavior. Note, when switched on,
+we will no longer accept any uploads to the project without a token. Please,
+refer to our [Documentation][api-reference-signed-uploads] to learn more.
+
+<Image uuid="592fe21d-e181-475f-b5f2-4c430e24221b" desc="Project settings, Uploads, Secure Uploads" />
+
+### Webhooks
+{id="project-settings-advanced-webhooks"}
+
+Uploadcare REST API allows adding custom webhooks to notify your application
+about file uploads with the customized payload. Please, refer to our
+[Documentation][api-reference-rest-webhooks] to learn more.
+
+<Image uuid="b4f422c7-9e15-4675-9246-0df3791bb9fc" desc="Project settings, Uploads, Webhooks" />
+
+### Custom Amazon S3 Bucket Storage
+{id="project-settings-custom-storage"}
+
+You may choose to connect your storage to Uploadcare instead of using the one
+provided by Uploadcare (storage limits depend on your [Pricing Plan][pricing]).
+Note that Uploadcare CDN features won't be available. Please, refer to the
+respective section of our [Documentation][storage-custom] for details.
+
+<Image uuid="54e61523-0f45-4ed5-a67b-97d190210e8e" desc="Project settings, Uploads, Custom Storage" />
+
+### Configure Backups
+{id="project-settings-advanced-backup"}
+
+<!-- TODO: add Stored link to Glossary -->
+
+You can have all your Stored files to be copied to a custom S3 Bucket (or
+Selected Storage) automatically. Connect the storage once, and the system will do
+backups on a timely basis.
+
+<Image uuid="ec5aeca0-90cd-4af3-8072-91d93c7311ee" desc="Project settings, Uploads, Backup" />
+
+### Custom OAuth Applications
+{id="project-settings-advanced-oauth"}
+
+With File Uploader, users can upload files from various upload sources, such as
+Google Drive and Facebook. By default, _Uploadcare_ requests access to these
+cloud services. This allows Uploadcare to see and download all files stored with
+this service.
+
+<Video fullWidth>
+  <source
+    src='https://ucarecdn.com/2cfe5406-734d-45d9-ace7-1dda8ea56716/Custom-OAuth-authorization.mp4'
+    type='video/mp4'
+  />
+</Video>
+
+With custom OAuth, you can set up _your application_ icon, name, as well as
+Privacy Policy and Terms of Use.
+
+<Image uuid="3b688eb0-d1ab-46b9-90ba-81c45c0d80b2" desc="Project settings, Uploads, Custom OAuth applications" />
+
+Check out [OAuth connection examples][community-oauth].
+
+### Whitelist
+{id="project-settings-advanced-whitelist"}
+
+Protect your account from bad actors willing to do optimisations on your behalf,
+and get a proxy endpoint for Adaptive Delivery.
+
+<Image uuid="25add8ba-c28c-4d0f-a9d3-707fe3fdd86a" desc="Project settings, Delivery, Adaptive Delivery" />
+
+### Edit Project
+{id="project-settings-advanced-project"}
+
+This section allows changing the name of your project or removing it from your
+account. Click three dots next to the project's name in the list of projects to
+see the editing options.
+
+<Image uuid="52cd9173-08da-4d3d-8e94-60dfffcc7654" desc="Project list, Edit project" />
+
+## Billing Options
+{id="billing"}
+
+You can go to your Uploadcare Billing Options from your Dashboard or by using
+[this link][account-billing]. From there, you can:
+
+* See your [current plan][account-billing], limits status, and details about the
+  charges for the next billing period.
+* Configure your [payment options][account-card]: manage added cards and see
+  payments history.
+* Configure [profile information][account-settings].

@@ -1,0 +1,132 @@
+---
+  layoutPreset: integrations
+  title: Angular 2+ File Uploader
+  description:
+    Integrate File Uploader Widget into Your Angular 2+ App to Accept Files
+    From Users in a Fast and Reliable Way.
+---
+
+# Angular 2+ File Uploader
+
+Receive files from your users with a clean, lightweight and easy-to-integrate
+widget. This Angular component helps you integrate
+[Uploadcare Widget][feature-file-uploader] into your Angular app natively.
+
+[GitHub &rarr;][ngx-github]
+
+## Features
+
+* Upload files from a local disk, camera, and cloud source (up to 5 TB)
+* Multipart uploading for large files
+* Bulk file uploading
+* In-browser image editing
+* Uploading network to speed uploading jobs (like CDN)
+
+## Integration
+
+Run this command in your project’s directory:
+
+```bash
+npm install ngx-uploadcare-widget
+```
+
+Once you’re done with the installation, import File Uploader into your project.
+For new Angular projects, you can open the file `/src/app/app.module.ts` in a
+text editor and insert this line:
+
+```js
+import { UcWidgetModule } from 'ngx-uploadcare-widget';
+```
+
+After that, include the module in the `imports` section of your project’s
+module:
+
+```js
+@NgModule({
+  imports: [
+    ...,
+    UcWidgetModule,
+  ],
+  ...
+})
+...
+```
+
+If you work with an existing project, then you’ll need to do the same in
+the part of your app where you want to use the integration. If you are unsure,
+stick with `/src/app/app.module.ts`.
+
+That’s how `app.module.ts` should look like after your changes:
+
+<img src="https://ucarecdn.com/57f39390-30db-4dd0-aae7-8e05f5078849/-/preview/-/resize/680x/ngappmodule.png"
+    srcset="https://ucarecdn.com/57f39390-30db-4dd0-aae7-8e05f5078849/-/preview/-/resize/1360x/-/quality/lightest/ngappmodule.png 2x"
+    alt="app.module.ts With Your Changes" /><br/>
+
+## Test
+
+You are now ready to add File Uploader to some page and try using it.
+
+Insert the following lines in one of the `something.component.html` files of
+your project (or in `/src/app/app.component.html` for new projects):
+
+```html
+<ngx-uploadcare-widget
+  images-only="true"
+  public-key="YOUR_PUBLIC_KEY">
+</ngx-uploadcare-widget>
+```
+
+If you want to to go with the customized File Uploader look use this element:
+
+```html
+<ngx-uploadcare-widget-custom
+  images-only="true"
+  public-key="YOUR_PUBLIC_KEY">
+</ngx-uploadcare-widget-custom>
+```
+
+Don’t forget to replace `YOUR_PUBLIC_KEY` with an actual
+[Public API Key][settings-keys-public] from your Uploadcare project's
+[dashboard][dashboard].
+
+Save the file and let the Angular serve itself:
+
+```bash
+ng serve --open
+```
+
+Uploadcare File Uploader will load like this:
+
+<img src="https://ucarecdn.com/a5fa9864-406a-4c2f-b01c-e01e5c4884e6/-/preview/-/resize/680x/widget-button.png"
+    srcset="https://ucarecdn.com/a5fa9864-406a-4c2f-b01c-e01e5c4884e6/-/preview/-/resize/1360x/-/quality/lightest/widget-button.png 2x"
+    alt="Uploadcare File Uploader Button" /><br/>
+
+<img src="https://ucarecdn.com/5204ef2c-166c-46e3-b088-3642a10d3cd5/-/preview/-/resize/680x/widget-dialog.png"
+    srcset="https://ucarecdn.com/5204ef2c-166c-46e3-b088-3642a10d3cd5/-/preview/-/resize/1360x/-/quality/lightest/widget-dialog.png 2x"
+    alt="Uploadcare File Uploader Button" /><br/>
+
+## Settings
+
+File Uploader integration for Angular 2+ is highly customizable. You can use all
+the attributes listed in the [readme][ngx-github-readme]. Learn more about File
+Uploader options here in[docs][file-uploader-options].
+
+For example, this is how you allow uploading files only from local storage and
+URLs via the `data-tabs` attribute:
+
+```html
+<ngx-uploadcare-widget
+  images-only="true"
+  data-tabs="file url"
+  public-key="YOUR_PUBLIC_KEY">
+</ngx-uploadcare-widget>
+```
+
+## Full documentation
+
+Read the full documentation on [GitHub][ngx-github].
+
+## Related guides
+
+* [File Uploader][file-uploader]
+* [File Uploader API reference][api-reference-js-widget]

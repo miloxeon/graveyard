@@ -1,0 +1,344 @@
+---
+  title: 'Uploadcare CDN'
+  description:
+    'Uploadcare features a powerful CDN that can deliver your content across the world in no time. (Content Delivery Network is a system of servers deployed in multiple data centers across the world).'
+---
+
+import { CdnExample } from "@uploadcare/docs-components";
+
+# Content Delivery Network
+
+CDN is a geographically distributed system of servers that delivers content to
+client devices from the servers nearby, which saves time on long-distance data
+exchange. In addition to faster page load, delivery networks store cached files
+on multiple servers and provide a better uptime in case some servers become
+inaccessable.
+
+Uploadcare uses Akamai CDN and a proprietary CDN layer for better performance
+and reliability.
+
+## CDN operations
+{id="cdn-operations"}
+
+Access files in Uploadcare CDN at `ucarecdn.com` over HTTP/HTTPS liks this:
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/",
+    "https://ucarecdn.com/:uuid/"
+  ]}
+/>
+
+You can add CDN operations by including directives in the CDN URL:
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/resize/640x640/image.jpg",
+    "https://ucarecdn.com/:uuid/-/:operation/:params/:filename"
+  ]}
+/>
+
+* `:uuid` stands for the unique file identifier, UUID, assigned on upload.
+* `/-/` is a mandatory parsing delimiter to divide operations and other path
+  components.
+* `:operation/:params/` is a CDN operation directive with parameters.
+* `:filename` is an optional filename you can add after a trailing slash `/`.
+
+You can stack two and more operations like this:
+
+`cdn›-/:operation/:params/-/:operation/:params/`
+
+## Filenames
+{id="cdn-filename"}
+
+Your original filenames can be accessed via [REST API][api-reference-get-list-example].
+Make a request to receive a JSON response with file parameters including
+`original_filename`.
+
+You can set an optional filename that users will see instead of the original name:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/:filename
+```
+
+`:filename` should comply with [file name conventions][ext-rfc3986-section33]
+and it should be a valid part of a URL. For example, `filename.ext`.
+
+Here are some examples with full CDN URLs:
+
+```html
+Safe:
+
+// adding a simple filename
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/image.jpg
+
+// using a char allowed in the pchar definition
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/image@2x.jpg
+
+// allowed in pchar together with Image Transformations
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/preview/-/resize/550x/image@1x.jpg
+
+// using a sub-delim allowed in pchar together with Image Transformations
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/preview/-/grayscale/image_black&white@2x.jpg
+
+// using percent-encoded gen-delims that are not allowed in pchar
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/preview/-/grayscale/image%5Bdesaturated%5D@2x.jpg
+
+Unsafe:
+
+// using gen-delims that are not allowed in pchar without encoding
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/preview/-/grayscale/image[desaturated]@2x.jpg
+```
+
+## Group API
+
+### What a group is
+{id="groups"}
+
+Groups are file collections. Use them to organize content in your Uploadcare
+project. A common use case is to use them in single content upload or delivery
+transactions.
+
+For instance, each time you use [multi-upload][file-uploader-multi-upload] with
+[File Uploader][file-uploader], a new group is created. It stores UUIDs of
+uploaded files. You can access file collections via `:group_uuid`:
+
+```cdn
+https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/
+```
+
+`:group_uuid` is similar to a single file UUID, but it has the file number `~N`
+at the end. A group can contain up to 1000 files.
+
+A group URL will show a list of individual file URLs with their UUIDs, and
+index numbers in that group.
+
+Technically, our File Uploader will create a group on multi-upload using
+Uploadcare APIs. Learn more about [creating][api-reference-upload-groups] and
+[managing][api-reference-rest-groups] groups.
+
+### Accessing single files in a group
+{id="accessing-files"}
+
+Request a specific file in a group by adding `/nth/i/`, where `i` is a file index,
+starting from 0:
+
+<CdnExample
+  examples={[
+    [
+      "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/nth/0/",
+      "/:group_uuid/nth/0/"
+    ],
+    [
+      "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/nth/1/",
+      "/:group_uuid/nth/1/"
+    ],
+    [
+      "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/nth/2/",
+      "/:group_uuid/nth/2/"
+    ]
+  ]}
+/>
+
+Note, there is no `/-/` separator after a group UUID. It's required for
+transformations only.
+
+By the way, you can apply [Image Transformations][transformations-image] to
+indivitual files within a group:
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/nth/0/-/resize/256x/",
+    "/:group_uuid/nth/0/-/resize/256x/"
+  ]}
+/>
+
+You can also group the processed files with the respective operation sequences.
+When you request a file by its group URL, it'll include all operations before
+adding to that group. Adding more operations after `/-/` will apply them over
+the existing ones.
+<!-- Roma: Should be a link to the REST API groups? -->
+
+### Get a group as an archive
+{id="get-as-archive"}
+
+Getting a group as an archive is done via the `archive` group processing
+operation.
+
+The operation limits are:
+
+* A total size of uncompressed files ≤ 2 GB.
+* Processing operations will be discarded. Only original files will be archived.
+
+Here's how to get an archived file group:
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/archive/zip/gallerystuff.zip",
+    "/:group_uuid/archive/:format/:filename"
+  ]}
+/>
+
+* `:group_uuid` — UUID of a file group you want to get as an archive.
+* `:format` — the format of that output archive, we support `zip` and `tar`.
+* `:filename` (optional) — output archive filename.
+
+### Gallery from in-group files
+{id="gallery"}
+<!-- Roma: Will be moved to the Elements section once it arrives. -->
+
+A gallery will display a group of images on a single page. The gallery
+feature is powered by the [Fotorama][fotorama] JavaScript library.
+
+Making a gallery is also based on a group processing operation, `gallery`.
+Here’s how it works,
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/gallery/",
+    "/:group_uuid/gallery/"
+  ]}
+/>
+
+You can customize the layout and behavior of images in a gallery by adding
+[Fotorama options][fotorama-options] to their URLs. The workflow is pretty much
+the same as with [Image Transformations][transformations-image] except for image
+size, dimensions, and ratio manipulations.
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/gallery/-/nav/thumbs/-/fit/cover/-/autoplay/1000/",
+    "/:group_uuid/gallery/-/nav/thumbs/-/fit/cover/-/autoplay/1000/"
+  ]}
+/>
+
+The most common use case with `gallery` is to embed a collection of images into
+your page via `<iframe>`:
+
+```html
+<iframe
+  src="/:group_uuid/gallery/-/nav/thumbs/-/fit/cover/-/loop/true/-/allowfullscreen/native/-/thumbwidth/100/"
+  width="100%"
+  height="450"
+  allowfullscreen="true"
+  frameborder="0">
+</iframe>
+```
+
+<iframe src="https://ucarecdn.com/cd334b26-c641-4393-bcce-b5041546430d~11/gallery/-/nav/thumbs/-/fit/cover/-/loop/true/-/allowfullscreen/native/-/thumbwidth/100/"
+    frameBorder="0" width="100%" height="450" allowFullScreen />
+
+## Show or Download Images
+{id="inline"}
+
+`cdn›-/inline/yes/`
+`cdn›-/inline/no/`
+
+By default, CDN instructs browsers to show images and download other file types.
+The `inline` control allows you to change this behavior.
+
+<CdnExample
+  examples={[
+    [
+      "https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/-/inline/no/",
+      "/:uuid/-/preview/-/inline/no/"
+    ],
+    [
+      "https://ucarecdn.com/dd9b0b8c-446d-4da4-a520-a4374cab34ef/-/inline/yes/",
+      "/:uuid/-/inline/yes/"
+    ]
+  ]}
+/>
+
+## File Information
+{id="file-info"}
+
+### Get file info as JSON
+{id="operation-json"}
+
+`cdn›-/json/`
+
+Returns file-related information, such as image dimensions or geotagging data in
+the JSON format.
+
+<CdnExample
+  examples={[
+    [
+      "https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/json/",
+      "/:uuid/-/json/"
+    ],
+    [
+      "https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/-/json/",
+      "/:uuid/-/preview/-/json/"
+    ]
+  ]}
+/>
+
+In the second option, `json` response will contain the `original` key with the
+info on your original image.
+
+### Get file info as `application/javascript`
+{id="operation-jsonp"}
+
+`cdn›-/jsonp/`
+
+Same as the example above, but it returns data as the `application/javascript`
+type. Callback name should always be `uploadcare_callback`. It should receive
+the two following arguments: `id` and a response object. For original files,
+`id` is na equivalent to their UUIDs. For processed files, `id` is an equivalent
+to their URLs, excluding the last operation, `jsonp`.
+
+<CdnExample
+  examples={[
+    [
+      "https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/jsonp/",
+      "/:uuid/-/jsonp/"
+    ],
+    [
+      "https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/-/jsonp/",
+      "/:uuid/-/preview/-/jsonp/"
+    ]
+  ]}
+/>
+
+In the first case `id` will be `c5b7dd84-c0e2-48ff-babc-d23939f2c6b4`, in the
+second: `cdn›/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/`.
+
+### Perceptual hash
+{id="operation-phash"}
+
+File info response includes a value of a perceptual hash calculated using pixel contents of an image.
+Perceptual hashing is a common fingerprinting technique to quickly compare images and find duplicates or similar images.
+
+Uploadcare automatically calculates a 64-bit long perceptual hash value and returns it as a HEX string.
+In this example, the perceptual hash value is 940f5fd09aa48ddc:
+
+```
+{
+  "id": "1b192edb-212d-401a-ad9b-529047272e1b",
+  "datetime_original":null,
+  "orientation":null,
+  "height":1600,
+  "width":2400,
+  "geo_location":null,
+  "format":"JPEG",
+  "hash":"940f5fd09aa48ddc"
+}
+```
+
+It’s easy to find image duplicates by quickly comparing their perceptual hash values.
+To find similar images, it's important to compare perceptual hash values bitwise (<a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming distance</a>).
+A small number of unmatched bits (e.g., up to 8 bits) will correspond to subtle changes in the visual contents,
+while non-similar images will usually have more than 8 different bits.
+
+
+## Custom CDN CNAME
+{id="custom-cname"}
+
+Use your own domain for CDN links to your files stored with Uploadcare. By
+default, all file URLs use `ucarecdn.com` domain. By setting a Custom CDN
+CNAME, the file URLs can use `cdn.mycompany.com` instead.
+
+Depending on your [plan][pricing], you can [connect][community-custom-cname]
+Uploadcare CDN to your domain or subdomain with a [Let’s Encrypt][ext-letsencrypt]
+SSL certificate. Enterprise plans let you choose any CDN you prefer.

@@ -1,0 +1,176 @@
+---
+  layoutPreset: guides
+  title: Guides
+  description:
+    'Guides were made to help you connect your app with Uploadcare
+    and start receiving files from users and tailoring content delivery in
+    minutes.'
+---
+
+import { Badge, BadgesBox } from "@uploadcare/docs-components"
+
+# Guides
+
+This section contains Uploadcare platform guides. They were made to help you
+sort out any essential file-related tasks: uploading, storage, delivery, or even
+in-browser image editing. Also, here is the easiest way to integrate File
+Uploader and Upload API with your app: streamline your development process by
+breaking it down in simple steps you complete in minutes.
+
+## Techniques
+{id="techniques"}
+
+### Implementing Responsive Images
+{id="responsive_images"}
+
+When developing a website, implementing responsive designs means handling
+responsive images, the ones that can adapt to user devices and browsers.
+Uploadcare [Image Transformations][transformations-image] help you prepare a
+virtually infinite number of image versions to use with Responsive Images.
+
+[**→** Make images responsive][guide-image-responsive]
+
+### Watermarks, Build Cover for Your Images
+{id="watermarks"}
+
+<BadgesBox>
+  <Badge>5 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Quite often we see that some image on the web is protected with watermarks
+(i.e., logos or symbols applied over it). One way to watermark an image is
+to use an image processing software in manual or automatic mode. Another way is
+a near-real-time on-demand image processing — a concept we cultivate within our
+CDN.
+
+[**→** How to add a watermark][guide-watermarks]
+
+### Serverless Video and Audio
+{id="video_audio_elements"}
+
+<BadgesBox>
+  <Badge>15 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Uploadcare optimizes your content delivery. The main thing here is
+[delivering][delivery-cdn] your media assets via our CDN. Another thing is
+optimizing your content. We support video transcoding, GIF to video conversions,
+and image processing; audio transcoding is on our roadmap.
+
+[**→** How to use a CDN][guide-video-audio-elements]
+
+### Image Crop for Web and Mobile
+{id="image_crop"}
+
+<BadgesBox>
+  <Badge>9 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Cropping images is a common task and an everyday routine for producing content.
+We believe image crop should happen right in your browser and be intuitive and
+simple. This tutorial is about enabling your users to crop images in any browser
+with Uploadcare, no matter the device or browser they use.
+
+[**→** Image cropper for your website][guide-image-crop]
+
+### Serverless Image Gallery with CDN Delivery
+{id="fotorama"}
+
+<BadgesBox>
+  <Badge>10 Minutes to Integrate</Badge>
+</BadgesBox>
+
+[Fotorama][fotorama] is a simple yet powerful image gallery. It supports any
+browsers, provides seamless, responsive experience, and lazy loading images.
+By bringing Uploadcare together, you can get your galleries serverless and
+powered up with best-in-class CDN delivery.
+
+[**→** Serverless and responsive image gallery][guide-fotorama]
+
+### Access to Canvas Pixels
+{id="canvas_pixels"}
+
+It is a great idea to use images from our CDN on HTML canvas.
+Unfortunately browsers restrict access to canvas if an image was downloaded
+from untrusted source. By default only images from the same origin
+are treated as trusted. If you’ll draw the image from other origins,
+the canvas will be marked as “dirty” and no pixel read will be possible
+from the canvas.
+
+[**→** Access to Canvas Pixels][guide-canvas-pixels]
+
+### Uploaded Files Browser
+{id="files_browser"}
+
+Often you may want to allow user to choose previously uploaded files again.
+Uploadcare doesn’t store relations between users and files
+and also doesn’t allow the file uploader to list all files in the project
+for security reasons.
+
+[**→** Uploaded Files Browser][guide-files-browser]
+
+## Example apps
+{id="examples"}
+
+### Django Serverless Image Uploading
+{id="django"}
+
+<BadgesBox>
+  <Badge>19 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Uploadcare is an end-to-end file API that allows you to fully manage
+file uploading, storage, transformations, and delivery. All that is included in
+our Python and Django integrations. In this guide, we will create an app with
+an Instagram-like grid feed and image uploading.
+
+[**→** Django file upload][guide-django]
+
+### Serverless File Uploading for JavaScript
+{id="javascript"}
+
+<BadgesBox>
+  <Badge>14 Minutes to Integrate</Badge>
+</BadgesBox>
+
+By bringing together the Uploadcare end-to-end file handling platform and
+JavaScript, you will be able to power up any web app with ready-to-use uploading,
+storage, and in-browser image editing. In this guide, we will show how to use
+the File Uploader to build a simple HTML5+JS Image Hosting app.
+
+[**→** Upload files in JavaScript][guide-javascript]
+
+## Compliances
+{id="hipaa"}
+
+### Establish HIPAA-Compliant ePHI Data Flows
+{id="hipaa"}
+
+HIPAA is US legislation providing data privacy and security provisions for
+safeguarding medical information. Uploadcare’s File API ensures your data flows
+are HIPAA-compliant and painless.
+
+[**→** Establish HIPAA-Compliant ePHI Data Flows][guide-hipaa]
+
+## Migrating
+{id="migrating"}
+
+### Migro
+{id="migro"}
+
+If you came to Uploadcare from a DIY solution or another platform, the first
+thing to migrate is to copy files from their current place to your Uploadcare
+storage, so that they’re handled and delivered with an Uploadcare CDN.
+
+[**→** How to Transfer Your Files to Uploadcare][migro-guide]
+
+### Migrating Images from Filestack
+{id="from_filestack"}
+
+Even though our [Migro][migro-guide] utility does a good job migrating your files
+from Filestack to Uploadcare, image transformations are a bit more complicated
+to transfer. This article holds a mapping of Filestack image transformation
+operations to the Uploadcare ones. We also provide some migration practices and
+visual examples.
+
+[**→** Migrate data from Filestack][guide-from-filestack]

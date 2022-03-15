@@ -1,0 +1,117 @@
+---
+  layoutPreset: integrations
+  title: React File Uploader
+  description:
+    Integrate File Uploader Widget into Your React App to Accept Files
+    From Users in a Fast and Reliable Way.
+---
+
+import {Video} from '@uploadcare/docs-components'
+
+# React File Uploader
+
+Receive files from your users with a clean, lightweight and easy-to-integrate
+widget. This React component helps you integrate Uploadcare Widget into your
+React app natively; props management and lazy loading are bundled.
+
+[GitHub &rarr;][react-github]
+
+See a lazy-loading [React component][react-github] example at
+[codesandbox.io][ext-sandbox-react-demo].
+
+<Image uuid="db1f5f66-ca80-4297-ba4e-35602ad6b50b" desc="React Demo App on codesandbox.io" />
+
+## Features
+
+* Upload files from a local disk, camera, and cloud source (up to 5 TB)
+* Multipart uploading for large files
+* Bulk file uploading
+* In-browser image editing
+* Uploading network to speed uploading jobs (like CDN)
+
+## Integration
+
+Run this command in your project's directory:
+
+```bash
+npm install @uploadcare/react-widget
+```
+
+This way, you'll get a ready-to-use _component_ to include it in the layout.
+
+Open your `/src/App.js` and add the following line along with other imports to
+load the newly installed component:
+
+```js
+import { Widget } from "@uploadcare/react-widget";
+```
+
+## Usage example
+
+To use the File Uploader component, add this code to your `/src/App.js` or
+another template of your choice:
+
+```jsx
+<p>
+  <label htmlFor='file'>Your file:</label>{' '}
+  <Widget publicKey='YOUR_PUBLIC_KEY' id='file' />
+</p>
+```
+
+Just replace `YOUR_PUBLIC_KEY` with your [Public API Key][settings-keys-public]
+in the code above.
+
+Finally, open your app in a browser, or run it again via `npm start` and that’s
+it.
+
+<Video fullWidth withShadow>
+   <source src="https://ucarecdn.com/e3374fd4-00d8-4745-80f0-cbd67eef0e9b/gif2video/-/format/webm/react-widget.gif" type="video/webm"/>
+   <source src="https://ucarecdn.com/e3374fd4-00d8-4745-80f0-cbd67eef0e9b/gif2video/-/format/mp4/react-widget.gif" type="video/mp4"/>
+</Video>
+
+## Settings and Events
+{id="advanced-settings"}
+
+The File Uploader is [highly customizable][file-uploader-options]. The component
+uses the **camelCase** notation of the options names; these name versions are
+called `Object key` in Options Summary.
+
+For example, this is how you allow uploading files only from local storage and
+URLs via the `tabs` attribute and enable the preview step via the `previewStep`
+attribute:
+
+```jsx
+<Widget
+  id='file'
+  name='file'
+  tabs='file url'
+  previewStep='true' />
+```
+
+Regarding the events, you can use `onChange` and `onFileSelect`. These are
+well described in our [API reference][api-reference-js-widget-events] and in
+the README of the [component’s GitHub repo][react-github].
+A couple of basic examples:
+
+```jsx
+// ...
+  onFileSelect={(file) => {
+    console.log('File changed: ', file)
+
+    if (file) {
+      file.progress(info => console.log('File progress: ', info.progress))
+      file.done(info => console.log('File uploaded: ', info))
+    }
+  }}
+  onChange={info => console.log('Upload completed:', info)}
+// ...
+```
+
+## Full documentation
+
+Read the full documentation on [GitHub][react-github].
+
+## Related guides
+
+* [File Uploader][file-uploader]
+* [File Uploader API reference][api-reference-js-widget]

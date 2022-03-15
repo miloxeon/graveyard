@@ -1,0 +1,251 @@
+---
+  layoutPreset: guides
+  title: Heroku add-on
+  noindex: true
+  description:
+    Did you know that Uploadcare is also an add-on to Heroku? Get a hands-on
+    experience in uploading, storing, and processing files with Uploadcare in Heroku
+---
+
+# Heroku add-on
+
+[Uploadcare][home] is an [add-on][ext-heroku-addon] that handles
+uploading, storing and processing files.
+
+Uploadcare is a service that helps media creators, businesses and developers receive, store, process
+and deliver visual content to their clients.
+
+Uploadcare is accessible via an API and has supported [API clients][integrations-clients] for
+iOS, Python, Ruby, PHP, Node.js, Java, Erlang.
+Also there are plugins for Wordpress, CKEditor and tinymce.
+
+
+## Provisioning the add-on
+{id="heroku-provisioning"}
+
+Uploadcare can be attached to a Heroku application via the CLI:
+
+> callout
+> A list of all plans available can be found [here][pricing].
+
+```bash
+heroku addons:add uploadcare
+-----> Adding uploadcare to sharp-mountain-4005... done, v18 (free)
+```
+
+Once Uploadcare has been added two API keys will be available in the app configuration:
+
+* `UPLOADCARE_PUBLIC_KEY`
+* `UPLOADCARE_SECRET_KEY`
+
+This can be confirmed using the `heroku config:get` command.
+
+```bash
+heroku config:get UPLOADCARE_PUBLIC_KEY
+your-public-api-key
+heroku config:get UPLOADCARE_SECRET_KEY
+your-secret-api-key
+```
+
+After installing Uploadcare the application should be configured to fully integrate with the add-on.
+
+## Local setup
+{id="heroku-setup"}
+
+### Environment setup
+{id="heroku-setup-env"}
+
+After provisioning the add-on it’s necessary to locally replicate the config vars so your development environment can operate against the service.
+
+> callout
+> Though less portable it’s also possible to set local environment variables using `export UPLOADCARE_PUBLIC_KEY=value; export UPLOADCARE_SECRET_KEY=value`.
+
+Use [Foreman][ext-foreman] to configure, run and manage process types specified in your app’s [Procfile][ext-procfile]. Foreman reads configuration variables from an .env file. Use the following command to add the `UPLOADCARE_PUBLIC_KEY` and `UPLOADCARE_SECRET_KEY` values retrieved from heroku config to `.env`.
+
+```bash
+heroku config -s | grep UPLOADCARE >> .env
+more .env
+```
+
+> warning
+> Credentials and other sensitive configuration values should not be committed to source-control. In Git exclude the .env file with: `echo .env >> .gitignore`.
+
+
+## Using with Rails 4.x
+{id="heroku-rails"}
+
+### Installation
+{id="heroku-rails-install"}
+
+Ruby on Rails applications will need to add the following entry into their `Gemfile` specifying the Uploadcare client library.
+
+```ruby
+gem 'uploadcare-rails', "~> 1.0"
+```
+
+Update application dependencies with bundler.
+
+```bash
+bundle install
+```
+
+### Configuration
+{id="heroku-rails-config"}
+
+Uploadcare *requires* to store all related config in one single yml file. You should create `uploadcare.yml`
+in your config folder. Just run
+
+```bash
+bundle exec rails g uploadcare_config
+```
+
+then change your API KEYS
+
+```ruby
+# config/uploadcare.yml
+defaults: &defaults
+  public_key: ENV['UPLOADCARE_PUBLIC_KEY']
+  secret_key: ENV['UPLOADCARE_SECRET_KEY']
+```
+
+Only two config settings are required: public and secret keys.
+All other posible options are listed [here][file-uploader-options].
+Config file created by generator also contains a list of all options with default values.
+Note that global settings are used for internal API calls and as
+default config for file uploader. Any instanse of file uploader can have separate
+set of config that will override app-wide settings if needed.
+
+
+### Include javascript library in your layout
+{id="heroku-rails-js"}
+
+```erb
+<%= include_uploadcare_widget_from_cdn %>
+<%= uploadcare_settings %>
+```
+
+### Use uploadcare fields
+{id="heroku-rails-uc-fields"}
+
+#### Simple
+
+```erb
+<%= uploadcare_uploader_field :post, :file %>
+<!--
+  results in:
+  <input id="post_file" name="post[file]" role="uploadcare-uploader" type="hidden">
+  <div class="uploadcare-widget" style="display: none;" data-status="ready">
+      ....
+  </div>
+ -->
+```
+
+#### Form tags
+
+```erb
+<%= form_for(@post) do |f| %>
+  <div class="field">
+    <%= f.label :title %><br/>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :file %><br/>
+    <%= f.uploadcare_field :file %>
+  </div>
+  <div class="field">
+    <%= f.label :file %><br/>
+    <%= f.uploadcare_field :file %>
+  </div>
+  <div class="field">
+    <%= f.label :image_group %><br/>
+    <%= f.uploadcare_multiple_uploader_field :image_group %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+```
+
+<!-- Read more at `uploadcare-rails` [docs][guide-ruby-rails] -->
+
+
+## Using with Python/Django
+{id="heroku-py"}
+
+### Step 1. Install the `pyuploadcare`  library
+{id="heroku-py-install"}
+
+```bash
+pip install pyuploadcare
+```
+
+### Step 2. Add authentication settings to your settings.py file
+{id="heroku-py-auth"}
+
+```python
+import os
+
+UPLOADCARE = {
+    'pub_key': os.environ.get('UPLOADCARE_PUBLIC_KEY'),
+    'secret': os.environ.get('UPLOADCARE_SECRET_KEY'),
+}
+```
+
+### Step 3. Use `pyuploadcare.dj.FileField`  in any model
+{id="heroku-py-filefield"}
+
+No arguments needed!
+
+```python
+from django.db import models
+
+from pyuploadcare.dj import FileField
+
+class Photo(models.Model):
+    title = models.CharField(max_length=255)
+    photo = FileField()
+```
+
+Read more in the `pyuploadcare` [docs][pyuploadcare-github-readme]
+
+<!--
+## Using with Java, Node....
+
+[[Repeat structure from Rails 3.x section for each supported language]]
+-->
+
+
+## Dashboard
+{id="heroku-dashboard"}
+
+> callout
+> For more information on the features available within the Uploadcare dashboard please see the docs at [Uploadcare site][docs].
+
+The Uploadcare dashboard allows you to manage your projects, files, file uploader config.
+
+The dashboard can be accessed via the CLI:
+
+```bash
+heroku addons:open uploadcare
+Opening uploadcare for sharp-mountain-4005...
+```
+
+or by visiting the [Heroku apps web interface][ext-heroku-apps-web-interface] and selecting the application in question. Select Uploadcare from the Add-ons menu.
+
+## Removing the add-on
+{id="heroku-remove"}
+
+Uploadcare can be removed via the CLI.
+
+> warning
+> This will mark your project and all associated data as deprovisioned. Contact us at [help@uploadcare.com][mail-help], to retreive it.
+
+```bash
+heroku addons:remove uploadcare
+-----> Removing uploadcare from sharp-mountain-4005... done, v20 (free)
+```
+
+## Support
+{id="heroku-help"}
+
+Any non-support related issues or product feedback is welcome at [help@uploadcare.com][mail-help].

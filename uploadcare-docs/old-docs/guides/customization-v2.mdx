@@ -1,0 +1,149 @@
+---
+  layoutPreset: guides
+  title: Widget 2.x Customization
+  noindex: true
+  description:
+    Uploadcare Widget adapts to the look and flow of your app. Learn how
+    to customize the widget 2.x
+---
+
+import { CodePen, Badge, BadgesBox } from "@uploadcare/docs-components"
+
+# Widget 2.x Customization
+
+<BadgesBox>
+  <Badge>17 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Uploadcare widget and dialog are shown on your web app
+and we understand the importance of seamless look and feel.
+There always was possibility to modify widget appearance
+[through CSS][file-uploader-styling]
+and starting with version 0.16.0 we extend customization features.
+
+* [Embed Dialog in Page](#panel)
+* [Styling](#styling)
+* [Custom Tabs](#tabs)
+
+
+## Embed Dialog in Page
+{id="panel"}
+
+By default after user clicks on Uploadcare widget, modal dialog is shown
+covering the rest of page with semi-transparent background.
+This is ok if upload field is one of many in a form.
+But if upload is main action for the page (e.g. wizard step)
+initial click becomes unnecessary. For this case we allow showing
+uploading panel directly on the page.
+
+```html
+<div id="v2-uploader-placeholder">Uploading. Please wait...</div>
+<script>uploadcare.openPanel('#v2-uploader-placeholder');</script>
+```
+
+In this case panel will replace DOM element with `v2-uploader-placeholder` id
+and return it back after user have chosen a file. This can be used to show
+some indication of upload process. Another difference is that
+unlike dialog, panel can be closed only by choosing a file.
+
+<!-- https://codepen.io/uploadcare/pen/KLGGam -->
+<CodePen id='KLGGam' defaultTab='result' title='Widget 2.x Customization #1' />
+
+## Styling
+{id="styling"}
+
+The panel may look ugly as it has sharp border, but you can change
+it’s appearance via CSS. Add something like this:
+
+```css
+.uploadcare-dialog-tab,
+.uploadcare-dialog-tabs,
+.uploadcare-dialog-panel {
+  background: transparent;
+  border: 0;
+}
+.uploadcare-dialog-panel {
+  padding-left: 0;
+}
+.uploadcare-dialog-tabs {
+  float: none;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  margin-left: 0;
+}
+.uploadcare-dialog-tab {
+  width: 50px;
+  margin: 0 10px 10px 0;
+  float: left;
+}
+.uploadcare-dialog-tabs-panel,
+.uploadcare-dialog-source-base-wrap {
+  padding: 0;
+  margin: 0;
+  height: 400px;
+}
+.uploadcare-dialog-file-or:not(.uploadcare-if-draganddrop),
+.uploadcare-dialog-file-sources {
+  display: none;
+}
+.uploadcare-dialog-camera-holder {
+  height: 350px;
+}
+.uploadcare-dialog-camera-video {
+  max-height: 350px;
+}
+```
+
+Some of the dialog elements are rendered inside iframes from our servers,
+therefore their customization via CSS is not available. But you can use
+tabsCss methods to inject CSS inside iframes.
+
+
+## Custom Tabs
+{id="tabs"}
+
+When you are happy with how dialog or panel looks, you may want to change
+its behavior. Now you can add your own tabs to it to have full control.
+To do this you need to register a named tab and specify its name in list
+of enabled tabs.
+
+```html
+<div id="v2-uploader-placeholder">Uploading. Please wait...</div>
+<script>
+function favoriteFiles(container, button, dialogApi, settings) {
+  ...
+}
+uploadcare.registerTab('favorites', favoriteFiles);
+uploadcare.openPanel('#v2-uploader-placeholder', null, {
+  tabs: 'favorites file facebook dropbox gdrive instagram vk',
+  favoriteFiles: [...]
+});
+</script>
+```
+
+Suppose you need a tab with the list of previously uploaded images.
+You can pass a list of file ids via settings object. When user selects a file
+you can inform dialog via `dialogApi`.
+
+```js
+function favoriteFiles(container, button, dialogApi, settings) {
+  $.each(settings.favoriteFiles, function(i, uuid) {
+    container.append($('<img>', {
+        'class': 'favorite-files-image',
+        'src': settings.cdnBase + '/' + uuid + '/-/scale_crop/280x280/center/',
+      })
+      .on('click', function(e) {
+        dialogApi.addFiles([uploadcare.fileFrom('uploaded', uuid, settings)])
+      })
+    );
+  });
+}
+```
+
+As always you can tune appearance via CSS. In the end you get file
+uploading panel built on Uploadcare infrastructure but with your own
+logic, look and feel.
+
+<!-- https://codepen.io/uploadcare/pen/PvyyPo -->
+<CodePen id='PvyyPo' defaultTab='result' title='Widget 2.x Customization #2' />

@@ -1,0 +1,35 @@
+.root th {
+	text-align: left;
+}
+
+/* name */
+.root td:nth-child(1) {
+	white-space: nowrap;
+	font-weight: 500;
+}
+
+/* default value */
+.root td:nth-child(3) {
+	font-family: monospace;
+}
+
+/* global variable */
+.root td:nth-child(4) {
+	font-family: monospace;
+}
+
+/* data-attribute */
+.root td:nth-child(5) {
+	white-space: nowrap;
+	font-family: monospace;
+}
+
+/* object key */
+.root td:nth-child(6) {
+	font-family: monospace;
+}
+
+/* description */
+.root td:nth-child(7) {
+	min-width: 30rem;
+}

@@ -1,0 +1,159 @@
+---
+  layoutPreset: integrations
+  title: A Guide to Integrating File Uploader with Webflow Forms
+  description:
+    How to implement serverless and codeless file uploading into your Webflow
+    project with Uploadcare and start receiving files and user-generated content.
+---
+
+# File Uploader Integration for Webflow Forms
+
+Webflow is a no-code website builder that lets you accomplish most aspects of
+web development and website distribution via a visual editor. It has a built-in
+uploader block that you can use on your pages. However, it has some limitations,
+such as uploading large files, uploading from multiple sources, and editing
+uploaded images.
+
+Fortunately, you can embed an advanced File Uploader into your Webflow website.
+Using it is as easy as using the default Webflow File Upload element, but with
+almost no limits. With Uploadcare, you can upload files up to 5 TB and use more
+input sources, including Facebook, Instagram, Dropbox, etc. In this guide, we’ll
+provide step-by-step instructions on how to integrate it into your Webflow
+project.
+
+## Prerequisites
+
+Here’s what you’ll need to follow the tutorial: 
+
+1. A paid [Webflow][webflow] account—some vital functions we will need are
+   available only on paid plans.
+1. An [Uploadcare account][uploadcare-signup] (with [API keys][settings-keys]).
+
+## Step 1. Obtaining a Public API Key
+
+An API key is a unique set of symbols identifying your Uploadcare project when
+calling it from third-party services like Webflow. We’re going to use our Public
+API Key to let Webflow Form know which project to push files to.
+
+Getting a Public API Key is easy. You can copy it from:
+* The top right corner of your project’s Dashboard
+* The API keys tab on the left
+
+<img src="https://ucarecdn.com/f37ed8c8-5070-4206-ba81-7dc155e1d38f/scr01.png"
+     alt="Webflow file uploader integration"
+     title="Here’s how you find API keys in your Uploadcare account." />
+
+Now that we have all the necessary info, let’s continue to the integration
+itself.
+
+## Step 2. Add scripts with Uploadcare File Uploader
+{id="add-scripts"}
+
+When logged in, open your Webflow Dashboard, then go to the Settings (three horizontal dots).
+
+<img src="https://ucarecdn.com/55b7a3fb-8638-4e3c-976d-e43b7acb989c/scr02.png"
+     alt="Webflow file uploader integration"
+     title="Open the website settings." />
+
+In the website settings, go to the **Custom Code** tab and paste the following
+script: 
+
+```html
+<script>UPLOADCARE_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" data-integration="Webflow"></script>
+```
+
+Replace “YOUR_PUBLIC_KEY” with your Public API Key from Uploadcare.
+
+<img src="https://ucarecdn.com/0c9c8731-f6e6-463c-859b-798d86a90f77/scr03.png"
+     alt="Webflow file uploader integration"
+     title="Paste the code to “let the page know” about the Uploadcare File Uploader Widget." />
+
+Note: As of December 2020, Webflow only allows using Custom Code on paid plans.
+See Webflow Pricing to review the available options.
+
+If you want to change the way the file upload form will look, you can
+[customize it][file-uploader-styling] and use [custom CSS][ext-webflow-custom-css]
+as well.
+
+## Step 3. Add a Webflow Form to your page
+{id="add-form"}
+
+Open your website in the Webflow Designer and add a form block to the page where
+you want to add the upload button. To do this:
+
+1. Click on **Add Elements** (+ sign).
+1. Unfold the **Forms** dropdown.
+1. Drag **Form block** onto the page.
+
+<img src="https://ucarecdn.com/6297897b-4cca-4351-b516-c32ec6898dba/scr04.png"
+     alt="Webflow file uploader integration"
+     title="Webflow Elements panel." />
+
+If you already have a form, open it in the Designer and proceed to the next
+step.
+
+Even if you want your visitor to upload a picture using a single button, we
+still need to add a form in Webflow because an input field (which we’re going to
+use in the next step) can only exist inside a form.
+
+## Step 4. Bind Uploadcare File Uploader to a Webflow form input
+{id="bind"}
+
+First, we need to add a text field to the form. Again, use the **Add Elements**
+button, but this time select **Input** instead of **Form Block.** Just like in
+the screenshot below:
+
+<img src="https://ucarecdn.com/470855f9-0031-49ec-842c-de71d12346ba/scr05.png"
+     alt="Webflow file uploader integration"
+     title="Drag Input into the form." />
+
+Once the field has been added, it should remain selected. Like in the screenshot
+below, click on the gear icon in the element settings and then add
+`role="uploadcare-uploader"` as a custom attribute.
+
+<img src="https://ucarecdn.com/51d2ee85-7395-4fa0-bed9-01e78bae912b/scr06.png"
+     alt="Webflow file uploader integration"
+     title="Click on the “+” sign in the Custom Attributes section. Use “role” as an attribute name and “uploadcare-uploader” as a value." />
+
+Then, go to the **Style** settings (the paintbrush icon on the top right) and
+hide the input field.
+
+<img src="https://ucarecdn.com/e1b20f50-87ba-42f0-9835-0c5a728db2c1/scr07.png"
+     alt="Webflow file uploader integration"
+     title="The field will disappear but will still be available in the form section inside the Navigator tab on the left." />
+
+## Step 5. Publish the page
+{id="publish"}
+
+To see the results, we need to publish the page. Click **Publish** and select
+the options you need. In this tutorial, we will be deploying to the default
+domain provided by Webflow.
+
+<img src="https://ucarecdn.com/7de4eb51-7cd2-4b8d-9803-96020e4c7c85/scr08.png"
+     alt="Webflow file uploader integration"
+     title="Depending on your plan, you may have different options here. The goal is to publish the page." />
+
+Navigate to the page (a link icon will appear next to the domain). Let’s see the
+results:
+
+<img src="https://ucarecdn.com/67c874a1-a56f-4a7c-8181-01f6f0d731eb/scr09.png"
+     alt="Webflow file uploader integration"
+     title="A button appeared instead of the hidden field we defined." />
+
+Clicking this button opens the widget.
+
+<img src="https://ucarecdn.com/80bd59fb-2112-4a70-beb9-6912e0af007b/scr10.png"
+     alt="Webflow file uploader integration"
+     title="Here, you can select from different methods of uploading files." />
+
+Forms are often used to upload pictures and documents. Let’s select one.
+
+<img src="https://ucarecdn.com/ddfe78d5-6026-4b98-9d8c-c4e14746f6f2/scr11.png"
+     alt="Webflow file uploader integration"
+     title="The file is ready to be sent. " />
+
+## Conclusion
+
+That’s it! Let us know if this guide was helpful, and feel free to ask any
+questions in the [Uploadcare Community Area][community-support].

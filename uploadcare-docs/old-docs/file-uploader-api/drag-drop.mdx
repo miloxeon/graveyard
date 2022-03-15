@@ -1,0 +1,88 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: Controlling Drag and Drop'
+  description:
+    'This section covers handling Drag and Drop control for your browser:
+    file uploader supports Drag and Drop that you can control via JavaScript API.
+    Find more info in Uploadcare Docs.'
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — Controlling Drag and Drop
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#drag-and-drop' />
+  <Migration />
+</Messages>
+
+Uploadcare File Uploader supports Drag and Drop that you can control via JavaScript API.
+
+* [Checking browser support](#browser-support)
+* [Uploading files by dropping](#upload-drop)
+* [Getting raw data by dropping](#receive-drop)
+
+## Checking a browser support
+{id="browser-support"}
+
+We use a boolean parameter that is set to `true` if a browser supports Drag and
+Drop and file API.
+
+```js
+var browser_supports_dragdrop = uploadcare.dragdrop.support;
+```
+
+## Uploading files by dropping
+{id="upload-drop"}
+
+You can get file objects after dropping them on the `el` element, where `el` can
+be a DOM element, selector or jQuery object.
+
+```js
+uploadcare.dragdrop.uploadDrop(el, callback[, settings]);
+```
+
+For instance, that is the way to upload a single file. If multiple files are
+selected, only the first one of them gets uploaded:
+
+```js
+uploadcare.dragdrop.uploadDrop(el, function(file) {
+  file.done(...);
+});
+```
+
+You can also upload multiple files at once. Here is how:
+
+```js
+uploadcare.dragdrop.uploadDrop(el, function(files) {
+  files; // array
+}, {multiple: true});
+```
+
+`settings` here is a [settings object][file-uploader-options].
+
+## Getting raw data by dropping
+{id="receive-drop"}
+
+Our JavaScript API allows you to get raw data after dropping files on the `el`
+element, which can either be a DOM element, selector or jQuery object.
+
+```js
+uploadcare.dragdrop.receiveDrop(el, callback);
+```
+
+For example:
+
+```js
+uploadcare.dragdrop.receiveDrop(el, function(type, data) {
+  type; // 'object' or 'url'
+  data; // Array of native File objecs or URLs.
+
+  // Retrieving files, or just the first one if there are many.
+  var file = uploadcare.fileFrom(type, data[0]);
+
+  // Retrieving multiple files in one go
+  var fileArray = uploadcare.filesFrom(type, data);
+});
+```

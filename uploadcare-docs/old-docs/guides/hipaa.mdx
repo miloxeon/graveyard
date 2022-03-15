@@ -1,0 +1,95 @@
+---
+  layoutPreset: guides
+  title: Establish HIPAA-Compliant ePHI Data Flows
+  description:
+    Build HIPAA-compliant healthcare apps, infrastructures, and
+    securely send and receive sensitive medical business data and
+    protected health information (PHI, ePHI) with Uploadcare
+---
+
+# Establish HIPAA-Compliant ePHI Data Flows
+
+HIPAA is US legislation providing data privacy and security provisions for
+safeguarding medical information. Uploadcare’s File API ensures your data flows
+are HIPAA-compliant and painless.
+
+Getting the HIPAA compliance would usually involve forcing your way through
+piles of checklists and invoices from consulting agencies. With Uploadcare,
+HIPAA-compliant file handling becomes a matter of days and completing the three
+steps described below.
+
+Before proceeding to the implementation, let’s cover what you can manage with
+Uploadcare in terms of HIPAA:
+
+* BAA: we sign a Business Associate Agreement to ensure the proper handling of
+  ePHIs (Electronic Protected Health Information).
+* Data Encryption: all data are encrypted in transit with SSL.
+* Access Controls: you can provide minimum necessary access by using token-free
+  URLs as a default in your DAM (Digital Asset Management System).
+* Request Monitoring: we log all network requests (POST, GET, PUT, DELETE) along
+  with system logs.
+* Request Auditing: we provide the needed logs upon your request.
+* Backup: all customer data are backed up, you can configure custom backup
+  storage.
+* Risk Mitigation: when changing our infrastructure, we perform checks to assure
+  ePHIs are not exposed to risks.
+
+Now, let’s go on to the implementation steps.
+
+## Step 1. Get an Uploadcare Account
+{id="uc-account"}
+
+You will need an Uploadcare account, navigate here to [Sign Up][account-signup].
+Regarding the plan option, here’s what applies:
+
+* You can start with the Free plan to explore the platform and set up
+  your data flows with no encryption. Note, [Secure Uploading](#signed-uploads)
+  are available on our Free plan.
+* All the technical requirements to set up [Authenticated URLs](#authenticated-urls)
+  are in place on the “Startup” plan. However, your infrastructure will not be
+  covered by BAA on this plan (not HIPAA-compliant).
+* To be well-equipped right from the start, go for our “Volume Plan” or
+  [contact us][mail-sales] to fine-tune the pricing on the “Custom” plan.
+
+To get started with Uploadcare, look through our [docs][docs] or leave this to
+your engineering team. There's a series of guides allowing to integrate
+Uploadcare with a number of development stacks and frameworks.
+
+## Step 2. Set Up Secure Uploading
+{id="signed-uploads"}
+
+Secure Uploading is a key feature when it comes to controlling who and when can
+upload data to one of your Uploadcare projects.
+
+To enable Secure Uploading for a project, Navigate to your
+[Dashboard][dashboard], create a project or pick an existing one, go to
+“Secure Uploading in the project settings, and hit “Enable.”
+
+Once enabled, each upload request will have to be signed to be accepted by our
+system. Signatures are generated on your backend. The technical details are
+well-covered in the Secure Uploading section of our
+[docs][api-reference-signed-uploads].
+
+Note, Uploadcare projects are separate environments that hold files and
+settings. You can configure Uploadcare to power up areas of your web app that
+don’t require extra security.
+
+## Step 3. Set Up Authenticated URLs
+{id="authenticated-urls"}
+
+[Authenticated URLs][secure-delivery-authenticated-urls] is a second go-to
+Uploadcare feature when handling ePHIs. Once enabled, every client will require
+a token together with a URL to gain access to a file in one of your Uploadcare
+projects.
+
+Setting up Authenticated URLs requires a custom CNAME. Find the instructions
+in our [Community Area][community-custom-cname] to do it. You can also shoot
+us a note [here][mail-help].
+
+## BAA and Conclusion
+{id="conclusion"}
+
+Note, your HIPAA-compliance will come in effect upon signing a Business
+Associate Agreement (BAA) with Uploadcare. You can request one [here][mail-sales].
+
+That’s it! Your product is now capable of handling ePHIs under the HIPAA act.

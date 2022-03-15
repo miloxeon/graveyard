@@ -1,0 +1,328 @@
+---
+  layoutPreset: guides
+  title: Django Serverless Image Upload
+  description:
+    Learn how to use File Uploader to create a Django-based app with
+    an Instagram-like grid feed and serverless image uploading
+---
+
+import { Badge, BadgesBox } from "@uploadcare/docs-components"
+
+# Creating a Django app with Uploadcare
+
+<BadgesBox>
+  <Badge>19 Minutes to Integrate</Badge>
+</BadgesBox>
+
+[Uploadcare][home] is an end-to-end file API that allows you to fully manage
+file uploading, storage, transformations, and delivery. All that is included in
+our [Python][guide-python] and [Django][ext-django-home] integrations.
+
+In this guide, we'll create an app with an Instagram-like grid feed and image
+uploading:
+
+<img src="https://ucarecdn.com/741b39de-6fb8-49f7-aabd-be8ced182b52/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/guide-django-done.png"
+    srcSet="https://ucarecdn.com/741b39de-6fb8-49f7-aabd-be8ced182b52/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/guide-django-app.png 2x"
+    alt="The App is Done" /><br/>
+
+`pyuploadcare` is an official Uploadcare Python library providing wrappers for
+file uploading, API interactions, and Image Transformations. In this guide,
+we'll stick with using `ImageField`, a [File Uploader][file-uploader]
+implementation for Django.
+
+## Requirements
+
+* Python 2.7+
+* Django
+
+[Full compatibility list][pyuploadcare-github-requirements]
+
+If you're using `pyuploadcare` with Django, check `.travis.yml` for supported
+Python-Django combinations.
+
+## Installation
+
+Our Python library, `pyuploadcare`, consists of the Uploadcare API interface and
+a couple of Django goodies. Although it isn’t necessary to go with Django, we'll
+use it to build a sample project.
+
+It’s a good practice to always use a per-project [virtualenv][ext-python-venv]
+when developing locally with Python. It's also a good way to get around the
+Python versions ambiguity. Generally, you create and activate a virtual
+environment this way:
+
+```bash
+pip install --upgrade virtualenv
+cd instagrid # your project directory
+
+# For Linux/MacOS
+virtualenv --python python3 instagrid
+source instagrid/bin/activate
+
+# For Windows
+virtualenv --python "c:\python36\python.exe" instagrid
+.\instagrid\Scripts\activate
+```
+
+If the commands worked out, your CLI prompt should change like this:
+
+```bash
+(instagrid) HostName:WorkingDirectory UserName$
+```
+
+Now you can install Django and `pyuploadcare`:
+
+```bash
+pip install django
+pip install pyuploadcare
+```
+
+## Create a Django Project
+
+Let’s start with creating the project:
+
+```bash
+django-admin startproject instagrid
+cd instagrid
+python manage.py runserver
+```
+
+After running these three commands, open `http://127.0.0.1:8000` in your
+browser. You should already see the Django welcome screen:
+
+<img src="https://ucarecdn.com/294133aa-5853-47c9-8b1b-e08edea69b65/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/guide-django-welcome.png"
+    srcSet="https://ucarecdn.com/294133aa-5853-47c9-8b1b-e08edea69b65/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/guide-django-welcome.png 2x"
+    alt="Django Welcome Screen" /><br/>
+
+Now stop the server using `Ctrl+C` and run default Django migrations, which
+Django asks to apply every time you run the server:
+
+```bash
+python manage.py migrate
+```
+
+### Configuration
+{id="settingup-prepare"}
+
+Open the `/instagrid/settings.py` file and find the `INSTALLED_APPS` section.
+There, add lines for your app name and `pyuploadcare`:
+
+```python
+INSTALLED_APPS = [
+    'instagrid',
+    'pyuploadcare.dj',
+    ...
+]
+```
+
+This, among other things, allows Django to look for `models.py` in your
+app’s directory.
+
+Also, in the same file, find the definition of `DIRS` in the `TEMPLATES`
+section. Here we will add the path to the templates directory:
+
+```python
+TEMPLATES = [
+    {
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        ...
+    },
+]
+```
+
+The last thing related to this file is your Uploadcare config. Put the API Keys
+you discovered earlier in this guide somewhere in the file like another settings
+variable:
+
+```python
+UPLOADCARE = {
+    'pub_key': 'YOUR_PUBLIC_KEY',
+    'secret': 'YOUR_SECRET_KEY',
+}
+
+WSGI_APPLICATION = ...
+```
+
+### Creating a Model
+{id="settingup-model"}
+
+Say, we would like to store the info about uploaded images in a database.
+Create a new file under `/instagrid/` named `models.py`.
+Here’s the sample model we will put there:
+
+```python
+from django.db import models
+from pyuploadcare.dj.models import ImageField
+
+
+class Post(models.Model):
+    photo = ImageField(blank=True, manual_crop="")
+```
+
+[ImageField][ext-pyuploadcare-imagefield] is the `pyuploadcare` implementation
+of our [File Uploader][file-uploader], which you can use as a regular
+Django’s TextField.
+
+Make and apply our app migrations to create a DB structure for the new model:
+
+```bash
+python manage.py makemigrations instagrid
+python manage.py migrate
+```
+
+### Create a Template and a View
+{id="frontend"}
+
+Now that we have done the groundwork for the app let’s make the app’s main
+page. It will serve as an image gallery and a place for the “Upload” button too.
+
+We will not describe the process of building an HTML page. More tips on it you
+can easily find across the web.
+
+Create the `templates` folder under your project’s main directory (it’s near the
+`manage.py`), and put your [index.html file][ucarecdn-index-html] there.
+
+Open `index.html` in your text editor, and note the following.
+The `form.media` here is a default Django form property which is going to
+render any scripts needed for the form to work, in our case – Uploadcare
+scripts:
+
+```html
+<head>
+  <title>Instagrid</title>
+  {{ form.media }}
+</head>
+```
+
+The following is the Django way of displaying forms:
+
+```html
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Save"/>
+</form>
+```
+
+And here is the part that renders uploaded images, which data are stored in DB.
+We’re using some capabilities of our
+[Image Transformations][transformations-image-crop] to crop an image and define its
+quality:
+
+```html
+{% if posts %}
+{% for post in posts %}
+<div class="col-md-4">
+  <img class="img-fluid" src="{{ post.photo.cdn_url }}-/crop/600x600/center/-/quality/lightest/" alt=""></div>
+{% endfor %}
+{% endif %}
+```
+
+The last thing in this step is creating a **view.** Views help Django know what
+template should be displayed and what data should be passed there.
+
+Create a new file named `views.py` under the `/instagrid/` directory in your
+app. Put there the following code:
+
+```python
+from django.shortcuts import render, redirect
+from .models import Post
+from .forms import PostForm
+
+def home(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+    else:
+        form = PostForm()
+
+    try:
+        posts = Post.objects.all()
+    except Post.DoesNotExist:
+        posts = None
+
+    return render(request, 'index.html', { 'posts': posts, 'form': form })
+```
+
+This code is just slightly different from any basic tutorial’s one. Here we
+define the `home` view, which saves the form data on POST request and passes
+all the objects stored in `Post` DB.
+
+To make view show up on the site, you have to also change the
+`/instagrid/urls.py` like that:
+
+```python
+from django.contrib import admin
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.home)
+]
+```
+
+### Create a Form
+{id="fe_be"}
+
+We created a Post model in the first step and an `index.html` template together
+with the `home` view in the second. To make them work together, we need to
+implement the last component in our sample app – a form.
+
+First, create the `forms.py` file under the `/instagrid/` directory in your
+project.
+
+The simplest way is to create a form from a model. Insert the following snippet
+into the newly created file:
+
+```python
+from django import forms
+from .models import Post
+from pyuploadcare.dj.forms import ImageField
+
+class PostForm(forms.ModelForm):
+    photo = ImageField(label='')
+
+    class Meta:
+        model = Post
+        fields = ('photo',)
+```
+
+You can read more about how these are built in
+[Django Docs][ext-django-modelforms]. One thing to note is the following line:
+
+```python
+photo = ImageField(label='')
+```
+
+We set the `label` to an empty string to ensure that we won’t have labels in our
+form. Feel free to drop this argument if you like them 👍
+
+Save all the edited files and run the server:
+
+```bash
+python manage.py runserver
+```
+
+Now open `http://127.0.0.1:8000` in your browser and play around with your
+Instagrid application ✨
+
+<img src="https://ucarecdn.com/741b39de-6fb8-49f7-aabd-be8ced182b52/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/guide-django-done.png"
+    srcSet="https://ucarecdn.com/741b39de-6fb8-49f7-aabd-be8ced182b52/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/guide-django-app.png 2x"
+    alt="The App is Done" /><br/>
+
+## Next steps
+{id="conclusion"}
+
+There’s more to it: you can handle API requests and [Image Transformations][transformations-image],
+and enable the In-Browser Image Editing feature with `pyuploadcare` too. To
+continue your way with Uploadcare, take a look at these links:
+
+## Related guides
+
+* [PyUploadcare Docs][ext-pyuploadcare-docs]
+* [PyUploadcare GitHub Page][pyuploadcare-github-readme]
+* [Make your own Instagram with Django and Uploadcare][ext-howcode-tutorials] (video tutorials series)
+* [Build an Instagram-like app with Uploadcare by HowCode][ext-howcode-tutorials]

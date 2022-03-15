@@ -1,0 +1,256 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: File Uploader Reference'
+  description:
+    Uploadcare File Uploader can handle either a single file upload
+    or multiple files at once multi-upload. This section covers
+    your JavaScript API File Uploader workflow and methods.
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — File Uploader Reference
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#widget' />
+  <Migration />
+</Messages>
+
+Uploadcare File Uploader can handle either a [single file][api-reference-js-widget-single]
+upload or multiple files at once [multi-upload][api-reference-js-widget-multi].
+This section covers your JavaScript API File Uploader workflow and methods.
+
+* [File Uploader initialization](#widget-init)
+* [Single-file file uploader](#single-file)
+* [Multi-file file uploader](#multi-file)
+* [Multi-purpose file uploader](#multi-purpose)
+* [Passing a single file to a file uploader](#single-file-value)
+* [Pass multiple files to a file uploader](#multi-file-value)
+* [Get current file uploader value](#widget-get-value)
+* [Load new file or group](#widget-reload-info)
+* [Open the file uploader dialog](#widget-open-dialog)
+* [On change, file uploader event](#widget-on-change)
+* [On upload complete, file uploader event](#widget-on-upload-complete)
+* [On dialog open](#widget-on-dialog-open)
+* [Unsubscribe file uploader callbacks](#widget-unsubscribe-callback)
+
+## File Uploader initialization
+{id="widget-init"}
+
+Initialize a file uploader.
+
+```js
+var widgets = uploadcare.initialize('#my-form');
+widgets; // [widget1, widget2, multipleWidget1, ...]
+var widgets = uploadcare.initialize();
+```
+
+This is a one-time initialization of file uploader instances on every element with the
+`role="uploadcare-uploader"` attribute in a container specified by a selector or
+DOM element. Works for both [single-file][api-reference-js-widget-single] and
+[multi-file][api-reference-js-widget-multi] file uploaders.
+
+Returns an array of newly initialized file uploaders or an empty array in case no new
+instances were initialized.
+
+The `uploadcare.initialize()` method is called automatically unless the
+[manual start][file-uploader-option-manual-start] file uploader option is defined.
+
+## Single-file file uploaders
+{id="single-file"}
+<a id="single-widget" />
+
+Get a single-upload file uploader instance for a given element.
+
+```js
+var singleWidget = uploadcare.SingleWidget('[role=uploadcare-uploader]');
+```
+
+`uploadcare.SingleWidget()` element argument can be a DOM element, jQuery object,
+or CSS selector. If an argument is a CSS selector, the method returns only an
+instance for the first matched element. To ensure you are getting the right
+instance when dealing with multiple file uploaders on a page, select by id or pass a
+DOM element to the method.
+
+All file uploader [options][file-uploader-options] will be loaded from data-attribute of your
+element on a first file uploader initialization.
+
+Passing an element with the `data-multiple` attribute to `uploadcare.SingleWidget()`
+raises an error. A [multi-upload file uploader][api-reference-js-widget-multi] should
+be used instead.
+
+## Multi-file file uploaders
+{id="multi-file"}
+<a id="multiple-widget" />
+
+Get a multi-upload file uploader instance for a given element with the `data-multiple`
+[option][file-uploader-option-multiple] set.
+
+```js
+var multiWidget = uploadcare.MultipleWidget('[role=uploadcare-uploader][data-multiple]');
+```
+
+The workflow is similar to [single-upload file uploader][api-reference-js-widget-single].
+If an instance of the first encountered element is not a multi-upload file uploader, an
+error is raised.
+
+## Multi-purpose file uploaders
+{id="multi-purpose"}
+<a id="any-widget" />
+
+Get either single-upload or multi-upload file uploader instance depending on the passed
+`data-multiple` attribute.
+While the API for single-upload and multi-upload file uploaders is slightly different,
+you can use this constructor when your code can work with both versions:
+
+```js
+var widget = uploadcare.Widget('[role=uploadcare-uploader]');
+```
+
+## Pass a single file to a file uploader
+{id="single-file-value"}
+
+Set a [file instance][api-reference-js-file] as a value for a
+[single-upload][api-reference-js-widget-single] file uploader.
+
+```js
+singleWidget.value(file);
+```
+
+You can also use a file UUID or [CDN link][delivery-cdn] as a value:
+
+```js
+singleWidget.value('9dd2f080-cc52-442d-aa06-1d9eec7f40d1');
+```
+
+Setting `null` as a value clears the file uploader:
+
+```js
+singleWidget.value(null);
+```
+
+## Pass multiple files to a file uploader
+{id="multi-file-value"}
+<a id="multiple-widget-value" />
+
+Set a [group instance][api-reference-js-file-groups] as a value for a
+[multi-upload][api-reference-js-widget-multi] file uploader.
+
+```js
+multiWidget.value(fileGroup);
+```
+
+You can also set an array of file instances or UUIDs as a value for the
+[multi-upload][api-reference-js-widget-multi]:
+
+```js
+multiWidget.value([file1, file2, '9dd2f080-cc52-442d-aa06-1d9eec7f40d1']);
+```
+
+Or, just pass a valid [file group][api-reference-js-file-groups] identifier:
+
+```js
+multiWidget.value('cdf2fe62-3d43-47d4-9288-c3951561f5c7~2');
+```
+
+## Get a current file uploader value
+{id="widget-get-value"}
+
+Get current file uploader value: file instance, group instance or `null`.
+
+```js
+var file = widget.value();
+```
+
+## Load a new file or group
+{id="widget-reload-info"}
+
+Load a new file or group instance from the `value` attribute of your `input` or
+update the object info. You will get a UUID or CDN link.
+
+```js
+widget.reloadInfo();
+```
+
+## Open a file uploader dialog
+{id="widget-open-dialog"}
+
+Open the dialog of a specific file uploader and get its instance. Returns a
+[dialog API][api-reference-js-dialog-panel].
+
+```js
+var dialog = widget.openDialog(tab);
+```
+
+`tab` defines a name of the tab opened by default.
+
+## On change, file uploader event
+{id="widget-on-change"}
+
+Provides you with the ability to do something after a new file is selected. An
+instance is passed to the callback: a [file][api-reference-js-file] for
+[single-upload][api-reference-js-widget-single] file uploaders or a
+[file group][api-reference-js-file-groups] for
+[multi-upload][api-reference-js-widget-multi] file uploaders. The instance may or may
+not be uploaded.
+
+```js
+widget.onChange(function(file) {
+  // Handle new file.
+});
+```
+
+## On upload complete, file uploader event
+{id="widget-on-upload-complete"}
+
+Provides you with the ability to do something after a file is uploaded and ready.
+The callback is passed an info object: a [file info][api-reference-js-file-info] for
+[single-upload][api-reference-js-widget-single] file uploaders or a
+[file group info][api-reference-js-group-info] for
+[multi-upload][api-reference-js-widget-multi] file uploaders.
+
+```js
+widget.onUploadComplete(function(info) {
+  // Handle uploaded file info.
+});
+
+// Same as above:
+widget.onChange(function(file) {
+  if (file) {
+    file.done(function(info) {
+      // Handle uploaded file info.
+    });
+  };
+});
+```
+
+## On dialog open, file uploader event
+{id="widget-on-dialog-open"}
+
+Provides you with the ability to do something on file uploader dialog open. Works with
+a user click or the [widget.openDialog()][api-reference-js-widget-open-dialog] call.
+Works only when the [system dialog][file-uploader-option-system-dialog] option is
+disabled.
+
+```js
+widget.onDialogOpen(function(dialogApi) {
+  dialogApi.switchTab('dropbox');
+});
+```
+
+## Unsubscribe file uploader callbacks
+{id="widget-unsubscribe-callback"}
+
+Allows you to unsubscribe any file uploader callback:
+
+```js
+widget.onChange(fn); // Subscribe
+widget.onChange.remove(fn); // Unsubscribe
+
+widget.onUploadComplete(fn);
+widget.onUploadComplete.remove(fn);
+
+widget.onDialogOpen(fn);
+widget.onDialogOpen.remove(fn);
+```

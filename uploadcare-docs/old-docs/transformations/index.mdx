@@ -1,0 +1,38 @@
+---
+  title: 'Uploadcare Transformations'
+  description:
+    'Uploadcare Transformations allow you to apply CDN and REST API processing operations to transform images, encode videos, and convert documents.'
+---
+
+# Transformations
+
+[Transformations][transformations-product-page] help you perform media
+processing on the server. You can apply different transformations to images,
+videos and documents. All operations are non-desctructive so your original files
+stay intact.
+
+## Image Transformations
+{id="image-transformations"}
+
+[Image Transformations][transformations-image] help you resize, optimize,
+stylize images, create responsive images, etc. You can stack several
+transformations and tweak parameters. Image transformations are applied at the
+moment of a user request to that image over the CDN URL with the transformation
+directives.
+
+## Video Processing
+{id="video-processing"}
+
+Uploadcare Video Processing optimizes your video content delivery. It works via
+the [REST API][api-reference-rest] by posting a processing request. In addition
+to encoding videos, you can apply
+[Video Transformations][transformations-video-processiing] to adjust video
+quality, format, and size with CDN URL directives.
+
+## Document Conversion
+{id="document-conversion"}
+
+Uploadcare allows converting documents to the following target formats: DOC,
+DOCX, XLS, XLSX, ODT, ODS, RTF, TXT, PDF, JPG, PNG. Document Conversion works
+via the [REST API][api-reference-rest]. After the conversion is performed, you 
+can address the outputs via the respective CDN URLs.

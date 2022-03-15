@@ -1,0 +1,483 @@
+---
+  title: 'Uploadcare Video Processing'
+  description:
+    'Uploadcare Video Processing optimizes your videos online. Adjust video
+    quality, format, and dimensions.'
+---
+
+# Video Processing
+
+Uploadcare can encode video files from all popular formats to MP4, WEBM, or OGG, adjust their
+quality, dimensions, cut out a video fragment, and generate thumbnails via
+[REST API][api-reference-rest].
+
+## How it works
+{id="workflow"}
+
+Video Processing requires you to create a processing job beforehand (unlike
+with [Image Transformations][transformations-image] that are applied on the fly
+at the time of a user (cold) request).
+
+The general Video Processing workflow is as follows:
+1. `POST` a processing job. The processing params are passed in a request together with an input file UUID. 
+2. Wait until the processing job status becomes `finished`.
+3. The processed file can now be addressed via its UUID passed in a response.
+
+Video Processing doesn't alter your input files: it creates encoded outputs as
+separate files.
+
+## REST API workflow
+{id="rest-api"}
+
+Here you can find detailed API references for
+[video processing][api-reference-rest-video-processing].
+
+All API requests should be [authorized][api-reference-rest-auth].
+
+The endpoint for your requests is:
+
+```
+https://api.uploadcare.com/convert/video/
+```
+
+The processed video becomes addressable via a CDN URL alias you provided in the request:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/video/-/:operation/:parameters/
+```
+
+CDN URL aliases are interchangeable with the respective processed file UUIDs.
+
+### `POST` a processing job
+{id="process"}
+
+`POST /convert/video/` — **сheck out detailed [conversion API reference][api-reference-rest-video-processing].**
+
+The processing params are passed together with a source file UUID. These two request parameters are mandatory:
+* `paths`, an array of UUIDs of your source videos to process together with a set of [required params](#process-url-formatting).
+* `store`, a flag indicating if Uploadcare should
+  [store][api-reference-rest-file-store] your outputs.
+
+When applying the same set of conversion parameters to a previously encoded
+video, older conversion results will be replaced with the new ones
+(`variations` parameter will change).
+
+Before:
+
+```json{noAutoLinker}
+{
+  ...
+  "uuid": "dd7c1d17-ff16-4ae1-8b25-6b776b4a6425",
+  "variations": {
+    "video/-/format/mp4/": "a46a4e66-fac8-4440-b426-37b662ae96d3"
+  },
+  ...
+}
+```
+
+After:
+
+```json{noAutoLinker}
+{
+  ...
+  "uuid": "dd7c1d17-ff16-4ae1-8b25-6b776b4a6425",
+  "variations": {
+    "video/-/format/mp4/": "0efdf844-2c63-4268-a908-fc56ae3a8078"
+  },
+  ...
+}
+```
+
+#### Input File Identifier Formatting
+{id="process-url-formatting"}
+
+Your input file identifiers should be formatted as follows:
+
+```cdn
+/:uuid/video/
+```
+
+Transformations should be separated by `/-/`:
+
+```cdn
+/:uuid/video/-/:operation/:parameters/-/:operation/:parameters/
+```
+
+Also, you can provide a complete CDN URL. When the conversion is done, it can
+be used as an alias to your converted file UUID:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/video/-/:operation/:parameters/-/:operation/parameters/
+```
+
+Summing up the params::
+* `:uuid` identifies the input file. `:uuid` should be followed by `cdn›/video/`, otherwise your request will be invalid.
+* `:operation` stands for any operation you wish to apply to a video. 
+* `:parameters` helps you adjust the processing behavior.
+
+Operation can be omitted; the video will then be delivered as `mp4` with its
+quality set to `normal`.
+
+Full list of operations can be found [down below](#process-operations).
+
+### Checking processing job status
+{id="status"}
+
+`GET /convert/video/status/:token/` — **check out detailed [job status API reference][api-reference-rest-video-status].**
+
+Once you get a processing job result, you can get a processing job status via
+`token`. Just put it in your request URL as `:token`.
+
+Alternatively, you can subscribe to the `file.uploaded` event via the
+webhooks REST API endpoint. This way, you'll know when processing routines are
+complete without checking your processing job status. Learn more about
+[webhooks][api-reference-rest-webhooks].
+
+## Video Transformations
+{id="process-operations"}
+
+You can change your video canvas size, quality, format and length by applying video
+transform operations. This way, you can optimize video and find a perfect
+balance between the desired video quality and loading time along with traffic
+usage.
+
+Video Transformations can be passed in a [processing job](#process) request
+along with your input file UUID. Make sure to [format](#process-url-formatting)
+URLs in the request properly.
+
+### `size`
+{id="operation-size"}
+
+```cdn
+/:uuid/video/-/size/:one_or_two_dimensions/
+/:uuid/video/-/size/:one_or_two_dimensions/:resize_mode/
+```
+
+Downscales a video to the specified dimensions. If video is smaller, does
+nothing. There are four presets which control aspect ratio and cropping
+behavior:
+* `preserve_ratio` (default) — preserve the aspect ratio of the original file.
+* `change_ratio` — matches the output video to provided dimensions, no matter the
+  original aspect ratio.
+* `scale_crop` — matches the output video to provided dimensions, and crops the
+  rest of the pixels along one of the axes (top/bottom or left/right).
+* `add_padding` — letterbox the video to match the output frame size exactly
+  (add black bars).
+
+Note, you can choose to provide a single dimension too. By default, this will
+resize your video preserving the original aspect ratio. In case you explicitly
+specify a non-default `:resize_mode`, the missing dimension size will be taken
+from the original file. For instance, `cdn›/size/x600/change_ratio/` for a
+640x480 original frame size will output your video as `640x600`.
+
+The value you specify for any of the dimensions should be a _non-zero integer
+divisible by 4_. Here are some examples:
+
+```cdn
+/:uuid/video/-/size/720x540/
+/:uuid/video/-/size/800x600/change_ratio/
+/:uuid/video/-/size/512x384/scale_crop/
+/:uuid/video/-/size/512x384/add_padding/
+/:uuid/video/-/size/720x/
+/:uuid/video/-/size/x540/
+```
+
+### `quality`
+{id="operation-quality"}
+
+```cdn
+/:uuid/video/-/quality/:setting/
+```
+
+Sets the video quality level that affects the file size. In turn, it affects
+loading time and user-generated traffic.
+
+`:setting` defaults to `normal`.
+
+* `normal` — suits most cases.
+* `better` — better video quality, larger file size compared to `normal`.
+* `best` — useful when you want to get perfect quality and don't care about the
+  file size. It's larger than `better`.
+* `lighter` — saves traffic without a significant subjective quality loss,
+  smaller file size compared to `normal`.
+* `lightest` — lowest visual quality that provides a minimal loading time,
+  smaller than `lighter`.
+
+### `format`
+{id="operation-format"}
+
+```cdn
+/:uuid/video/-/format/:format/
+```
+
+`:format` defaults to `mp4`.
+
+Converts a file to one of the web video formats:
+* `webm`, WebM is an open media file format designed for
+  the web. Video streams are compressed via VP8 or VP9 video codec. Audio gets
+  compressed with Vorbis or Opus, [more][ext-webm-more]. WebM is compatible with many
+  of the current [devices][ext-webm-android] and [browsers][ext-caniuse-webm] and backed
+  by Google.
+* `ogg`, Ogg/Theora is a free and open video compression format from Xiph.org.
+  Theora is considered competitive at low bitrates, which makes it suitable for
+  the web, [more][ext-ogg-more]. Theora is backed by the community is supported by
+  [fewer browsers][ext-caniuse-ogg] than `webm`.
+* `mp4`, MPEG-4 is widely supported across devices and [browsers][ext-caniuse-mp4].
+  Videos encoded with `mp4` are compressed via H.264 codec and will work on Android
+  and iOS, in Safari, Chrome, and IE. Choose it when you want to go universal
+  or in case you need a fallback.
+
+### `cut`
+{id="operation-cut"}
+
+```cdn
+/:uuid/video/-/cut/:start_time/:length/
+```
+
+Cuts out a video fragment based on the following parameters:
+* `:start_time`, defines the starting point of a fragment to cut based on your
+  input file timeline.
+* `:length`, defines the duration of that fragment.
+
+Both of the parameters can be formatted in the following ways:
+* `HHH:MM:SS.sss`; `HHH` are hours ranging from 0 to 999, `MM` — minutes ranging
+  from 0 to 59, `SS.sss` are seconds and milliseconds. `HHH` and `MM` can be omitted.
+* `SSS+.sss`, a number of seconds and milliseconds; `sss` can be omitted.
+
+You can also set `:length` to `end` and your video fragment will include all the
+duration of your input starting at `:start_time`.
+
+Note, `:start_time` and `:length` may not be exact depending on how keyframes
+are arranged within your input video.
+
+Here are some examples:
+
+```cdn
+/:uuid/video/-/cut/1:2:40.535/2:20.0/
+/:uuid/video/-/cut/001:02:40.535/02:20.0/
+/:uuid/video/-/cut/2:30.535/2:20.0/
+/:uuid/video/-/cut/1:2:40.535/end/
+/:uuid/video/-/cut/3760.535/140/
+/:uuid/video/-/cut/3760.535/end/
+```
+
+## Video Thumbnails
+{id="operation-thumbs"}
+
+Note, `thumbs` should be put last in your sequence of transformations in a
+[processing job URL](#process-url-formatting).
+
+### Generating Thumbnails
+
+```cdn
+:uuid/video/-/thumbs~N/
+```
+
+When specified in the [processing request](#process), it'll create `N`
+thumbnails for your video, where `N` is a non-zero integer ranging from 1 to 50;
+defaults to 1.
+
+If the operation is omitted, a single thumbnail gets generated from the middle
+frame of your video. If you define another `N`, thumbnails are generated from
+the frames evenly distributed along your video timeline. For example, if you
+have a 20-second video with `N` set to 20, it'll generate a thumbnail every
+second of your video.
+
+### Requesting Thumbnails
+
+In an API response, you get a `thumbnails_group_uuid`. It is a collection of
+image files stored as a [file group][delivery-group-api]. You can access
+individual images and apply [Image Transformations][transformations-image].
+
+There also is a way to request thumbnails via [URL directives](#workflow).
+
+```cdn
+/:uuid/video/-/:operations/-/thumbs~20/:number/
+```
+
+Where, `:uuid` and `:operations` are your video file identifier and processing
+operations passed in a [processing job](#process) request. `:number` is a
+zero-based index of a particular thumbnail in a created set. In the example
+above, the `:number` ranges from 0 to 19. You can also go with:
+
+```cdn
+/:uuid/video/-/:operations/-/thumb/
+```
+
+Which is a shortcut for:
+
+```cdn
+/:uuid/video/-/:operations/-/thumbs~1/0/
+```
+
+If you omit a thumbnail index, we return the first thumbnail from your set. In
+the following example, the first thumbnail from 20 is returned:
+
+```cdn
+/:uuid/video/-/:operations/-/thumbs~20/
+```
+
+## Examples
+### Requesting to encode a single video
+{id="process-example-single"}
+
+Make sure to use your own project keys instead of `PUBLIC_KEY`, `SECRET_KEY`;
+the keys should point to an Uploadcare project with the [enabled](#billing)
+Video Processing feature. The `:uuid` of the source file to convert should
+belong to the project specified by `PUBLIC_KEY`.
+
+Request:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/vnd.uploadcare-v0.5+json" \
+     -H "Authorization: Uploadcare.Simple demopublickey:demosecretkey" \
+     -d '{"paths": [":uuid/video/-/format/ogg/"], "store": "1"}' \
+     "https://api.uploadcare.com/convert/video/"
+```
+
+Response:
+
+```json
+{
+  "problems": {},
+  "result": [
+    {
+      "original_source": ":uuid/video/-/format/ogg/",
+      "token": 445619839,
+      "thumbnails_group_uuid": ":uuid-thumb-group",
+      "uuid": ":uuid-processed"
+    }
+  ]
+}
+```
+
+A JSON response object holds the following parameters:
+* `problems`, problems related to your processing job, if any.
+* `result`, info related to your transformed output(-s):
+  * `original_source`, input file identifier including transformations, if present.
+  * `token`, a processing job token that can be used to get a [job status](#status).
+  * `thumbnails_group_uuid`, holds `:uuid-thumb-group`, a UUID of a
+    [file group][api-reference-rest-groups-id] with thumbnails for an output
+    video, based on the `thumbs` [operation](#operation-thumbs) parameters.
+  * `uuid`, a UUID of your processed video file.
+
+Technically, when the video is processed, you get two UUIDs: the first is
+included in `original_source`, and the second sits in `uuid`. It happens because
+there are two methods to address converted files:
+* `https://ucarecdn.com/:uuid/video/-/format/ogg/` works as a CDN URL _alias_ for a transformed video,
+* `:uuid-processed` — the actual file identifier is used with other [REST API routines][api-reference-rest].
+
+### Multi-File Processing
+{id="process-example-multi"}
+
+When posting a multi-file conversion job, you get separate results and status
+tokens for each file.
+
+Request:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/vnd.uploadcare-v0.5+json" \
+     -H "Authorization: Uploadcare.Simple demopublickey:demosecretkey" \
+     -d '{"paths": [
+          ":uuid/video/",
+          ":uuid/video/-/format/ogg/-/quality/best/",
+          ":uuid"], "store": "1"}' \
+     "https://api.uploadcare.com/convert/video/"
+```
+
+Response:
+
+```json
+{
+  "problems": {
+    "13cd56e2-f6d7-4c66-ab1b-ffd13cd6646d": "Bad path \":uuid\". Use :uuid/video/",
+  },
+  "result": [
+    {
+      "original_source": ":uuid/video/-/format/ogg/-/quality/best/",
+      "token": 445630631,
+      "thumbnails_group_uuid": ":uuid-thumb-group",
+      "uuid": ":uuid-processed"
+    },
+    {
+      "original_source": ":uuid/video/",
+      "token": 445630637,
+      "thumbnails_group_uuid": ":uuid-thumb-group",
+      "uuid": ":uuid-processed"
+    }
+  ]
+}
+```
+
+As you can see, there is a problem with one of the inputs in this example.
+The problem is caused by the incorrect entry in `paths`: no `cdn›/video/` is
+included in the third item.
+
+### Get processing job status
+{id="status-request"}
+
+Request:
+
+```bash
+curl -X GET \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/vnd.uploadcare-v0.5+json" \
+     -H "Authorization: Uploadcare.Simple demopublickey:demosecretkey" \
+     "https://api.uploadcare.com/convert/video/status/:token/"
+```
+
+Response:
+
+```json
+{
+  "status": "processing",
+  "error": null,
+  "result": {
+    "thumbnails_group_uuid": ":uuid-thumb-group",
+    "uuid": ":uuid-processed"
+  }
+}
+```
+
+A processing job output is a JSON object with the following parameters:
+* `status`, processing job status, can have one of the following values:
+  * pending — video file is being prepared for conversion.
+  * processing — video file processing is in progress.
+  * finished — the processing is finished.
+  * failed — we failed to process the video, see `error` for details.
+  * canceled — video processing was canceled.
+* `error`, holds a processing error if it fails to process your video.
+* `result`, repeats the contents of your processing output.
+* `thumbnails_group_uuid`, holds `:uuid-thumb-group`, a UUID of a
+  [file group][api-reference-rest-groups-id] with thumbnails for an output
+  video, based on the `thumbs` [operation](#operation-thumbs) parameters.
+* `uuid`, a UUID of your processed video file.
+
+Once your conversion job is `finished`, you are free to add any
+[RFC3986 compliant][delivery-filename] filename when accessing your
+outputs via their [CDN URL aliases](#workflow), here is an example:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/28843a09-dd3d-4b8a-ad4f-8aa5f8f60ff2/video/-/size/640x/myvideo@640.mp4
+```
+
+## Billing
+{id="billing"}
+
+The feature is available on all paid plans. We charge for processing videos
+separately:
+
+* Transformations cost 0.045 USD per minute of your output video. If you apply
+  multiple transformations to a single video, we will charge you by the duration
+  of your outputs.
+* The transformed outputs are put to your Uploadcare project's storage. Large
+  video files take up significant space, so check the _storage limits_ for your
+  plan and estimate the volume of storage needed. You may refer to to the
+  average conversion ratios for [supported video formats](#operation-format).
+* Each transformation takes one _upload unit_. Video Transformations are applied
+  externally, so we upload an output to your account once it is generated.
+* Processing Video Transformation operations don't eat up your account _traffic_.

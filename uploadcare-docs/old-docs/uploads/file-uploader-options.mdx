@@ -1,0 +1,429 @@
+---
+  title: 'Uploadcare File Uploader Options'
+  description:
+    'Uploadcare File Uploader can be configured in a number of ways which include live config and setting options as globals, locals or settings object.'
+---
+
+import { WidgetLocales, WidgetLocalesCount } from '@uploadcare/widget'
+import { Messages, Migration, WidgetV3Warning } from "@uploadcare/docs-components";
+
+# File Uploader Options
+
+<Messages>
+  <WidgetV3Warning link='/docs/uploads/v2/#configuration' />
+  <Migration />
+</Messages>
+
+## File Uploader Options Summary
+{id="options"}
+
+* [Public key](#option-public-key)
+* [Multiple](#option-multiple)
+* [Multiple max](#option-multiple-max)
+* [Multiple min](#option-multiple-min)
+* [Images only](#option-images-only)
+* [Preview step](#option-preview-step)
+* [Crop](#option-crop)
+* [Image shrink](#option-image-shrink)
+* [Clearable](#option-clearable)
+* [Tabs](#option-tabs)
+* [Input accept types](#option-input-accept-types)
+* [Preferred types](#option-preferred-types)
+* [System dialog](#option-system-dialog)
+* [Multipart minimum size](#option-multipart-min-size)
+* [Locale](#option-locale)
+* [Locale translations](#option-locale-translations)
+* [Locale pluralize](#option-locale-pluralize)
+* [Secure signature](#option-secure-signature)
+* [Secure expire](#option-secure-expire)
+* [Preview proxy](#option-preview-proxy)
+* [Preview URL callback](#option-preview-url-callback)
+* [Live](#option-live)
+* [Manual start](#option-manual-start)
+* [CDN base](#option-cdn-base)
+* [Do not store](#option-do-not-store)
+* [Validators](#option-validators)
+* [Audio bits per second](#option-audio-bits-per-second)
+* [Video preferred MIME types](#option-video-preferred-mime-types)
+* [Video bits per second](#option-video-bits-per-second)
+* [Camera mirror default](#option-camera-mirror-default)
+
+### Public key
+{id="option-public-key"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_PUBLIC_KEY` <br/>
+Local: `data-public-key` <br/>
+Object key: `publicKey`
+
+Sets your Uploadcare [public key][settings-keys].
+
+### Multiple
+{id="option-multiple"}
+
+Type: `boolean` <br/>
+Global: *N/A* <br/>
+Local: `data-multiple` <br/>
+Object key: `multiple` <br/>
+
+If `true`, the file uploader allows selecting and uploading multiple files. `false` by
+default.
+
+### Multiple max
+{id="option-multiple-max"}
+
+Type: `integer` <br/>
+Global: *N/A* <br/>
+Local: `data-multiple-max` <br/>
+Object key: `multipleMax` <br/>
+
+Sets the maximum number of files that can be selected for a single upload.
+Defaults to 0 which stands for no limit.
+
+### Multiple min
+{id="option-multiple-min"}
+
+Type: `integer` <br/>
+Global: *N/A* <br/>
+Local: `data-multiple-min` <br/>
+Object key: `multipleMin` <br/>
+
+Sets the minimal number of files that can be selected for a single upload. The
+default value is 1.
+Note, there is no point in setting this option to 0 since there should be at
+least one file in a file group.
+
+### Images only
+{id="option-images-only"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_IMAGES_ONLY` <br/>
+Local: `data-images-only` <br/>
+Object key: `imagesOnly` <br/>
+
+If `true`, only image files are allowed to be uploaded. `false` by default.
+
+### Preview step
+{id="option-preview-step"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_PREVIEW_STEP` <br/>
+Local: `data-preview-step` <br/>
+Object key: `previewStep` <br/>
+
+If `true`, the preview step is present after selecting files. Otherwise, the
+file uploader dialog closes when the selection is complete. `false` by default.
+
+### Crop
+{id="option-crop"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_CROP` <br/>
+Local: `data-crop` <br/>
+Object key: `crop` <br/>
+
+Defines the file uploader [manual crop][file-uploader-crop-options] behavior. When
+uploading images, your users can select a crop area. This option does not force
+your file uploader to accept [images only](#option-images-only). The option also works
+in the [multi-file mode](#option-multiple) since version 2.3.0.
+
+### Image shrink
+{id="option-image-shrink"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_IMAGE_SHRINK` <br/>
+Local: `data-image-shrink` <br/>
+Object key: `imageShrink` <br/>
+
+Saves traffic and storage space by resizing images on a client before uploading.
+See the [detailed][file-uploader-shrink] option description for details. Using the
+client-side resize does not force the [images only](#option-images-only) option.
+
+### Clearable
+{id="option-clearable"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_CLEARABLE` <br/>
+Local: `data-clearable` <br/>
+Object key: *N/A* <br/>
+
+Allows users to remove uploaded files from the file uploader. Note, those files are not
+deleted from your Uploadcare account.
+
+### Tabs
+{id="option-tabs"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_TABS` <br/>
+Local: `data-tabs` <br/>
+Object key: `tabs` <br/>
+
+Allows you to define which upload sources you want to use with the file uploader. The
+value is represented by a space-separated ordered list of upload source names.
+See [this article][file-uploader-upload-sources] for details.
+
+### Input accept types
+{id="option-input-accept-types"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_INPUT_ACCEPT_TYPES` <br/>
+Local: `data-input-accept-types` <br/>
+Object key: `inputAcceptTypes` <br/>
+
+Sets the `accept` attribute for the file uploader dialog. If the
+[images only](#option-images-only) option is disabled, the value is empty.
+Otherwise, the default value is `image/*`. `null` means `accept` should be kept
+empty regardless of the `images only` value. You can discover the other possible
+values in [this specification][ext-mozilla-devspecs].
+Note, this is not a replacement for our
+[file validation][api-reference-js-file-validation] because your users will
+still be able to choose any file via drag&drop or from URL.
+
+### Preferred types
+{id="option-preferred-types"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_PREFERRED_TYPES` <br/>
+Local: `data-preferred-types` <br/>
+Object key: `preferredTypes` <br/>
+
+Defines the list of preferred MIME types. The list should be ordered and contain
+space-separated MIME types. Common parts can be marked with asterisks:
+`image/* application/vnd.openxmlformats-officedocument.*`.
+If no MIME types match the criteria or preferred types aren’t set, default
+formats are used. Keep in mind that some cloud services can export data in
+different formats. For example, Google document can be exported as Word document,
+PDF or plain text.
+
+### System dialog
+{id="option-system-dialog"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_SYSTEM_DIALOG` <br/>
+Local: `data-system-dialog` <br/>
+Object key: *N/A* <br/>
+
+Forces a system-native file picking dialog to show up instead of our file uploader. That
+makes the file uploader behavior as close as possible to the generic
+`<input type="file">`. Native behavior is achieved at the expense of support for
+uploading content from [social media and cloud storage](#option-tabs),
+[manual crop](#option-crop), and [preview step](#option-preview-step).
+Multi-file selection would still work. The option does not work in old browser
+versions: the dialog falls back to the file uploader.
+
+### Multipart minimum size
+{id="option-multipart-min-size"}
+
+Type: `integer` <br/>
+Global: `UPLOADCARE_MULTIPART_MIN_SIZE` <br/>
+Local: `data-multipart-min-size` <br/>
+Object key: `multipartMinSize` <br/>
+
+This option sets the file size threshold for [multipart uploading][api-reference-upload-requests-multipart].
+The value ranges from 10485760 (10 MB), which is default, up to 104857600 (100
+MB).
+
+If a file size hits the threshold, it gets uploaded in four parallel chunks by 5
+MB. Multipart upload makes large file uploading faster. Files go directly to a
+storage, bypassing our upload servers, and they're quickly available for
+further use. All files below the threshold get uploaded in one piece.
+
+Note: Multipart upload works with local sources only (files and camera).
+
+### Locale
+{id="option-locale"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_LOCALE` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+Uploadcare File Uploader supports <WidgetLocalesCount /> locales.
+
+There currently are: <WidgetLocales />
+
+English locale is used by default.
+
+### Locale translations
+{id="option-locale-translations"}
+
+Type: `object` <br/>
+Global: `UPLOADCARE_LOCALE_TRANSLATIONS` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+Sets [custom localization][file-uploader-locales] options.
+
+### Locale pluralize
+{id="option-locale-pluralize"}
+
+Type: `object` <br/>
+Global: `UPLOADCARE_LOCALE_PLURALIZE` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+Defines [pluralization][file-uploader-pluralization] options.
+
+### Secure signature
+{id="option-secure-signature"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_SECURE_SIGNATURE` <br/>
+Local: `data-secure-signature` <br/>
+Object key: `secureSignature` <br/>
+
+The `signature` is an [HMAC/SHA256][ext-wiki-hmac] hex-encoded hash that
+includes `secret_key` and [`expire`](#option-secure-expire) strings.
+
+To use Secure Uploading for your project, you need to make a `signature` on your
+back end using your project's Secret Key and provide it to File Uploader. [Learn
+how to make your signature][api-reference-signed-uploads] in docs.
+
+### Secure expire
+{id="option-secure-expire"}
+
+Type: `integer` <br/>
+Global: `UPLOADCARE_SECURE_EXPIRE` <br/>
+Local: `data-secure-expire` <br/>
+Object key: `secureExpire` <br/>
+
+Stands for the [Unix time][ext-wikipedia-unix-time] to which the signature is
+valid, e.g., `1454902434`.
+
+Works together with the [secure signature option](#option-secure-signature) that
+defines a period of your signature validity.
+
+### Preview proxy
+{id="option-preview-proxy"}
+
+Type: `string` <br/>
+Global: `UPLOADCARE_PREVIEW_PROXY` <br/>
+Local: `data-preview-proxy` <br/>
+Object key: `previewProxy` <br/>
+
+The option can be used with
+[Authenticated URLs][secure-delivery-authenticated-urls]. Defines your
+[proxy backend][secure-delivery-proxy-backend] URL.
+
+See the article on [file uploader Authenticated URLs][secure-delivery-authenticated-urls] for details.
+
+### Preview URL callback
+{id="option-preview-url-callback"}
+
+Type: `function` <br/>
+Global: `UPLOADCARE_PREVIEW_URL_CALLBACK` <br/>
+Local: *N/A* <br/>
+Object key: `previewUrlCallback` <br/>
+
+The option can be used with
+[Authenticated URLs][secure-delivery-authenticated-urls]. Defines the function
+that specifies which URL a file uploader should use for image previews. Function
+signature is `(originalUrl, fileInfo) => previewUrl`.
+
+If this option is specified, option `previewProxy` will be ignored.
+So you should use one of them, not both.
+
+See the article on [file uploader Authenticated URLs][secure-delivery-authenticated-urls] for details.
+
+### Live
+{id="option-live"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_LIVE` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+If `true`, inputs on your page are initialized automatically, see
+[this article][api-reference-js-initialization] for details. `true` by default.
+
+### Manual start
+{id="option-manual-start"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_MANUAL_START` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+If true, input initialization is [invoked manually][api-reference-js-initialization]. `false` by
+default.
+
+### CDN base
+{id="option-cdn-base"}
+
+Type: `url` <br/>
+Global: `UPLOADCARE_CDN_BASE` <br/>
+Local: `data-cdn-base` <br/>
+Object key: `cdnBase` <br/>
+
+Defines your schema and CDN domain. Can be changed to one of the
+[predefined values][delivery-cdn] or your custom CNAME. Defaults to
+`https://ucarecdn.com/`.
+
+### Do not store
+{id="option-do-not-store"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_DO_NOT_STORE` <br/>
+Local: `data-do-not-store` <br/>
+Object key: `doNotStore` <br/>
+
+Forces files uploaded with a file uploader not to be [stored][storage-store].
+For instance, you might want to turn this on when automatic file storing is
+enabled in your project, but you do not want to store files uploaded with a
+particular file uploader.
+
+### Validators
+{id="option-validators"}
+
+Type: `array` <br/>
+Global: *N/A* <br/>
+Local: *N/A* <br/>
+Object key: `validators` <br/>
+
+JavaScript-only option. Defines an array of validation functions.
+See [validators documentation][api-reference-js-file-validation].
+
+### Audio bits per second
+{id="option-audio-bits-per-second"}
+
+Type: `number` <br/>
+Global: `UPLOADCARE_AUDIO_BITS_PER_SECOND` <br/>
+Local: `data-audio-bits-per-second` <br/>
+Object key: `audioBitsPerSecond` <br/>
+
+Allows you to adjust the quality of an audio recorded via the file uploader Camera Tab.
+Refer [here][ext-mozilla-mediarecorder-options] to learn more.
+
+### Video preferred MIME types
+{id="option-video-preferred-mime-types"}
+
+Type: `array` <br/>
+Global: `UPLOADCARE_VIDEO_PREFERRED_MIME_TYPES` <br/>
+Local: `data-video-preferred-mime-types` <br/>
+Object key: `videoPreferredMimeTypes` <br/>
+
+Allows you to specify the MIME types. The first supported by the browser will
+be used as an option of video stream captured via the file uploader Camera Tab.
+Refer [here][ext-mozilla-mediarecorder-options] to learn more.
+
+### Video bits per second
+{id="option-video-bits-per-second"}
+
+Type: `number` <br/>
+Global: `UPLOADCARE_VIDEO_BITS_PER_SECOND` <br/>
+Local: `data-video-bits-per-second` <br/>
+Object key: `videoBitsPerSecond` <br/>
+
+Allows you to adjust the quality of a video stream captured via the file uploader Camera Tab.
+Refer [here][ext-mozilla-mediarecorder-options] to learn more.
+
+
+### Camera mirror default
+{id="option-camera-mirror-default"}
+
+Type: `boolean` <br/>
+Global: `UPLOADCARE_CAMERA_MIRROR_DEFAULT` <br/>
+Local: `data-camera-mirror-default` <br/>
+Object key: `cameraMirrorDefault` <br/>
+
+Allows you to set the default state of image/video mirorring in the camera tab. `true` by default.

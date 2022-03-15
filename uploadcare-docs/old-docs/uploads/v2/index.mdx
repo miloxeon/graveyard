@@ -1,0 +1,1044 @@
+---
+  title: File Uploader Documentation
+  noindex: true
+  description:
+    Uploadcare File Uploader is the ultimate tool for uploads. We try
+    and keep this reference full-scale and plain. For developers
+    by developers. To use the feature, learn more information
+    in File Uploader docs.
+---
+
+import { Messages, Migration, WidgetV2Warning } from '@uploadcare/docs-components'
+import { WidgetV2, WidgetLocalesCount } from "@uploadcare/widget-v2"
+
+# File Uploader Documentation
+
+<Messages>
+  <WidgetV2Warning link='/docs/uploads/file-uploader/' />
+  <Migration />
+</Messages>
+
+Uploadcare comes with the file uploader that replaces your general
+`<input type="file">` controls. Here’s the latest version in action:
+
+<WidgetV2 clearable />
+
+* [Installation](#install)
+* [Usage](#usage)
+* [Configuration](#configuration)
+* [Tabs (Upload Sources)](#tabs)
+* [Input Value](#input-value)
+* [Styling](#styling)
+* [Custom Localization](#custom-localization)
+* [Pluralization](#pluralization)
+* [Requirements](#requirements)
+* [Automatic File Storing](#autostore)
+* [Initialization](#initialization)
+* [Manual Crop](#crop)
+* [Shrink Images Before Uploading](#image-shrink)
+* [Mobile Layout](#mobile)
+
+## Installation
+{id="install"}
+
+You’re free to choose from the install methods listed below.
+
+### CDN
+{id="install-cdn"}
+
+Embed our client library via `<script>` tag in the `<head>`
+section of each page where you’d like to make use of Uploadcare File Uploader.
+Just use this CDN link to use the file uploader version with built-in jQuery:
+
+```html
+<script src="https://ucarecdn.com/libs/widget/2.x/uploadcare.full.min.js" charset="utf-8"></script>
+```
+
+Or, if you’re already using jQuery on your page, consider loading
+the light version of our file uploader without built-in jQuery:
+
+```html
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" charset="utf-8"></script>
+<script src="https://ucarecdn.com/libs/widget/2.x/uploadcare.full.min.js" charset="utf-8"></script>
+```
+
+### Other install methods
+{id="install-other"}
+
+#### NPM
+
+```bash
+npm install uploadcare-widget@2.10
+```
+
+#### ES6
+
+```js
+import uploadcare from 'uploadcare-widget';
+```
+
+#### CommonJS
+
+```js
+var uploadcare = require('uploadcare-widget');
+```
+
+#### Bower
+
+```bash
+bower install uploadcare#2.10
+```
+
+#### Meteor
+
+```bash
+meteor add uploadcare:uploadcare-widget@2.10
+```
+
+## Usage
+{id="usage"}
+
+Once you’re done with the install, there are
+two simple steps to take to actually use the file uploader.
+
+**Set your [public key](#option-public-key).**
+This can also sit in the `<head>` section:
+
+```html
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'demopublickey';
+</script>
+```
+
+Your secret key is not required for the file uploader
+(it’s quite careless for your page to include any
+secret keys anyway.)
+
+**Insert file uploader element** into your form:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" />
+```
+
+By default, the library looks for inputs with the specified
+`role` attribute and places file uploaders there.
+Once a file is uploaded, this `<input>` gets a
+CDN link with a file UUID. Your server then
+receives this link instead of file content.
+
+We suggest placing the file uploader somewhere at the top of your form.
+Unlike regular inputs, our file uploader starts uploading files **immediately**
+after they get selected by a user, not on form submission.
+That way users can fill out the rest of your form while an
+upload is in progress. This can be a real time saver.
+
+## Configuration
+{id="configuration"}
+
+Uploadcare File Uploader is highly customizable through file uploader options.
+Check out the [configuration page][file-uploader-configure]
+to see some of them in action.
+
+There are two ways to set file uploader options:
+
+* Global options are set when your page loads.
+* Local — when a new file uploader is created.
+
+Changing any options during file uploader operation won’t
+affect its behavior.
+
+### Global variables
+{id="global-variables"}
+
+Globals are specified as global JavaScript variables in a `<script>` tag, for example:
+
+```html
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'demopublickey';
+  UPLOADCARE_LOCALE = 'ru';
+</script>
+```
+
+### Local attributes
+{id="local-attributes"}
+
+Local options are specified in the target `<input>` tag as `data-*` attributes,
+for example:
+
+```html
+<input type="hidden" role="uploadcare-uploader"
+  data-public-key="demopublickey"
+  data-images-only
+/>
+```
+
+### Settings object
+{id="settings-object"}
+
+Most of file uploader options can also be set within the `settings` object,
+see [JavaScript API][api-reference-javascript] docs for more info.
+
+```js
+uploadcare.openDialog(null, {
+  publicKey: 'demopublickey',
+  imagesOnly: true,
+  crop: '300x200'
+});
+```
+
+Here is a summary of **all available options**:
+{id="options"}
+
+* [Public key](#option-public-key)
+* [Multiple](#option-multiple)
+* [Multiple max](#option-multiple-max)
+* [Multiple min](#option-multiple-min)
+* [Images only](#option-images-only)
+* [Preview step](#option-preview-step)
+* [Crop](#option-crop)
+* [Image shrink](#option-image-shrink)
+* [Clearable](#option-clearable)
+* [Tabs](#option-tabs)
+* [Input accept types](#option-input-accept-types)
+* [Preferred types](#option-preferred-types)
+* [System dialog](#option-system-dialog)
+* [Locale](#option-locale)
+* [Locale translations](#option-locale-translations)
+* [Locale pluralize](#option-locale-pluralize)
+* [Secure signature](#option-secure-signature)
+* [Secure expire](#option-secure-expire)
+* [Live](#option-live)
+* [Manual start](#option-manual-start)
+* [CDN base](#option-cdn-base)
+* [Do not store](#option-do-not-store)
+* [Validators](#option-validators)
+
+
+### Public key `string`
+{id="option-public-key"}
+
+Global: `UPLOADCARE_PUBLIC_KEY` <br/>
+Local: `data-public-key` <br/>
+Object key: `publicKey`
+
+Your [public key][settings-keys].
+
+
+### Multiple `boolean`
+{id="option-multiple"}
+
+Global: *N/A* <br/>
+Local: `data-multiple` <br/>
+Object key: `multiple` <br/>
+
+If true, the file uploader allows selecting and uploading multiple files.
+Turned off by default.
+
+
+### Multiple max `integer`
+{id="option-multiple-max"}
+
+Global: *N/A* <br/>
+Local: `data-multiple-max` <br/>
+Object key: `multipleMax` <br/>
+
+A maximum number of files allowed for a single upload.
+The default value is 0 which stands for no limit.
+
+
+### Multiple min `integer`
+{id="option-multiple-min"}
+
+Global: *N/A* <br/>
+Local: `data-multiple-min` <br/>
+Object key: `multipleMin` <br/>
+
+A minimum number of files allowed per upload.
+The default value is 1.
+Note that setting the value to 0 bears no meaning
+since a file group should contain at least one file.
+
+
+### Images only `boolean`
+{id="option-images-only"}
+
+Global: `UPLOADCARE_IMAGES_ONLY` <br/>
+Local: `data-images-only` <br/>
+Object key: `imagesOnly` <br/>
+
+If true, only image files can be uploaded.
+Turned off by default.
+
+
+### Preview step `boolean`
+{id="option-preview-step"}
+
+Global: `UPLOADCARE_PREVIEW_STEP` <br/>
+Local: `data-preview-step` <br/>
+Object key: `previewStep` <br/>
+
+If true, a preview step will follow once files are selected
+(otherwise, a file dialog closes.)
+Turned off by default.
+
+
+### Crop `string`
+{id="option-crop"}
+
+Global: `UPLOADCARE_CROP` <br/>
+Local: `data-crop` <br/>
+Object key: `crop` <br/>
+
+Manual crop options, [see below](#crop).
+If an uploaded file is an image, user will be able to select crop area.
+This option does not force [images only](#option-images-only), though.
+
+Works together with the [multiple](#option-multiple) option
+starting from version 2.3.0.
+
+
+### Image shrink `string`
+{id="option-image-shrink"}
+
+Global: `UPLOADCARE_IMAGE_SHRINK` <br/>
+Local: `data-image-shrink` <br/>
+Object key: `imageShrink` <br/>
+
+Allows to reduce image size before uploading to save traffic and storage space.
+See the [detailed](#image-shrink) syntax below.
+This option does not force [images only](#option-images-only).
+
+
+### Clearable `boolean`
+{id="option-clearable"}
+
+Global: `UPLOADCARE_CLEARABLE` <br/>
+Local: `data-clearable` <br/>
+Object key: *N/A* <br/>
+
+Allows user to remove uploaded files from the file uploader.
+Please note that those files are not deleted from your account.
+
+
+### Tabs `string`
+{id="option-tabs"}
+
+Global: `UPLOADCARE_TABS` <br/>
+Local: `data-tabs` <br/>
+Object key: `tabs` <br/>
+
+Space-separated ordered list of upload sources
+(e.g. local files, URLs or Facebook), [see below](#tabs).
+
+
+### Input accept types `string`
+{id="option-input-accept-types"}
+
+Global: `UPLOADCARE_INPUT_ACCEPT_TYPES` <br/>
+Local: `data-input-accept-types` <br/>
+Object key: `inputAcceptTypes` <br/>
+
+Sets the `accept` attribute for a file picking dialog.
+By default, the value is `image/*` if [images only](#option-images-only)
+is true or empty if not.
+`null` value means `accept` always should be empty regardless of `images only`.
+You can find other values in
+[this specification][ext-mozilla-devspecs].
+Please note that this is not a replacement for file [validation][api-reference-js-file-validation]
+because users can still choose any type of file by drag&drop or from URL.
+
+
+### Preferred types `string`
+{id="option-preferred-types"}
+
+Global: `UPLOADCARE_PREFERRED_TYPES` <br/>
+Local: `data-preferred-types` <br/>
+Object key: `preferredTypes` <br/>
+
+Defines the list of preferred MIME types.
+The list should be ordered and contain space-separated
+MIME types. Common parts can be marked with asterisks:
+`image/* application/vnd.openxmlformats-officedocument.*`.
+If no MIME types match the criteria or preferred types aren’t set,
+default formats are used.
+
+Keep in mind that some cloud services can export data in different formats.
+For example, Google document can be exported as Word document,
+PDF or plain text.
+
+
+### System dialog `boolean`
+{id="option-system-dialog"}
+
+Global: `UPLOADCARE_SYSTEM_DIALOG` <br/>
+Local: `data-system-dialog` <br/>
+Object key: *N/A* <br/>
+
+Forces native file picking dialog over the Uploadcare one.
+Thus, making file uploader behavior as close as possible to the
+usual `<input type="file">`. Native behavior is achieved
+at the expense of support for
+[social networks and cloud services](#option-tabs),
+[image crop](#option-crop), and [preview](#option-preview-step).
+Multiple file selection would still work, though.
+The option doesn’t work in old browsers versions,
+instead the dialog falls back to the Uploadcare one.
+
+
+### Locale `string`
+{id="option-locale"}
+
+Global: `UPLOADCARE_LOCALE` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+The file uploader supports <WidgetLocalesCount /> of languages.
+
+English locale is used by default.
+
+
+### Locale translations `object`
+{id="option-locale-translations"}
+
+Global: `UPLOADCARE_LOCALE_TRANSLATIONS` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+Custom localization options, [see below](#custom-localization).
+
+
+### Locale pluralize `object`
+{id="option-locale-pluralize"}
+
+Global: `UPLOADCARE_LOCALE_PLURALIZE` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+Custom pluralization options, [see below](#pluralization).
+
+
+### Secure signature `string`
+{id="option-secure-signature"}
+
+Global: `UPLOADCARE_SECURE_SIGNATURE` <br/>
+Local: `data-secure-signature` <br/>
+Object key: `secureSignature` <br/>
+
+In case you enable Secure Uploading for your project,
+you’d need to provide the file uploader with `signature` and `expire`.
+Read more about Secure Uploading in our [API docs][api-reference-signed-uploads].
+
+The `signature` is a MD5 hex-encoded hash from a
+concatenation of `secret_key` and `expire`.
+
+Works together with the
+[secure expire](#option-secure-expire) option.
+
+
+### Secure expire `integer`
+{id="option-secure-expire"}
+
+Global: `UPLOADCARE_SECURE_EXPIRE` <br/>
+Local: `data-secure-expire` <br/>
+Object key: `secureExpire` <br/>
+
+Stands for the [Unix time][ext-wikipedia-unix-time]
+to which the signature is valid, e.g. `1454902434`.
+
+Works together with the
+[secure signature option](#option-secure-signature).
+
+
+### Live `boolean`
+{id="option-live"}
+
+Global: `UPLOADCARE_LIVE` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+If true, inputs are initialized automatically, [see below](#initialization).
+Enabled by default.
+
+
+### Manual start `boolean`
+{id="option-manual-start"}
+
+Global: `UPLOADCARE_MANUAL_START` <br/>
+Local: *N/A* <br/>
+Object key: *N/A* <br/>
+
+If true, initialization of inputs is invoked manually, [see below](#initialization).
+Disabled by default.
+
+
+### CDN base `url`
+{id="option-cdn-base"}
+
+Global: `UPLOADCARE_CDN_BASE` <br/>
+Local: `data-cdn-base` <br/>
+Object key: `cdnBase` <br/>
+
+Defines schema and CDN domain. Can be changed to
+[one of the predefined values][delivery-cdn]
+or your custom CNAME. Defaults to `https://ucarecdn.com/`.
+
+
+### Do not store `boolean`
+{id="option-do-not-store"}
+
+Global: `UPLOADCARE_DO_NOT_STORE` <br/>
+Local: `data-do-not-store` <br/>
+Object key: `doNotStore` <br/>
+
+Forces files uploaded with a file uploader not to be
+[stored][api-reference-upload].
+For instance, you might want to turn this on when *autostore*
+is enabled in your project, but you aren’t willing to
+store files uploaded with a particular file uploader.
+
+
+### Validators `array`
+{id="option-validators"}
+
+Global: *N/A* <br/>
+Local: *N/A* <br/>
+Object key: `validators` <br/>
+
+JavaScript-only option. Defines an array of validation functions.
+See [validators documentation][api-reference-js-file-validation].
+
+
+### Boolean options
+{id="boolean-options"}
+
+All `boolean` options are set globally with
+general JavaScript boolean values.
+
+```js
+UPLOADCARE_CLEARABLE = true;
+UPLOADCARE_PREVIEW_STEP = false;
+```
+
+When setting boolean options locally in HTML tag attributes,
+any value is interpreted as `true`, even an empty one.
+However, when setting local options to `false`,
+an attribute value should strictly be either
+`"false"` or `"disabled"`.
+
+Setting a local option to `true`:
+
+```html
+<input data-option="data-option" />
+<input data-option="true" />
+<input data-option="" />
+<input data-option />
+```
+
+Setting a local option to `false`:
+
+```html
+<input data-option="false" />
+<input data-option="disabled" />
+```
+
+
+## Tabs (Upload Sources)
+{id="tabs"}
+
+The file uploader can upload files from local storages,
+URLs, social media, and many other sources.
+Each upload source has its own tab in the file uploader dialog.
+
+A complete list of tabs supported in the file uploader version
+(2.11.4) is provided below.
+
++-------------+------------------------------------+---------+
+|    Code     |          File Source               | Default |
++=============+====================================+=========+
+| `file`      | Local disk                         | **On**  |
++-------------+------------------------------------+---------+
+| `camera`    | Local webcam                       | **On**  |
++-------------+------------------------------------+---------+
+| `url`       | Any URL                            | **On**  |
++-------------+------------------------------------+---------+
+| `facebook`  | [Facebook][ext-facebook]           | **On**  |
++-------------+------------------------------------+---------+
+| `gdrive`    | [Google Drive][ext-google-drive]   | **On**  |
++-------------+------------------------------------+---------+
+| `gphotos`   | [Google Photos][ext-google-photos] | **On**  |
++-------------+------------------------------------+---------+
+| `dropbox`   | [Dropbox][ext-dropbox]             | **On**  |
++-------------+------------------------------------+---------+
+| `instagram` | [Instagram][ext-instagram]         | **On**  |
++-------------+------------------------------------+---------+
+| `evernote`  | [Evernote][ext-evernote]           | **On**  |
++-------------+------------------------------------+---------+
+| `flickr`    | [Flickr][ext-flickr]               | **On**  |
++-------------+------------------------------------+---------+
+| `onedrive`  | [OneDrive][ext-onedrive]           | **On**  |
++-------------+------------------------------------+---------+
+| `box`       | [Box][ext-box]                     | **Off** |
++-------------+------------------------------------+---------+
+| `vk`        | [VK][ext-vkontakte]                | **Off** |
++-------------+------------------------------------+---------+
+| `huddle`    | [Huddle][ext-huddle]               | **Off** |
++-------------+------------------------------------+---------+
+
+The set can be reconfigured by specifying the tabs
+you need as space-separated values.
+
+**Globally**:
+
+```html
+<script>
+  UPLOADCARE_TABS = 'url file facebook';
+</script>
+```
+
+or **locally**:
+
+```html
+<input type="hidden" role="uploadcare-uploader"
+  data-tabs="url file facebook"
+/>
+```
+
+
+## Input Value
+{id="input-value"}
+
+The value of the `[role=uploadcare-uploader]` input
+may either be empty or contain a CDN link with file UUID.
+
+If you set the input value externally and trigger the DOM change event,
+it will be reflected in the widget. For example, setting it to a file UUID
+or a [CDN link][delivery-cdn] will show that file in the widget as
+an uploaded one. You can do this for a live widget or even before it loads.
+
+Here’s an example of a predefined value:
+
+```html
+<input type="hidden" role="uploadcare-uploader"
+  data-public-key="demopublickey"
+  value="https://ucarecdn.com/9dd2f080-cc52-442d-aa06-1d9eec7f40d1/"
+/>
+<!--
+  Also valid:
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+-->
+```
+
+<WidgetV2
+  publicKey="232d896709883f79bfaf"
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+/>
+
+
+## Styling
+{id="styling"}
+
+Our widget is designed to inherit styles from your page and
+to be highly customizable at the same time.
+All elements are scaled in line with font size.
+
+<p style={{fontFamily: "Times New Roman", fontSize: "12px", lineHeight: "1.4"}}>
+  Times New Roman, 12px:
+  <WidgetV2
+    clearable
+    publicKey="232d896709883f79bfaf"
+    value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+  />
+</p>
+
+<p style={{fontFamily: "Courier New", fontSize: "18px", lineHeight: "1.4"}}>
+  Courier New, 18px:
+  <WidgetV2
+    clearable
+    publicKey="232d896709883f79bfaf"
+    value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+  />
+</p>
+
+Uploadcare Widget is thoroughly annotated with CSS classes
+which can be styled on top of the defaults.
+You can find the class for every item by inspecting
+file uploader elements or sifting through the [original source][styles-widget].
+
+You can also customize the look of upload dialog with
+corresponding `uploadcare-dialog-*` classes.
+
+More examples can be found in our [customization tutorial][file-uploader-styling].
+
+
+## Custom Localization
+{id="custom-localization"}
+
+It’s possible that your locale is not available in the widget yet.
+If that’s the case, contributing your locale might be a good idea.
+This can be done by forking the [main repository][file-uploader-github-repo]
+and adding a localization file [here][file-uploader-locale-github-list].
+
+However, if you’d like to override text in specific parts of the widget,
+you can configure it globally:
+
+```js
+UPLOADCARE_LOCALE = 'en';
+UPLOADCARE_LOCALE_TRANSLATIONS = {
+  buttons: {
+    cancel: 'Cancel',
+    remove: 'Remove',
+    choose: {
+      files: {
+        one: 'Choose a file',
+        other: 'Choose files'
+      },
+      images: {
+        one: 'Choose an image',
+        other: 'Choose images'
+      }
+    }
+  }
+};
+```
+
+Compare the structure above with
+[default English localization][file-uploader-locale-github-en].
+You should notice this overrides two strings in the original localization.
+
+If a string is both missing in the selected localization and is not
+overridden, English is used as a fallback. In fact, English is always
+the most extensive localization for latest widget version.
+
+## Pluralization
+{id="pluralization"}
+
+You might also want to override quantitative strings.
+For example, `"1 file"` and `"3 files"`. This would require a special
+structure as seen under the `file:` key in English localization.
+
+Strings that are altered in line with a number of input features
+are based on the output of a *pluralization function*.
+The function, given an input number, returns the name of a subkey to use.
+
+```js
+function pluralize(number) {
+  // do something
+  return 'some_subkey';
+}
+```
+
+There are two of such subkeys for English localization: `one` and `other`.
+However, it might be more difficult in languages with more complex
+pluralization rules. For example, take a look at `file:` subkeys
+for [Russian][trans:russian] locale.
+
+You might’ve noticed, to format a number into pluralized strings,
+a `%1` sequence is used.
+
+Each locale we provide with the widget is supplied with its
+[pluralization rules][ext-unicode-pluralization].
+But, if you wish to override those, you can write a custom function and assign
+it to the [`UPLOADCARE_LOCALE_PLURALIZE`](#option-locale-pluralize) variable.
+
+For example, the following configuration makes the widget to use
+the message under the `some` subkey for numbers of files from 2 to 10.
+
+```js
+UPLOADCARE_LOCALE_TRANSLATIONS = {
+  file: {
+    one: 'Only one file! :(',
+    some: 'Only %1 files. Upload more.',
+    many: '%1 files!! That\'s a lot.'
+  }
+};
+UPLOADCARE_LOCALE_PLURALIZE = function(n) {
+  if (n === 1) return 'one';
+  if (n > 1 && n <= 10) return 'some';
+  return 'many';
+};
+```
+
+
+## Requirements
+{id="requirements"}
+
+The widget doesn’t have any external dependencies except for **jQuery.**
+We provide two versions of the widget: with built-in jQuery and without it
+(see [usage](#install)).
+For instance, when using the version with jQuery you could do that:
+
+```js
+var $ = uploadcare.jQuery;
+$('body').append('It works!');
+```
+
+Our widget should work perfectly in a couple of the latest versions
+of major desktop browsers: Internet Explorer, Firefox, Google Chrome,
+Safari, and Opera. It is most likely to run well in older versions
+of major browser too, except for Internet Explorer.
+
+We support Internet Explorer 8 and 9 partially, some of the widget features
+depend on functionalities that are lacking in those browsers.
+Furthermore, we are using built-in jQuery 2.2.4 with no support for IE 8.
+<a id="ie8" href="#ie8" />
+**If you need to support IE 8,** you should make use of the ie8 widget version.
+
+```html
+<script src="https://ucarecdn.com/libs/widget/2.11.4/uploadcare.ie8.min.js" charset="utf-8"></script>
+```
+
+or without jQuery and jQuery 1.x on top of it
+
+```html{noAutoLinker}
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" charset="utf-8"></script>
+<script src="https://ucarecdn.com/libs/widget/2.x/uploadcare.light.min.js" charset="utf-8"></script>
+```
+
+## Automatic File Storing
+{id="autostore"}
+
+When the *autostore* feature is enabled in
+[project settings][account-settings], uploaded files
+are stored on our storage automatically. There’s no need
+to additionally [store][api-reference-rest-store] them.
+This might prove handy when your app retains most (or all)
+of the uploaded files.
+
+If *autostore* is disabled, you’d need to make a separate
+server-side [API call][api-reference-rest-store] in
+order to store your files. This should be done after a
+form listing out uploaded files is submitted.
+Files that weren’t through a
+[store][api-reference-rest-store] operation are deleted
+within a 24-hour time span.
+
+If *autostore* is enabled in your project settings,
+but you don’t want to store files uploaded with a particular widget,
+check out [this](#option-do-not-store) option.
+
+
+## Initialization
+{id="initialization"}
+
+By default, every new `[role=uploadcare-uploader]` element
+appearing on a page (at any time) gets initialized as a widget
+in about ~100 ms. A single JavaScript timer provides this behavior.
+It shouldn’t have any impact on performance in typical applications.
+However, if every cycle counts and you feel this is weighty,
+consider disabling the [`UPLOADCARE_LIVE`](#option-live) option.
+
+This way, you’d have to deal with
+[manually][file-uploader-option-manual-start]
+adding widget inputs after a page loads.
+
+Though, all the file uploaders on a page would still be initialized
+during its load. You might not want it, especially if you plan
+introducing some preparations prior to instantiating file uploaders.
+Consider using [`UPLOADCARE_MANUAL_START`](#option-manual-start)
+together with `uploadcare.start()` in the case.
+A `settings` object should be passed into `uploadcare.start()`
+to override global settings. You can pass any global settings,
+but keep in mind that keys are `camelCased`,
+**not** `CAPITALIZED_WITH_UNDERSCORES`.
+
+```js
+UPLOADCARE_MANUAL_START = true;
+
+jQuery(function($) {
+  var $.getJSON('/uploadcare.json', function(data) {
+    uploadcare.start({
+      publicKey: data.publicKey, // overrides UPLOADCARE_PUBLIC_KEY
+      crop: data.crop // overrides UPLOADCARE_CROP
+    });
+  });
+});
+```
+
+
+## Manual Crop
+{id="crop"}
+
+Uploadcare Widget features custom crop. [Enabling it](#option-crop) will alter
+the usual widget behavior. Now, after a user selects an image to upload,
+a cropping step arises where that image can be cropped according
+to your settings. Your project will still be supplied with the
+original image itself, while cropping will be put into a resulting
+CDN URL as the on-the-fly [CDN API operation][transformations-image-crop].
+
+Crop options are put into a string holding one or more
+comma-separated crop presets. When several presets are defined,
+users will be able to pick any of them during the crop step.
+
+Each preset consists of a size definition and an optional keyword.
+
+* `"disabled"` — crop is disabled. Can’t be combined with other presets;
+* `""` or `"free"` — crop is enabled and users will be able to freely
+  select any area on an image;
+* `"2:3"` — users will be able to select an area with the aspect ratio of 2:3;
+* `"300x200"` — same as above, but if the selected area
+  is greater than 300x200, it will be downscaled to fit the dimensions;
+* `"300x200 upscale"` — same as above, but the area will be
+  scaled even if it is smaller than the specified dimensions;
+* `"300x200 minimum"` — users won’t be able to select an area smaller
+  than 300x200. In case an image itself is smaller than 300x200,
+  it will be upscaled.
+
+### Crop examples
+{id="crop-examples"}
+
+Crop with **no restrictions**:
+
+```html
+<input type="hidden" role="uploadcare-uploader" data-images-only
+  data-crop=""
+/>
+```
+
+<WidgetV2
+  imagesOnly
+  crop
+  publicKey="232d896709883f79bfaf"
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+/>
+
+Five **presets with different aspect ratios,** one of which is free crop:
+
+```html
+<input type="hidden" role="uploadcare-uploader" data-images-only
+  data-crop="free, 16:9, 4:3, 5:4, 1:1"
+/>
+```
+
+<WidgetV2
+  imagesOnly
+  crop="free, 16:9, 4:3, 5:4, 1:1"
+  publicKey="232d896709883f79bfaf"
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+/>
+
+Crop with **fixed aspect ratio**:
+
+```html
+<input type="hidden" role="uploadcare-uploader" data-images-only
+  data-crop="4:3"
+/>
+```
+
+<WidgetV2
+  imagesOnly
+  crop="4:3"
+  publicKey="232d896709883f79bfaf"
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+/>
+
+Fixed-size crop with **upscaling**:
+
+```html
+<input type="hidden" role="uploadcare-uploader" data-images-only
+  data-crop="400x300 upscale"
+/>
+```
+
+<WidgetV2
+  imagesOnly
+  crop="400x300 upscale"
+  publicKey="232d896709883f79bfaf"
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+/>
+
+
+## Shrink Images Before Uploading
+{id="image-shrink"}
+
+Sometimes you don’t want to have hi-res original images uploaded to your
+account. Generally, sending large images is inefficient: especially when we’re
+talking about transferring 10+ megapixel shots from your smartphone over some
+mobile network. It’s either expensive or slow.
+
+Image shrink option is provided as a string holding the preferred resolution
+and, optionally, a JPEG quality of the resulting image (note, the original
+aspect ratio will be preserved despite the set resolution.)
+
+Image Shrink outputs to:
+
+* JPEG in case an input image has no transparency.
+* PNG in case an input image includes transparent pixels.
+
+Here are some examples of values you can specify for `data-image-shrink` to
+scontrol the feature:
+
+* `800x600`, shrinks images to 0.48 megapixels with the default JPEG quality of
+  80%.
+* `1600x1600 95%`, shrinks images to 2.5 megapixels with the JPEG quality set to
+  95%.
+
+The resolution you set should not exceed 5 megapixels. All EXIF info from
+original images (including orientation, camera model, geolocation, and settings)
+will be copied to resized images.
+
+Images won’t be shrunk in the following cases:
+
+* if a browser does not support all the required APIs.
+* if an image is uploaded from social sources or URL.
+* if an image is less than two times larger than the preferred size.
+  For example, an image with the resolution of 2560x1560px (4 MP) won’t be
+  shrunk to 1600x1600px (2.5 MP), but a 2448x3264px (8 MP) one will.
+  The reason is in the first case the decline in quality will be significant,
+  while the drop in file size will stay relatively low.
+
+### Shrink examples
+{id="image-shrink-examples"}
+
+Shrink to **1024x1024 pixels**:
+
+```html
+<input type="hidden" role="uploadcare-uploader"  data-preview-step=""
+  data-image-shrink="1024x1024"
+/>
+```
+
+<WidgetV2
+  imageShrink="1024x1024"
+  previewStep
+/>
+
+The widget, capable of **shrinking multiple files**
+to the resolution of 640x480 pixels (0.3 MP.):
+
+```html
+<input type="hidden" role="uploadcare-uploader"
+  data-multiple=""
+  data-image-shrink="640x480"
+/>
+```
+
+<WidgetV2
+  multiple=""
+  imageShrink="640x480"
+/>
+
+
+## Mobile Layout
+{id="mobile"}
+
+Starting from the version 1.0.0, our web widget can be
+properly used on mobile devices. On small screens, the uploading dialog
+gets opened full-screen, and layout is changed for the sake of
+better user experience. This feature is turned on automatically
+on pages with the proper `<meta name="viewport">` tag.
+Viewport tag reports which screen size was expected when
+you created a page. It is required for all responsive websites.
+If your site does not support responsive issues, but you still want
+to provide mobile devices with the appropriate Uploadcare Widget,
+you can include this relatively safe viewport tag to your page:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+```
+
+This tag will trigger a mobile browser to show your page with 1:1 initial zoom,
+but will still allow users to adjust the zoom manually.
+
+
+[trans:russian]: https://github.com/uploadcare/uploadcare-widget/blob/v1.0.0rc2/app/assets/javascripts/uploadcare/locale/ru.js.coffee#L17-L21
+[styles-widget]: https://github.com/uploadcare/uploadcare-widget/tree/v2/app/assets/stylesheets/uploadcare

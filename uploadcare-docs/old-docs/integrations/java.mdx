@@ -1,0 +1,225 @@
+---
+  layoutPreset: integrations
+  title: Java API Client for File Upload and Management
+  description:
+    Java Uploadcare API client for Fast & Reliable File Uploads; File, Group,
+    Project Operations & More.
+---
+
+# Java API Client 
+
+Java integration handles uploads and file operations by wrapping Uploadcare
+[Upload API][api-reference-upload] and [REST API][api-reference-rest]. This
+comprehensive API client lets you use most of the Uploadcare features from within
+your Java app.
+
+[GitHub &rarr;][java-github]
+
+## Features
+
+Upload features:
+* Upload files from local storage and URLs (up to 5 TB)
+* Multipart uploading for large files
+* Uploading network to speed uploading jobs (like CDN)
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+* Paginated resources are fetched as `List<T>`
+* CDN path builder
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+
+## Requirements
+{id="sign-up"}
+
+* [Uploadcare account][account-signup]
+* [Java JDK][ext-java-jdk-downloads]
+
+Go to your Uploadcare [Dashboard][dashboard] and create a new project for your
+Java app. It'll have [API keys][settings-keys] to complete Java API client
+integration.
+
+## Setup
+{id="setup"}
+
+The latest stable library version is available at [Maven Central][ext-maven-java-version-list].
+
+Include the following code into your build by adding the following dependencies
+into `pom.xml` for your project.
+
+```xml
+<dependency>
+  <groupId>com.uploadcare</groupId>
+  <artifactId>uploadcare</artifactId>
+  <version>3.3.1</version>
+</dependency>
+```
+
+To build with Gradle add to Gradle build file:
+
+```groovy
+compile 'com.uploadcare:uploadcare:3.3.1'
+```
+
+## Usage example
+
+### Create `Client` and basic API usage
+{id="client-init"}
+
+Use your [Public][settings-keys-public] and [Secret][settings-keys-secret] API
+Keys from the Java project's dashboard.
+
+Create a new API Client:
+
+```java
+Client client = new Client("publicKey", "secretKey");
+Project project = client.getProject();
+Project.Collaborator owner = project.getOwner();
+
+List<URI> published = new ArrayList<URI>();
+Iterable<File> files = client.getFiles().asIterable();
+for (File file : files) {
+    if (file.isMadePublic()) {
+        published.add(file.getOriginalFileUrl());
+    }
+}
+```
+### Building CDN URLs
+{id="building-cdn-urls"}
+
+Uploadcare CDN can apply image transformations by adding directives like this:
+
+```cdn
+https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/resize/640x640/image.jpg
+```
+
+Here's a Java example to automate CDN URL creation:
+
+```java
+File file = client.getFile("85b5644f-e692-4855-9db0-8c5a83096e25");
+CdnPathBuilder builder = file.cdnPath()
+        .resizeWidth(200)
+        .cropCenter(200, 200)
+        .grayscale();
+URI url = Urls.cdn(builder);
+```
+
+### Upload files with `FileUploader` and `UrlUploader`
+{id="uploader"}
+
+Check out two options to upload files with the Java Uploadcare library
+`Uploader` interface.
+
+Upload with [UrlUploader][java-github-urluploader]:
+
+```java
+@Test
+void uploadFileWithUrlUploader_uploadedAndRequestedFilesShouldMatch() throws UploadFailureException {
+  Uploader uploader = new UrlUploader(client, URL);
+  File uploadedFile = uploader.upload();
+  String uploadedFileId = uploadedFile.getFileId();
+
+  File requestedByIdFile = client.getFile(uploadedFileId);
+
+  then(requestedByIdFile.hasOriginalFileUrl()).isTrue();
+  then(requestedByIdFile.getOriginalFileUrl().getRawPath()).contains(uploadedFileId);
+  then(requestedByIdFile.getOriginalFilename()).isEqualToIgnoringCase(SHUTTERSTOCK_FILE_NAME);
+  then(requestedByIdFile.getMimeType()).isEqualTo("image/jpeg");
+  then(requestedByIdFile.isRemoved()).isFalse();
+  then(requestedByIdFile.isStored()).isTrue();
+  then(requestedByIdFile.getUploadDate()).isInSameHourAs(new Date());
+}
+```
+
+Upload with [FileUploader][java-github-fileuploader] by providing `java.io.File`:
+
+```java
+@Test
+void uploadFileWithFileUploader_uploadedAndRequestedFilesShouldMatch() throws UploadFailureException {
+  java.io.File localFile = new java.io.File(Optional.ofNullable(getClass().getClassLoader()
+      .getResource(LOCAL_FILE_NAME)).map(java.net.URL::getFile)
+      .orElseThrow(RuntimeException::new));
+  Uploader uploader = new FileUploader(client, localFile);
+  File uploadedFile = uploader.upload();
+  String uploadedFileId = uploadedFile.getFileId();
+
+  File requestedByIdFile = client.getFile(uploadedFileId);
+
+  then(requestedByIdFile.hasOriginalFileUrl()).isTrue();
+  then(requestedByIdFile.getOriginalFileUrl().getRawPath()).contains(uploadedFileId);
+  then(requestedByIdFile.getOriginalFilename()).isEqualToIgnoringCase(LOCAL_FILE_NAME);
+  then(requestedByIdFile.isRemoved()).isFalse();
+  then(requestedByIdFile.isStored()).isTrue();
+  then(requestedByIdFile.getUploadDate()).isInSameHourAs(new Date());
+}
+```
+
+Note: the `com.uploadcare.api.File#getOriginalFileUrl` method returns a
+combination of UUID and an original file name without whitespaces.
+
+### Manage project data and files
+{id="project-and-files"}
+
+With `Client`, you get a few utility methods to retrieve and handle the
+project-specific data, like fetching a file by a file id or listing all uploaded
+files for the project. Note, _ids_ are Uploadcare [UUIDs][uploads]
+associated with files whenever they get uploaded.
+
+Here’s a short example of navigating your files and retrieving 10 file names
+uploaded to your project after today’s midnight and matching some arbitrary
+pattern:
+
+```java
+// Print 10 file names uploaded after today's midnight and matching regexp
+client.getFiles().asList()
+        .stream()
+        .map(f -> new Pair<>(f.getOriginalFilename(), f.getUploadDate()))
+        .filter(p -> p.getValue().after(Date.from(todayMidnight))
+                && p.getKey().matches(FILENAME_STARTING_WITH_LETTERS_AND_HAVING_EXTENSION))
+        .limit(10)
+        .forEach(System.out::println);
+```
+
+### Automatic File Storing
+{id="auto-storing-mode"}
+
+When **Automatic File Storing.** in [project settings][settings-advanced-autostore]
+is on (default), all newly uploaded files will be stored permanently. If it's
+switched off, all incoming files will be deleted in 24 hours to prevent your
+storage cluttering.
+
+With **Automatic File Storing.** turned off, you can still `store` files
+selectively via API. In Java, these per-file controls are provided by both
+`com.uploadcare.api.Client#saveFile` taking a UUID as a parameter and
+`com.uploadcare.api.File#save`.
+
+### Transfer files to Amazon S3
+{id="custom-storage"}
+
+You can connect an Amazon S3 Bucket to your Uploadcare account as a custom
+storage for specific [cases][storage-custom]. See [docs][storage-custom-setup]
+on how to configure it.
+
+With the Java library, you can move files to custom storage with the
+`com.uploadcare.api.Client#copyFile` [method][java-github-copyFile]. You can do
+the same via [REST API][api-reference-rest-copy].
+
+### More examples
+{id="conclusion"}
+
+Refer to the official Java library [GitHub repo][java-github] and
+check out [more examples][java-github-examples].
+
+## Full documentation
+
+Read the full documentation on [GitHub][java-github].
+
+## Related guides
+
+* [Integration with Android][guide-android]
+<!-- * [Integration with Kotlin][guide-kotlin] -->

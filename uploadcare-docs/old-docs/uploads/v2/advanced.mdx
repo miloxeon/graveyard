@@ -1,0 +1,80 @@
+---
+  title: Advanced topics
+  noindex: true
+  description:
+    Uploadcare is a powerful tool even when it comes to the details.
+    Make use of the advanced features in minutes with this article
+---
+
+import { CodePen } from "@uploadcare/docs-components";
+
+# Advanced topics
+
+* [Access to Canvas Pixels](#access-canvas-pixels)
+* [Uploaded Files Browser](#uploaded-files-browser)
+
+## Access to Canvas Pixels
+{id="access-canvas-pixels"}
+
+It is a great idea to use images from our CDN on HTML canvas.
+Unfortunately browsers restrict access to canvas if an image was downloaded
+from untrusted source. By default only images from the same origin
+are treated as trusted. If you’ll draw the image from other origins,
+the canvas will be marked as “dirty” and no pixel read will be possible
+from the canvas.
+
+Calling `getImageData()` or `toDataURL()` will lead to `SecurityError`:
+
+```js
+canvas.toDataURL();
+// Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
+canvas.getContext('2d').getImageData(0, 0, 100, 100);
+// Uncaught DOMException: Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The canvas has been tainted by cross-origin data.
+```
+
+One of solutions is using `crossOrigin` image property
+to ask browser to request the image in a safe way.
+
+<!-- https://codepen.io/uploadcare/pen/QRvbEB -->
+<CodePen id="QRvbEB" title="Access to canvas pixels example #1" />
+
+Unfortunately this property is available only in Chrome and Firefox.
+But it is very easy to make such request manually with the help of
+`XMLHttpRequest`.
+
+<!-- https://codepen.io/uploadcare/pen/oRWXbx -->
+<CodePen id="oRWXbx" title="Access to canvas pixels example #2" />
+
+This works well in Chrome 19+, Firefox 6+, IE 10+, Safari 6+ and Opera 15+.
+
+
+## Uploaded Files Browser
+{id="uploaded-files-browser"}
+
+Often you may want to allow user to choose previously uploaded files again.
+Uploadcare doesn’t store relations between users and files
+and also doesn’t allow the file uploader to list all files in the project
+for security reasons.
+
+There are two ways to handle the files-to-user relations:
+
+1. You can store this information on your side and
+  load list of user’s files using AJAX requests to your server.
+  This is relatively complex way because you’ll need to implement some storage
+  and endpoint which will return file list from this storage.
+2. List of previously uploaded files can be stored locally on user’s computer
+  in browser’s local storage. This way user will not be able to choose files
+  uploaded from other devices, but this doesn’t require any support on
+  server side.
+
+Following example shows how to add local storage history tab
+with following features:
+
+* Lists are separated by public key. If you are using file uploaders
+  with two or more public keys, only files from current project will be shown.
+* List of last 50 files are shown.
+* If file uploader has images-only flag, only image files will be shown.
+* User can remove files from history.
+
+<!-- https://codepen.io/uploadcare/pen/zQwGoO -->
+<CodePen id="zQwGoO" title="Uploaded files browser example" />

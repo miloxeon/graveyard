@@ -1,0 +1,182 @@
+---
+  layoutPreset: guides
+  title: Serverless Image Gallery with CDN Delivery
+  description:
+    Learn how to add a powerful and responsive image gallery with CDN
+    delivery and image transformations to your page with Uploadcare and Fotorama
+---
+
+import { Badge, BadgesBox } from "@uploadcare/docs-components"
+
+# Serverless Image Gallery with CDN Delivery
+
+<BadgesBox>
+  <Badge>10 Minutes to Integrate</Badge>
+</BadgesBox>
+
+[Fotorama][fotorama] is a simple yet powerful image gallery. It supports any
+browsers, provides seamless responsive experience and lazy loading images.
+By bringing Uploadcare together, you can get your galleries serverless and powered
+up with best-in-class <abbr title="Content Delivery Network">CDN</abbr> delivery.
+
+By serving images from Uploadcare, you also enable our
+[Image Transformations][transformations-image] engine for your images.
+
+Here’s what you’ll get,
+
+<iframe
+  src="https://ucarecdn.com/8d1b6a82-d553-4e0c-a1f8-429d6e4c9acb~4/gallery/-/nav/thumbs/-/fit/cover/-/loop/true/-/allowfullscreen/native/-/thumbwidth/100/"
+  width="100%"
+  height="450"
+  allowFullScreen="true"
+  frameBorder="0" />
+
+This guide will help you learn how to build a serverless image gallery and
+apply Image Transformations with a few lines of HTML. It should take you about
+_10 minutes_.
+
+* [Step 1. Get Uploadcare Account](#get-uc-account)
+* [Step 2. Upload Images](#upload-images)
+* [Step 3. Add Fotorama](#fotorama-add)
+* [Step 4. Add Image Transformations](#fotorama-edit)
+* [Conclusion](#conclusion)
+
+## Step 1. Get Uploadcare Account
+{id="get-uc-account"}
+
+First, you will need an Uploadcare account. In case you don’t have it,
+[Sign Up][account-signup] for one, it’s free. Then, navigate to your
+[dashboard][dashboard], go to an existing [project][settings-projects] or
+create a new one.
+
+## Step 2. Upload Images
+{id="upload-images"}
+
+Switch to “Files” in the sidebar. Hit “Upload new files” and choose images you
+want to include in your gallery. We recommend continuing with about four
+uploaded images.
+
+Once uploaded, your images will appear on the list of files in your project.
+Click any file and see how its URL now looks like:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/:filename
+```
+
+Once your images are on Uploadcare, we store them for you. From here, you can
+manipulate images via their permanent URLs. Let’s elaborate on the URL
+components.
+
+First, the `ucarecdn.com` part indicates an image has already been cached by our
+CDN layers. Then, `:uuid` is a unique identifier assigned to your image, and
+`:filename` holds its original filename. We won’t need `:filename` any longer:
+your image is now addressable via UUID, i.e., this will work:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/
+```
+
+We’ll need your new image links to complete further steps of this guide, let’s
+move on to adding Fotorama to your page.
+
+## Step 3. Add Fotorama
+{id="fotorama-add"}
+
+Getting Fotorama up and running involves adding some HTML.
+
+This goes to the `<head>` of your page:
+
+```html
+<!-- Add jQuery 1.8 or later to your page, 33 KB -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- Get Fotorama from CDNJS, 19 KB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+```
+
+Then, add the `<div>` element with the specified `fotorama` class to the block
+of your page where you want the gallery and define image URLs:
+
+```html
+<div class="fotorama">
+  <img src="https://ucarecdn.com/05f649bf-b70b-4cf8-90f7-2588ce404a08/">
+  <img src="https://ucarecdn.com/a9ed82c6-14f1-462e-849e-3b007c2aae87/">
+  <img src="https://ucarecdn.com/b7bbb974-b8a1-46f0-82ae-e5a23a136238/">
+  <img src="https://ucarecdn.com/150ff289-8b0f-407f-902f-0f224217d225/">
+</div>
+```
+
+Your gallery will now include four images, however you may notice the images are
+too heavy and have different aspect ratios. We can fix this by adding some
+[Image Transformations][transformations-image].
+
+## Step 4. Add Image Transformations
+{id="fotorama-edit"}
+
+You can modify any image on the fly by simply modifying its URL. We’ll implement
+the [`cdn›-/crop/`][transformations-image-crop] and
+[`cdn›-/preview/`][transformations-image-preview] transformations to handle image aspect
+ratios and sizes:
+
+```html
+<div class="fotorama">
+  <img src="https://ucarecdn.com/05f649bf-b70b-4cf8-90f7-2588ce404a08/-/crop/4460x3347/336,0/-/preview/">
+  <img src="https://ucarecdn.com/a9ed82c6-14f1-462e-849e-3b007c2aae87/-/crop/4480x3360/0,2807/-/preview/">
+  <img src="https://ucarecdn.com/b7bbb974-b8a1-46f0-82ae-e5a23a136238/-/crop/5969x4480/469,0/-/preview/">
+  <img src="https://ucarecdn.com/150ff289-8b0f-407f-902f-0f224217d225/-/crop/4480x3360/0,3360/-/preview/">
+</div>
+```
+
+Then, we’d want the gallery to be responsive and allow it to enter the
+fullscreen mode. That’s done by specifying a couple of data attributes:
+
+```html
+<div class="fotorama"
+     data-allowfullscreen="native"
+     data-width="100%"
+     data-ratio="4/3">
+  <img src="https://ucarecdn.com/05f649bf-b70b-4cf8-90f7-2588ce404a08/-/crop/4460x3347/336,0/-/preview/">
+  <img src="https://ucarecdn.com/a9ed82c6-14f1-462e-849e-3b007c2aae87/-/crop/4480x3360/0,2807/-/preview/">
+  <img src="https://ucarecdn.com/b7bbb974-b8a1-46f0-82ae-e5a23a136238/-/crop/5969x4480/469,0/-/preview/">
+  <img src="https://ucarecdn.com/150ff289-8b0f-407f-902f-0f224217d225/-/crop/4480x3360/0,3360/-/preview/">
+</div>
+```
+
+Note, Fotorama provides two ways of handling the fullscreen mode, check out the
+“Fullscreen” section in their [docs][fotorama-fullscreen]. Getting the image
+gallery responsive is a way to handle its “Dimensions,” see this Fotorama
+[docs][fotorama-responsive] article for fine-tuning.
+
+Your gallery is now there and ready.
+
+In case you want the gallery to contain image thumbnails rather than the
+full-sized originals, you can modify the `<div>` contents in the following manner:
+
+```html
+<a href="https://ucarecdn.com/05f649bf-b70b-4cf8-90f7-2588ce404a08/-/crop/4460x3347/336,0/-/preview/">
+  <img src="https://ucarecdn.com/05f649bf-b70b-4cf8-90f7-2588ce404a08/-/crop/4460x3347/336,0/-/preview/128x128/" alt="">
+</a>
+```
+
+Note how we modified the `cdn›-/preview/` Image Transformation parameters: the image
+was thus resized to fit in the 128x128px box without changing its original
+aspect ratio.
+
+You can learn more about existing Image Transformations in our
+[docs][transformations-image]. Specifically, the section about
+[Filters][transformations-image-filter].
+
+## Conclusion
+{id="conclusion"}
+
+That’s it, you’ve just added a serverless image gallery to your page. It serves
+content from CDN and allows manipulating images on the fly 🚀
+
+From here, you can move on to some further reading:
+
+* [In-Browser Image Editing][fxtab]
+* [Automate Image Galleries via CDN Group API][delivery-group-api-gallery]
+
+Should you have any questions, feel free to post those around our
+[community area][community].

@@ -1,0 +1,119 @@
+---
+  layoutPreset: integrations
+  title: Serverless File Uploads for TinyMCE
+  description:
+    Learn how to enable serverless file and image uploads in TinyMCE
+    with Uploadcare and start receiving files and user generated content
+    in minutes.
+---
+
+# Serverless File Uploads for TinyMCE
+
+[TinyMCE][ext-tinymce-home] is a powerful WYSIWYG editor powering 100M sites on
+the web. Integrating [Uploadcare][home] enables serverless file and image
+upload via [File Uploader][file-uploader] that adapts to your app’s
+flow and design.
+
+Every file uploaded via File Uploader gets instantly cached on our CDN and
+swiftly and reliably delivered across 130+ countries.
+
+This guide covers integrating File Uploader into TinyMCE 4+ in _6 minutes_.
+Here’s a basic [demo][mce-github-demo] of what you’ll get.
+
+* [Step 1. Get Uploadcare Account](#get-uc-account)
+* [Step 2. Prepare Your TinyMCE Installation](#prepare-tinymce)
+* [Step 3. Add File Uploader](#add-uploader)
+* [Conclusion](#conclusion)
+
+## Step 1. Get Uploadcare Account
+{id="get-uc-account"}
+
+First, you will need an Uploadcare account. In case you don’t have it,
+[Sign Up][account-signup] for one, it’s free. Then, navigate to your
+[dashboard][dashboard] to create a new [project][settings-projects] or obtain
+[Public API Key][settings-keys-public] for an existing one.
+
+If you’re going to allow non-image uploads in your TinyMCE, add
+[billing info][account-billing] in your account settings.
+
+## Step 2. Prepare Your TinyMCE Installation
+{id="prepare-tinymce"}
+
+The second step is about installing TinyMCE. It’s quick: update your page with
+the following elements:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script src='https://cloud.tinymce.com/stable/tinymce.min.js'></script>
+  <script>
+  tinymce.init({
+    selector: '#mytextarea'
+  });
+  </script>
+</head>
+
+<body>
+<h1>TinyMCE Quick Start Guide</h1>
+  <form method="post">
+    <textarea id="mytextarea">Hello, World!</textarea>
+  </form>
+</body>
+</html>
+```
+
+If you’re up to learning more, check out the
+[Tiny Quick Start][ext-tinymce-quickstart].
+
+## Step 3. Add File Uploader
+{id="add-uploader"}
+
+Now that we’ve got TinyMCE let’s integrate Uploadcare. The HTML snippet above
+can serve as a good starting point.
+
+Download the latest plugin archive from the [Releases][mce-github-releases]
+page of our repo. Extract the downloaded archive to the plugin directory of your
+TinyMCE installation or any other target location.
+
+And the last thing is to update settings applied on TinyMCE init:
+
+```html
+tinymce.init({
+    selector: '#mytextarea',
+    plugins: 'uploadcare',
+    toolbar: 'uploadcare',
+    external_plugins: {
+      uploadcare: '/path/to/uploadcare/plugin.js',
+    },
+    uploadcare_public_key: 'YOUR_PUBLIC_KEY',
+});
+```
+
+Make sure to replace `YOUR_PUBLIC_KEY` in the above snippet with the Public API
+Key you discovered in the [first step](#get-uc-account) of this guide. Check if
+`external_plugins` is a valid path for your TinyMCE installation.
+
+Save your page and open it in your browser. The file uploader is there and ready to
+receive uploads.
+
+<img src="https://ucarecdn.com/094dd28d-b80c-4fb2-ba00-668f9faa7271/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/tinymce-button-installed.jpg"
+    srcSet="https://ucarecdn.com/094dd28d-b80c-4fb2-ba00-668f9faa7271/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/tinymce-button-installed@2x.jpg 2x"
+    alt="TinyMCE File Uploader Installed" />
+
+## Conclusion
+{id="conclusion"}
+
+Good job, you’ve just enabled serverless file and image uploading in your TinyMCE
+editor 🙂
+
+For further reading, take a look at:
+
+* [Configuration][mce-github-configuration] section of the integration repo
+  readme.
+* Uploadcare [In-Browser Image Editing][feature-fxtab] options for File
+  Uploader.
+* Other Uploadcare [integrations][integrations].
+
+In case you have any questions, feel free to post those around our
+[community area][community].

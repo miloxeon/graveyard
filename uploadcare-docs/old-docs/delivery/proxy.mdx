@@ -1,0 +1,275 @@
+---
+  title: 'Uploadcare Proxy'
+  description:
+    'Uploadcare allows you to use CDN operations and Intelligence without explicitly uploading files.'
+---
+
+# Uploadcare Proxy
+
+Uploadcare delivers your files with [a powerful CDN][delivery-cdn]. It implies
+that you need to upload files to Uploadcare storage first. If you want to use
+our CDN without _explicitly_ uploading files to Uploadcare, this is the feature
+you want to use. Proxy allows you to integrate Uploadcare into your solution
+with only minor URL modifications:
+
+```
+https://yoursite.ucr.io/ + https://yoursite.com/assets/image.jpg =
+https://yoursite.ucr.io/https://yoursite.com/assets/image.jpg
+```
+
+Proxy will upload files to your Uploadcare storage as soon as they’re
+requested. It will also allow you to use Uploadcare CDN features.
+
+Primarily, Proxy is used to deliver images along with [image
+transformations][transformations-image]. You can deliver other files as well.
+Your original file URLs will still work.
+
+Note: Try out [Adaptive Delivery][delivery-adaptive] which adapts images to any
+device automatically with a simple setup. Use Proxy for a more manual approach.
+
+## Setting Up
+{id="setup"}
+
+Open your Uploadcare project's Dashboard and select **Delivery** from the main
+menu on the left. Click **Connect** for **Proxy.**
+
+<!-- Add screenshot from Dashboard here -->
+
+### Step 1. Provide a List of Allowed Domains
+{id="setup-domains"}
+
+Specify the domain names that host your files. The Proxy will recognize these
+domains and deliver files successfully. You can add one or more domains in the
+**Proxy** dialog window.
+
+### Step 2. Custom Proxy Endpoint (optional)
+{id="setup-endpoint"}
+
+By default, Uploadcare creates a proxy endpoint for every project automatically:
+`PUBLIC_KEY.ucr.io` (e.g., `88a247b663ba80c3bf6f.ucr.io`).
+
+As you can see, a default subdomain for the endpoint is your project's Public
+key. All links start with this URL, so you can change it to something readable.
+Custom endpoint examples:
+* CNAME or subdomain endpoint will look like: `mydomain.ucr.io`
+* A record or domain endopoint will look like: `cdn.mydomain.com`
+
+## Using Proxy
+{id="usage"}
+
+Here's how to use Proxy after it's set up.
+
+### Step 1. Add Proxy prefix
+{id="usage-prefixes"}
+
+Add the Proxy prefix that contains your Endpoint to a file URL on the allowed
+domain:
+
+```
+https://yoursite.ucr.io/ + https://yoursite.com/assets/image.jpg =
+https://yoursite.ucr.io/https://yoursite.com/assets/image.jpg
+```
+
+After that, `image.jpg` will be delivered via [Uploadcare CDN][delivery-cdn].
+The original file will remain at its original place, so that older references
+will work as well.
+
+Now you can add prefixes to all images using your IDE or text editing tool.
+Apply CDN operations when needed.
+
+<!-- Misha: SUGG: Maybe create regular expressions for changing all pictures in
+entire code? Or a python script that'll do this substitution. -->
+
+### Step 2. Apply image transformations
+{id="usage-transformations"}
+
+You can apply [image transformations][transformations-image] by adding one of
+the respective [URL directives][transformations-image] **between** the prefix
+and media URL.
+
+[This CDN operation][transformations-image-resize] will resize `image.jpg` to
+500 px in width by adding `cdn›-/preview/-/resize/500x/`:
+
+```
+https://yoursite.ucr.io/-/preview/-/resize/500x/https://yoursite.com/assets/image.jpg
+```
+
+As a result, `image.jpg` will be resized and delivered with Uploadcare CDN.
+
+You can also optimize your responsive image handling workflow and free up some
+storage space by deleting image versions in different sizes for adaptive
+layouts. Uploadcare resizes images on the fly and you don't have to save all
+versions beforehand. Here's how to generate multires images:
+
+```
+1260 pixels in width:
+https://yoursite.ucr.io/-/preview/-/resize/1260x/https://yoursite.com/assets/image.jpg
+
+760 pixels in width:
+https://yoursite.ucr.io/-/preview/-/resize/760x/https://yoursite.com/assets/image.jpg
+
+512 pixels in width:
+https://yoursite.ucr.io/-/preview/-/resize/512x/https://yoursite.com/assets/image.jpg
+```
+
+[Find out more](#cases-ri) on implementing responsive images down below.
+
+### Possible Errors
+{id="errors"}
+
+Here's a list of errors you might get when using Proxy:
+
+#### \[HTTP 400\] `Domain <yoursite.com> is not registered`
+
+You did not register a Proxy domain for your sites by dropping us a line at
+[help@uploadcare.com][mail-help].
+
+#### \[HTTP 400\] `Domain <yoursite.com> is not allowed`
+
+You tried fetching a file from a domain that was not allowed. Check settings or
+contact us to add the domain as allowed for your account.
+
+#### \[HTTP 400\] `Failed to parse file URL`
+
+Your prefix was added to an invalid URL. Consider checking that URL.
+
+#### \[HTTP 404\]
+
+You tried fetching an unreachable file. Consider checking its URL.
+
+#### \[HTTP 502\] `'is_ready' timeout`
+
+A problem occurred when trying to upload a file to our storage. Try again later
+and if it didn't help you always can [contact us][mail-help].
+
+#### Other errors
+
+Proxy uses the `from_url` method, so you can also get general
+[errors][api-reference-upload-errors] related to the Upload API or specific to
+the `from_url` [method][api-reference-upload-fromurl-errors].
+
+## Proxy Use Cases
+{id="cases"}
+<!-- Roma: Looks like this is a place for a guide. -->
+
+We picked a collection of the most popular Proxy use cases. These cases are
+about optimizing traffic, improving load time, and handling your assets the way
+you need.
+
+* [Implement Responsive Images](#cases-ri)
+* [Improve Load Time](#cases-load-time)
+* [Cut Traffic Costs](#cases-traffic)
+* [Migrate to the Cloud](#cases-migrate)
+
+<!-- Commented parts:
+* [Seamlessly Integrate Uploadcare](#cases-integrate)
+* [Assess Your Performance](#cases-performance) 
+-->
+
+### Implement Responsive Images
+{id="cases-ri"}
+
+After you set up delivery with Proxy, there's just one step to build a
+responsive design. Responsive images require that you prepare images in
+different sizes and later list them in the `srcset` attribute or the `<picture>`
+element.
+
+Check out our blog [article][blog-responsive-images] on Image Transformations
+that covers responsive techniques.
+
+### Improve Load Time
+{id="cases-load-time"}
+
+Uploadcare Proxy fetches your assets and delivers them via [Uploadcare
+CDN][delivery-cdn]. That alone improves load time of your assets because they
+get served from a CDN node best for your client’s location.
+
+When handling media, Proxy provides further load time improvement by letting you
+cut file sizes at no visual quality loss. With images, that can be done via our
+[Image Transformations][transformations-image] feature.
+
+Specifically, take a look at the following on-the-fly operations:
+
+* [`format`][transformations-image-format], convert images to WebP, PNG or JPEG.
+  It's recommended to use `format/auto`
+* [`quality`][transformations-image-quality], adjust image quality.
+* [`resize`][transformations-image-resize], adjust image size.
+
+This set of tools can help accelerate your images [up to
+9x][blog-accelerate-images].
+
+You can compare page load time and traffic optimization with Uploadcare CDN and
+without. Use tools like [Chrome DevTools][ext-devtools-network] for local tests.
+Play around with the image [quality][transformations-image-compression] and find
+a sweet spot for the best visual traffic compression results.
+
+<!-- Misha: TODO you can use Smart Compression -->
+
+Note that the first request for each media file over Proxy URL will copy it to
+Uploadcare CDN. Therefore, there won't be a performance improvement yet.
+However, once it gets copied to our servers, all subsequent requests will fetch
+the file from the closest CDN node.
+
+### Cut Traffic Costs
+{id="cases-traffic"}
+
+While accelerating your media [improves your conversions][ext-kiss-load-time],
+using less bandwidth cuts your traffic costs.
+
+The workflow here is quite the same as in the [load time](#cases-load-time)
+section: you control [media formats][transformations-image-format],
+[quality][transformations-image-quality] levels, and
+[dimensions][transformations-image-resize]. It helps you get smaller files
+without any visual quality loss.
+
+### Migrate to the Cloud
+{id="cases-migrate"}
+
+A possible case is that you already use a File API or cloud storage for your
+assets. In both cases, it is easy to migrate. [Set up Proxy](#setup), make a
+list of your asset URLs, and [replace them](#usage-prefixes).
+
+Your existing media assets may be transformed on-the-fly with the File API. Read
+more on [Image Transformations][transformations-image] here in docs. Learn [how
+to use them](#usage-transformations) with Proxy.
+
+<!-- Misha: TODO rewrite these two parts. OR remove cuz they repeat steps 3 & 4. -->
+<!-- dm: Seamlessly Integrate Uploadcare описываеся случай миграции за один проход.
+она не намного проще миграции в аплодкер целиком. самый классный юзкейс прокси в том,
+что не надо все это делать, файлы будут мигрироваться сами лениво, по мере запросов
+от пользователей. предлагаю этот кусок переписать. то же про ассесс перформанс -->
+
+<!-- 
+### Seamlessly Integrate Uploadcare
+{id="cases-integrate"}
+
+The simplest way to integrate file APIs is doing it from scratch, i.e., when
+developing a new product or scaling an existing one. That’s not always the case.
+When you have already got a bunch of assets, use Proxy to fetch those to
+Uploadcare and optimize their delivery on autopilot. This can be done in four
+simple steps:
+
+* [Set up](#setup) the Proxy.
+* Iterate through all of your assets and parse their URLs.
+* Fetch those assets via [Proxy](#usage) to your Uploadcare project.
+* Change your asset URLs to their optimized versions: [add
+  prefixes](#usage-prefixes).
+
+### Assess Your Performance
+{id="cases-performance"}
+
+Before signing up or migrating, you want to measure how Uploadcare can improve
+your system’s performance. Our advice, in this case, is using Uploadcare only
+for certain areas of your web or mobile app and then comparing how they perform
+before and after integrating with Uploadcare:
+
+* Pick an area of your web or mobile app that you monitor: understand
+  conversions and average load time.
+* [Set up Proxy](#setup) to work with your Uploadcare account.
+* Iterate through your assets related to that preferred area and replace URLs
+  with their optimized versions: [add prefixes](#usage-prefixes).
+* [Apply transformations](#usage-transformations) to further optimize your media
+  assets where applicable.
+* Run tests, collect statistics, and compare how the tested part of your web or
+  mobile app performs after implementing optimizations.
+  -->

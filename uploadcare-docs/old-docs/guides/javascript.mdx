@@ -1,0 +1,229 @@
+---
+  layoutPreset: guides
+  title: Serverless File Uploads for JavaScript
+  description:
+    Learn how to implement serverless file uploads in your JavaScript
+    and build a simple Image Hosting app powered with image uploads,
+    preview, and in-browser editing
+---
+
+import { Badge, BadgesBox, CodePen } from "@uploadcare/docs-components"
+
+# Serverless File Uploads for JavaScript
+
+<BadgesBox>
+  <Badge>14 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Uploadcare [File Uploader][file-uploader] is written in JavaScript, so there's
+no API wrapper needed. Everything is integrated flawlessly and natively.
+
+[Uploadcare][home] is an end-to-end file handling platform that lets you upload
+files, store them in a secure cloud storage. All platform features are
+accessible via API.
+
+In this guide, you'll learn how to use integrate File Uploader to and build a
+simple HTML5 image hosting app with a minumum of JS code.
+
+* [Before We Begin](#preparations)
+  * [Uploadcare Account](#preparations-uc)
+  * [Sample App](#preparations-app)
+* [Step 1. Install the File Uploader](#installation)
+* [Step 2. Store Data on Your Backend](#backend)
+* [Step 3. Go Into Effect](#effects)
+* [Conclusion](#conclusion)
+
+## Features
+
+* Upload files from a local disk, camera, and cloud source (up to 5 TB)
+* Multipart uploading for large files
+* Bulk file uploading
+* In-browser image editing
+* Uploading network to speed uploading jobs (like CDN)
+
+## Before We Begin
+{id="preparations"}
+
+### Uploadcare Account
+{id="preparations-uc"}
+
+In case you don’t have an Uploadcare account, [Sign Up][account-signup] for one.
+Once you get it, navigate to your [dashboard][dashboard] to create a new
+[project][settings-projects] or discover [Public API Key][settings-keys] for an
+existing one.
+
+If you’re going to upload non-image content, add [billing info][account-billing]
+to your account settings.
+
+### Sample App
+{id="preparations-app"}
+
+Let’s take a look at the simple Image Hosting app we want to build: single-page
+image gallery powered by our File Uploader to add media. Play around with the
+demo to capture the essence of what we’re up to:
+
+<!-- https://codepen.io/uploadcare/pen/oQGvOz -->
+<CodePen id="oQGvOz" title="Simple Image Hosting – Uploadcare Demo" />
+
+In the demo above we used [Local Storage][ext-mdn-localstorage] to save and
+update the list of files on the hosting. This way we made a mock-up of
+the real backend, so you can go through the guide using only your browser.
+
+There is also pre-made code for displaying images on the page. It is built in
+a common way (appending HTML), with a slight difference: we implement our
+[Image Processing][feature-image-processing] to render image previews.
+
+To set up file uploading in an app like this by hand, you would have a lot
+of work to get done: coding backend methods for file uploading, processing,
+and delivery, creating an upload interface on the frontend, etc.
+
+You can either [examine the completed app code][ext-codepen-completed] or make
+the app with us from scratch starting with [this code][ext-codepen-step-1].
+
+## Step 1. Install the File Uploader
+{id="installation"}
+
+First of all, you need to include the File Uploader `<script>` element.
+There are several types of its [bundles][file-uploader-install-bundles], like with
+built-in jQuery or with only one locale. If you are looking to change this kind
+of options, take a look at the [file uploader installation][file-uploader-install] section of
+our docs.
+
+In our case, jQuery is already there, so let’s just import the common Uploadcare
+lib *after* jQuery’s `<script>`:
+
+```html
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- ... -->
+<script>UPLOADCARE_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.min.js" charset="utf-8"></script>
+```
+
+As you may have noticed, there is one more `<script>` in the snippet above.
+That’s where you define your [Public API Key][settings-keys-public]
+you discovered at the [beginning](#preparations-uc) of this guide.
+
+Now you need to add the File Uploader button, which will be used to open the
+file uploader. By default all `<input>` elements with `role="uploadcare-uploader"` will
+become the File Uploader buttons:
+
+```html
+<!-- ... -->
+<div class="container mt-4">
+  <div class="float-right mb-4 mt-2">
+    <input type="hidden" role="uploadcare-uploader" id="uploadedImage" />
+  </div>
+  <h2 class="mb-4">Simple Image Hosting</h1>
+<!-- ... -->
+```
+
+Save your changes and take a look at your working button & file uploader:
+
+<!-- https://codepen.io/uploadcare/pen/PxJbBK -->
+<CodePen id="PxJbBK" title="Simple Image Hosting – Before Step 2" />
+
+## Step 2. Store Data on Your Backend
+{id="backend"}
+
+When you’re done with the installation, it’s time to store the info of
+the uploaded files on your backend. In our case, the `saveImage()` method will
+serve as the backend.
+
+In the first step, we used File Uploader’s ability to catch all the
+`<input role="uploadcare-uploader">`. But now we need to use the File Uploader
+object in the code. Let’s initialize it using the `<input>` CSS-selector:
+
+```html
+<script type="text/javascript">
+const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+
+// Skipped fetchImages() and saveImage()
+</script>
+```
+
+Now you can [handle events][api-reference-js-widget-events] fired by the File
+Uploader. To be more precise, we want to send the CDN URL of an uploaded file
+to so-called backend right after the upload completes. That’s where
+`onUploadComplete` with `cdnUrl` in params will help us:
+
+```html
+<script type="text/javascript">
+const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+
+widget.onUploadComplete(function(info) {
+  saveImage(info.cdnUrl).then(() => {
+    $('#uploadedImage').parent().html('<a href="javascript:refreshPage()">Refresh it!</a>')
+  })
+})
+
+// Skipped fetchImages() and saveImage()
+</script>
+```
+
+As you may have noticed, we also used the `Refresh it!` link to indicate the
+request was sent – it is not necessary.
+
+Save your changes and enjoy the fully functional simple Image Hosting:
+
+<!-- https://codepen.io/uploadcare/pen/mQBOow -->
+<CodePen id="mQBOow" title="Simple Image Hosting – Before Step 3" />
+
+## Step 3. Go Into Effect
+{id="effects"}
+
+Most of the image hostings know how to crop images. We’ll implement a solution
+too. [Effects Tab][feature-fxtab] powers the file uploader with image-editing
+capabilities right in a browser.
+
+Let’s put the Effects Tab `<script>` right after the file uploader one:
+
+```html
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.min.js" charset="utf-8"></script>
+<script src="https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.min.js" charset="utf-8"></script>
+```
+
+Effects Tab is, by design, the custom tab for the File Uploader.
+To make it work, register the tab explicitly:
+
+```html
+<script type="text/javascript">
+uploadcare.registerTab('preview', uploadcareTabEffects);
+// ...
+</script>
+```
+
+The last thing is to alter the [file uploader options][file-uploader-options].
+We will use these two:
+
+* `data-effects` to set the effects you want.
+* `data-preview-step` to show a preview step once files are selected. Otherwise,
+  a file dialog will close and the `onUploadComplete` will be fired too soon.
+
+That’s how it may look like:
+
+```html
+<input type="hidden" role="uploadcare-uploader" id="uploadedImage"
+      data-preview-step="true"
+      data-effects="crop,rotate,enhance,sharp,grayscale" />
+```
+
+And that’s it:
+
+<!-- https://codepen.io/uploadcare/pen/oQGvOz -->
+<CodePen id="oQGvOz" title="Simple Image Hosting – Uploadcare Demo" />
+
+## Conclusion
+{id="conclusion"}
+
+You’ve just made an Image Hosting application using JavaScript and Uploadcare
+without writing any frontend or backend code for file handling ✨
+
+To delve into the topic and get yourself ready for other cool features that
+Uploadcare can bring into your project, consider reading those:
+
+* [File Uploader Configuration][file-uploader-config]
+* [Multi Upload][file-uploader-multi-upload]
+* [JavaScript API reference][api-reference-javascript]
+
+In case you have any questions, feel free to post those around our
+[community area][community].

@@ -1,0 +1,264 @@
+---
+  title: 'Uploadcare Glossary'
+  description:
+    'This glossary contains the descriptions of specific terms used across the Uploadcare website, documentation, interfaces, and APIs.'
+---
+
+# Glossary
+Here, you'll find descriptions of specific and proprietary terms that we use on
+our website, and in our interfaces and APIs.
+
+## Project
+{id="project"}
+
+The main entity within your Uploadcare account. Each project has a unique name,
+dedicated storage, settings, API keys, etc. Create as many projects as you need.
+You can set up shared access to a corporate project for multiple Uploadcare
+accounts by contacting [support][mail-help].
+
+## Keys
+{id="keys"}
+
+Uploadcare **Public** and **Secret API Keys** are used to identify ownership and
+establish a connection between your application and your Uploadcare project.
+The Public Key is used for uploading files to a certain project, and the Secret
+Key is used for file management, to perform async operations, etc. Also, your
+Secret Key provides [Security](#security) for uploads and delivery.
+
+## Uploads
+{id="uploads"}
+
+The means of uploading your files into your Uploadcare storage. Developers can
+utilize [File Uploader](#file-uploader) (with
+[integrations][integrations-wrappers] for all popular frameworks) or
+[API clients][integrations-clients] for all popular programming languages,
+including [mobile platforms][integrations-mobile].
+
+### UUID
+{id="uuid"}
+
+A Universally Unique Identifier given to each file when it's uploaded to your
+Uploadcare project. UUID is a part of CDN URL, and can be used to manipulate
+file via REST API.
+
+### File Uploader
+{id="file-uploader"}
+
+A website file uploading module that you can embed into your website as a dialog
+window, panel, or button. File Uploader is linked with your Uploadcare project
+via the Public Key. This module works in all modern browsers.
+
+### File Uploader API
+{id="file-uploader-api"}
+
+The Application Programming Interface in the form of a JS SDK for
+[File Uploader](#file-uploader) customization. The interface, behavior, and File
+Uploader features can be customized to match your website design and function.
+For example, you can add custom file validation functions to File Uploader.
+
+### Upload Sources
+{id="upload-sources"}
+
+The sources from which you and your end users can upload images and other
+content. An uploading source can be a local drive, camera, social networks, or
+cloud services, such as Google Photos, Facebook, Instagram, Facebook,
+Dropbox, Flickr, etc.
+
+### Custom OAuth Applications
+{id="custom-oauth-applications"}
+
+An option to use the OAuth protocol to connect to Upload Sources.
+With this feature, your app will request permissions to your app when accessing
+Upload Sources.
+
+### Storage
+{id="storage"}
+
+Your primary project's storage that keeps the original file versions. When
+applying [CDN operations](#cdn-operations), the original files stays intact.
+Overall storage size (for all projects) is set by your plan.
+
+### Storing
+{id="storing"}
+
+A process of saving your files to Uploadcare storage after they're uploaded.
+The **Automatic file storing** option stores all incoming files as long as
+they’re not explicitly deleted.
+
+### Custom Storage
+{id="custom-storage"}
+
+Amazon S3 Bucket storage, which you can use instead of your Uploadcare storage
+if your solution or company policy requires storing all files with Amazon. Some
+features like Adaptive Delivery and [CDN operations](#cdn-operations) (e.g.,
+image transformations) won’t be available.
+
+## Delivery
+{id="delivery"}
+
+A set of options to deliver [stored](#storing) files to end users and your
+website visitors in a fast and reliable way. There are options for manual and
+automatic delivery. Also, you can deliver files that were not explicitly loaded
+and stored, for example, the results of image processing or document conversion.
+
+### CDN
+{id="cdn"}
+
+Uploadcare CDN is a global system that delivers files to end users around the
+world. It uses other CDN providers for better coverage, speed, and reliability.
+Whenever a website visitor accesses a file or its variant, it gets copied to
+the closest CDN node and then it gets cached there.
+
+### Bi-directional CDN
+{id="bi-directional-cdn"}
+<!-- Misha: did we agree up on renaming it to Upload Network? -->
+
+Traditionally, CDN is for delivery only. Uploadcare introduces this term to show
+an accelerated uploading technology that works similar to the delivery network.
+When commiting a file to upload, the Uploader will select the closest server to
+minimize uploading time.
+
+### CDN Operations
+{id="cdn-operations"}
+
+Commands that are added to the CDN link that can transform images, convert
+documents, encode videos, get file info, and do other operations without any
+coding.
+
+### Adaptive Delivery
+{id="adaptive-delivery"}
+
+Next-generation responsive design. Adaptive Delivery JS library helps you
+optimize image content automatically depending on a client's device, web browser
+and other parameters.
+
+### Custom CNAME
+{id="custom-cname"}
+
+Use your own domain for CDN links to your files stored with Uploadcare.
+By default, all file URLs use `ucarecdn.com` domain. By setting a Custom
+CNAME, the file URLs can use `cdn.mycompany.com` instead.
+
+### Proxy
+{id="proxy"}
+
+Proxy allows you manage files that are already hosted on your website and
+optimize their delivery with Uploadcare while skipping the manual upload (each
+file is uploaded to CDN after the first request).
+
+### Proxy Endpoint
+{id="proxy-endpoint"}
+
+A Proxy Endpoint is a URL prefix that goes before the original link to the file
+on your domain. For example `https://yoursite.ucr.io/https://yoursite.com/assets/image.jpg`.
+This will deliver image.jpg file using Uploadcare CDN.
+
+### Whitelist
+{id="whitelist"}
+
+An option that allows uploading images from the domains you trust when using
+[Proxy](#proxy) and [Adaptive Delivery](#adaptive-delivery).
+This can help you build a more secure and closed system for end users.
+Each [Uploadcare project](#project) has its own Whitelist.
+
+## Transformations
+{id="transformations"}
+
+A set of functions to manipulate images, [process videos](#video-processing), and
+[convert documents](#document-conversion). Accessible via CDN link commands and
+REST API.
+
+### Image Transformations
+{id="image-transformations"}
+
+On-the-fly [image transformations][transformations-image] such as compress,
+resize, crop, rotate, flip, change colors, blur, sharpen, set overlay, and many
+other (about a hundred). The transformations are applied in real
+time at the moment when the image is requested by the client. The transformed
+images are cached on the CDN and load even faster the next time.
+
+### Video Processing
+{id="video-processing"}
+
+The process of video conversion, that enables your video file to be played on
+the web by the modern browsers, and gives it an optimal file size. Also, you can
+apply some transformations on the Video Processing step. This feature is available
+via the REST API.
+
+### Document Conversion
+{id="document-conversion"}
+
+The process of document conversion from one format into another. For example,
+you can convert DOC to PDF, or a PDF into a set of images. Document conversion
+can be done through the REST API.
+
+## Intelligence
+{id="intelligence"}
+
+A set of artificial intelligence technologies for finding faces, objects, and
+colors in images for subsequent smart processing, filtering, and categorization.
+
+### Smart Crop
+{id="smart-crop"}
+
+A content-aware feature that crops images to prominent objects, such as faces
+and objects automatically. It can be used as a standalone feature, and it's also
+a part of [Adaptive Delivery](#adaptive-delivery).
+
+### Smart Compression
+{id="smart-compression"}
+
+AI used to select an applicable image format (e.g., JPEG, WebP) and compression
+ratio so the file size is reduced while still keeping the visual quality. This
+operation can be used explicitly as a [CDN transformation](#cdn-operations) or
+implicitly with [Adaptive Delivery](#adaptive-delivery) enabled.
+
+### Smart Blur
+{id="smart-blur"}
+
+AI that can blur faces and other objects (e.g., cats, or houses) automatically.
+This way, you don't have to specify box coordinates on images that you want to
+process.
+
+<!-- ### Smart Resize
+AI that works as a part of the responsive design technology and
+resizes images for specific placeholders, and for smaller viewports
+(e.g., on a smartphone). -->
+
+### Auto-enhance
+{id="auto-enhance"}
+
+An automatic procedure that applies certain filters, such as contrast,
+brightness, vibrance, and color to improve visual characteristics. This
+technology analyzes the initial image and its properties. Based on the analysis,
+it picks values for each improvement.
+
+## Security
+{id="security"}
+
+A set of options to provide security for uploading, access and delivery of your
+files to end users. Includes Secure Uploading and Secure Delivery.
+
+### Secure Uploading
+{id="secure-uploading"}
+
+A feature to control who can upload files to an Uploadcare project within your
+account. Your backend generates [a signature][api-reference-signed-uploads-make-signature]
+using [a Secret Key](#keys) and includes an expiration time parameter. A client
+is required to include a valid signature in an upload request. It works with
+[Uploadcare File Uploader][file-uploader] and [Upload API][api-reference-upload].
+
+### Secure Delivery
+{id="secure-delivery"}
+
+This security feature lets you control who and for how long can access files in
+your project via authenticated URLs. In other words, it's a CDN URL with a
+signature generated on your backend (similar to Secure Uploading). This
+feature works in conjunction with [a Custom CNAME](#custom-cname).
+
+## Uploadcare APIs
+{id="uploadcare-apis"}
+
+A set of APIs for all system components. The Upload API is used to upload files
+while the REST API is used to manipulate stored files (e.g., store, copy,
+delete, apply conversions).

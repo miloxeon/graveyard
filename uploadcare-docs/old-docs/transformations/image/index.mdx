@@ -1,0 +1,174 @@
+---
+  title: 'Image Transformation Overview'
+  description:
+    'Uploadcare Image Transformations allow you to apply CDN URL operations on the fly to alter images the way you need.'
+---
+
+import { CdnExample } from "@uploadcare/docs-components";
+
+# Image Transformations
+
+With Uploadcare, you can easily build custom image transformation workflows and
+automate most of image manipulation and optimization tasks. For example, you can
+set up a chain of actions for user-generated images that'll unify their look.
+
+<div style="position: relative; padding-bottom: 56.25%;">
+<iframe width="100%" height="100%" src="https://www.youtube.com/embed/h43Ct6cCvuQ" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style="position: absolute;" /></div>
+<div style="position: relative; padding-bottom: 2vw;"/>
+
+Сhange format, crop and resize images to fit any design and any screen on the
+fly. Adjust image colors, apply artistic filters, and enhance. You can use and
+stack transformations right in the image URL:
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/preview/image.jpg" target="_blank">
+        <img src="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/scale_crop/220x220/center/image.jpg"
+          srcSet="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/scale_crop/440x440/center/-/quality/lightest/image.jpg 2x"
+          alt="Original image" />
+      </a><br/>
+      Original image
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/preview/-/sharp/15/image.jpg" target="_blank">
+        <img src="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/scale_crop/220x220/center/-/sharp/15/image.jpg"
+          srcSet="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/scale_crop/440x440/center/-/quality/lightest/-/sharp/15/image.jpg 2x"
+          alt="Sharpened image" />
+      </a><br/>
+      Sharpen <code>-/sharp/15/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/preview/-/enhance/100/image.jpg" target="_blank">
+        <img src="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/scale_crop/220x220/center/-/enhance/100/image.jpg"
+          srcSet="https://ucarecdn.com/5e39e315-c06c-4d81-9b4a-35fca661621c/-/scale_crop/440x440/center/-/quality/lightest/-/enhance/100/image.jpg 2x"
+          alt="Enhanced image" />
+      </a><br/>
+      Enhance <code>-/enhance/100/</code>
+    </td>
+  </tr>
+</table>
+
+Every URL transformation generates a modified image version on the fly, while
+the original file stays intact. The transformed image version will be cached on
+[CDN nodes][delivery-cdn] to optimize delivery.
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/resize/200x/",
+    "https://ucarecdn.com/:uuid/-/resize/200x/"
+  ]}
+/>
+
+You can stack multiple transformations (e.g.,
+[overlay the source image][transformations-image-overlay-self]).
+Uploadcare supports virtually any image input format. The processed output
+formats are distilled down to: `PNG`, `JPEG` or `WebP`.
+
+Also, you can use [Proxy][delivery-proxy] to apply image transformations without
+explicitly uploading them:
+
+ ```
+ https://yoursite.ucr.io/-/preview/-/resize/500x/https://yoursite.com/assets/image.jpg
+ ```
+ 
+## Full list of image transformations
+{id="image-transformations-list"}
+
+* [Resize and Crop][transformations-image-resize-crop]
+  * [Preview][transformations-image-preview]
+  * [Resize][transformations-image-resize]
+    * [Change resize behavior][transformations-image-resize-behavior]
+  * [Smart resize][transformations-smart-resize]
+  * [Crop][transformations-image-crop]
+  * [Scale crop][transformations-image-scale-crop]
+  * [Smart crop][transformations-image-smart-crop]
+  * [Set fill color][transformations-image-setfill]
+* [Compression][transformations-image-compression]
+  * [Format][transformations-image-format]
+  * [Quality][transformations-image-quality]
+  * [Smart compression][transformations-image-smart-compression]
+  * [Progressive JPEG][transformations-image-progressive]
+  * [GIF to Video][transformations-image-gif-to-video]
+* [Colors][transformations-image-colors]
+  * [Color adjustment][transformations-image-colors-operations]
+  * [Enhance][transformations-image-enhance]
+  * [Grayscale][transformations-image-grayscale]
+  * [Inverting][transformations-image-invert]
+  * [Filter][transformations-image-filter]
+  * [Color Profile Management][transformations-image-color-profile-management]
+    * [Color Models and ICC Profiles][transformations-image-color-model-profile]
+    * [Conversion to sRGB][transformations-image-color-srgb]
+    * [ICC Profile Size Threshold][transformations-image-color-max-icc-size]
+* [Blur & Sharpen][transformations-image-blur-sharpen]
+  * [Blur][transformations-image-blur]
+  * [Blur Region][transformations-blur-region]
+  * [Blur Faces][transformations-blur-region-faces]
+  * [Unsharp Masking][transformations-image-blur-mask]
+  * [Sharpen][transformations-image-sharpen]
+* [Overlay][transformations-image-overlays]
+* [Rotate and flip][transformations-image-rotation]
+  * [Automatic Rotation, EXIF-based][transformations-image-rotation-auto]
+  * [Manual Right-Angle Rotation][transformations-image-rotation-manual]
+  * [Flip][transformations-image-flip]
+  * [Mirror][transformations-image-mirror]
+
+## Limitations
+{id="limits"}
+
+This section describes the limits to consider when implementing Uploadcare
+Image Transformations.
+
+### Core Operations
+{id="core-operations"}
+
+When applying image transformations, add at least one of the following
+operations via their respective URL directives:
+
+* [`resize`][transformations-image-resize]
+* [`scale_crop`][transformations-image-scale-crop]
+* [`preview`][transformations-image-preview]
+
+### Output Image Dimensions
+{id="dimensions"}
+
+The dimensions you specify for the last operation should not exceed 3000x3000
+pixels. You can go up to 5000x5000 pixels by explicitly setting
+your [image format][transformations-image-format] to JPEG, `cdn›/format/jpeg/`.
+
+You can extend the output max resolution up to 8192x8192, and up to 16384x16384
+for JPEGs in trade-off for increased latency. [Contact support][mail-help] to learn more
+about this option.
+
+### SVG files
+
+Any image transformation CDN URL is valid with an SVG file. But it doesn't
+affect it in any way and it always returns untouched SVG body. We’ll be adding
+basic resize and crop operations support for SVG images later.
+
+*SVGs uploaded before May 26, 2021 still have `is_image: false` and adding
+processing operations to them will result in error. Contact
+[support][mail-help] to batch process previously uploaded files.*
+
+### Image Resolution
+{id="size-limit"}
+
+We don’t provide on-the-fly image transformations for images greater than
+75 Mpx in resolution: those are tagged as **non-image** files and can only be delivered
+via CDN as-is. Adding processing operations to non-image files will result
+in an error.
+
+### Simple Rotation
+{id="simple-rotation"}
+
+When the only image transformation you want is rotating, consider using the
+[`preview`][transformations-image-preview] control without any arguments. When
+you use any of the transformations, we automatically rotate images according to
+their EXIF orientation.
+
+### Animated Images
+{id="animated"}
+
+Animated images are treated as static by the transformations engine, consider
+checking out our [GIF to Video][transformations-image-gif-to-video] workflow
+optimized for animated images delivery.

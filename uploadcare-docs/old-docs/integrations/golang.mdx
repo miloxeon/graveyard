@@ -1,0 +1,157 @@
+---
+  layoutPreset: integrations
+  title: Golang API Client for File Upload and Management
+  description:
+    Golang Uploadcare API client for Fast & Reliable File Uploads; File, Group,
+    Project Operations; Video + Document Conversion & More.
+---
+
+# Golang API Client
+
+Golang integration handles uploads and file operations by wrapping Uploadcare
+[Upload API][api-reference-upload] and [REST API][api-reference-rest]. This
+comprehensive API client lets you use most of the Uploadcare features from within
+your Golang app.
+
+[GitHub &rarr;][golang-github]
+
+## Features
+
+Upload features:
+* Upload files from local storage and URLs (up to 5 TB)
+* Multipart uploading for large files
+* Uploading network to speed uploading jobs (like CDN)
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+* Convert documents
+* Encode and transform videos
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+* Secure delivery (authenticated URLs)
+
+## Requirements
+
+- go1.13
+
+## Installation
+
+Install uploadcare-go with:
+
+```
+go get -u -v github.com/uploadcare/uploadcare-go/...
+```
+
+Then import it using:
+
+```go
+import (
+	"github.com/uploadcare/uploadcare-go/ucare"
+	"github.com/uploadcare/uploadcare-go/file"
+	"github.com/uploadcare/uploadcare-go/group"
+	"github.com/uploadcare/uploadcare-go/upload"
+	"github.com/uploadcare/uploadcare-go/conversion"
+)
+```
+
+## Configuration 
+
+Creating a client:
+
+```go
+creds := ucare.APICreds{
+	SecretKey: "your-project-secret-key",
+	PublicKey: "your-project-public-key",
+}
+
+conf := &ucare.Config{
+	SignBasedAuthentication: true,
+	APIVersion:              ucare.APIv06,
+}
+
+client, err := ucare.NewClient(creds, conf)
+if err != nil {
+	log.Fatal("creating uploadcare API client: %s", err)
+}
+```
+
+## Usage example
+
+For a comprehensive list of examples, check out the [API documentation][api-reference-upload].
+
+Getting a list of files:
+
+```go
+fileSvc := file.NewService(client) 
+
+listParams := file.ListParams{
+	Stored:  ucare.String(true),
+	OrderBy: ucare.String(file.OrderBySizeAsc),
+}
+
+fileList, err := fileSvc.List(context.Background(), listParams)
+if err != nil {
+	// handle error
+}
+		
+// getting IDs of the files
+ids := make([]string, 0, 100)
+for fileList.Next() {
+	finfo, err :=  fileList.ReadResult()
+	if err != nil {
+		// handle error
+	}
+
+	ids = append(ids, finfo.ID)
+}
+```
+
+Getting file info:
+
+```go
+fileID := ids[0]
+file, err := fileSvc.Info(context.Background(), fileID)
+if err != nil {
+	// handle error
+}
+
+if file.IsImage {
+	h := file.ImageInfo.Height
+	w := file.ImageInfo.Width
+	fmt.Printf("image size: %dx%d\n", h, w)
+}
+```
+
+Uploading a file:
+
+```go
+f, err := os.Open("file.png")
+if err != nil {
+	// handle error
+}
+
+uploadSvc := upload.NewService(client)
+
+params := upload.FileParams{
+	Data:        f,
+	Name:        f.Name(),
+	ContentType: "image/png",
+}
+fID, err := uploadSvc.File(context.Background(), params)
+if err != nil {
+	// handle error
+}
+```
+
+## Full documentation
+
+Read the full documentation on [GitHub][golang-github].
+
+## Related guides
+
+* [Integration with Rust][guide-rust]

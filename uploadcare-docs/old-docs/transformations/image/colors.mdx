@@ -1,0 +1,709 @@
+---
+  title: 'Uploadcare Image Transformations — colors'
+  description:
+    'Uploadcare allows applying Image Transformations on the fly with a set of CDN operations that can change image size, compression, colors, as various image modifications.'
+---
+
+# Colors
+{id="image-colors"}
+
+## Color adjustment
+{id="image-colors-operations"}
+
+`cdn›-/brightness/:value/`<br/>
+`cdn›-/exposure/:value/`<br/>
+`cdn›-/gamma/:value/`<br/>
+`cdn›-/contrast/:value/`<br/>
+`cdn›-/saturation/:value/`<br/>
+`cdn›-/vibrance/:value/`<br/>
+`cdn›-/warmth/:value/`
+
+Uploadcare features a set of operations for adjusting color properties of an image.
+
+The `:value` parameter controls the strength of any applied adjustment.
+Ranges of the `:value` parameter differ between operations.
+There also is a zero point for each operation —
+the value producing outputs equal to original images.
+
+| Operation      | `:value` range     | Zero point |
+| -------------- | ------------------ | ---------- |
+| `cdn›/brightness/` | from -100 to 100   | 0          |
+| `cdn›/exposure/`   | from -500 to 500   | 0          |
+| `cdn›/gamma/`      | from 0 to 1000     | 100        |
+| `cdn›/contrast/`   | from -100 to 500   | 0          |
+| `cdn›/saturation/` | from -100 to 500   | 0          |
+| `cdn›/vibrance/`   | from -100 to 500   | 0          |
+| `cdn›/warmth/`     | from -100 to 100   | 0          |
+
+The first three operations: `brightness`, `exposure`, and `gamma`
+are very similar.
+Unlike `exposure` and `gamma`, `brightness` works in a straightforward manner:
+the `:value` gets added to each color channel; out-of-range values are cut.
+Thus, when increasing brightness, brighter image features can be lost.
+Same works for darker features on brightness decrease.
+Conversely, `exposure` and `gamma` compress color values distribution
+in either lighter or darker areas depending on the provided `:value`,
+thus preserving details.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/brightness/-20/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/brightness/-20/" alt="Reduced brightness"/></a><br/>
+    <code>/brightness/-20/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/brightness/20/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/brightness/20/" alt="Increased brightness"/></a><br/>
+    <code>/brightness/20/</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/exposure/-100/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/exposure/-100/" alt="Reduced exposure"/></a><br/>
+    <code>/exposure/-100/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/exposure/80/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/exposure/80/" alt="Increased exposure"/></a><br/>
+    <code>/exposure/80/</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/gamma/150/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/gamma/150/" alt="Reduced gamma"/></a><br/>
+    <code>/gamma/150/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/gamma/70/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/gamma/70/" alt="Increased gamma"/></a><br/>
+    <code>/gamma/70/</code>
+  </td>
+</tr></table>
+
+The next three operations adjust color diversity and dynamic range in images:
+* `contrast` affects both colors and dynamic range;
+  on increase, images lose both bright and dark details.
+* `saturation` uniformly bumps up color intensity leaving
+  the dynamic range unchanged.
+* `vibrance` cleverly increases the intensity
+  of muted colors and leaves the well-saturated ones alone.
+  The operation produces more realistic results when applied to typical photos.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/contrast/-25/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/contrast/-25/" alt="Reduced contrast"/></a><br/>
+    <code>/contrast/-25/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/contrast/25/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/contrast/25/" alt="Increased contrast"/></a><br/>
+    <code>/contrast/25/</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/saturation/-25/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/saturation/-25/" alt="Reduced saturation"/></a><br/>
+    <code>/saturation/-25/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/saturation/25/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/saturation/25/" alt="Increased contrast"/></a><br/>
+    <code>/saturation/25/</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/vibrance/-50/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/vibrance/-50/" alt="Reduced vibrance"/></a><br/>
+    <code>/vibrance/-50/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/vibrance/50/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/vibrance/50/" alt="Increased vibrance"/></a><br/>
+    <code>/vibrance/50/</code>
+  </td>
+</tr></table>
+
+Last but not least, the `warmth` operation adjusts color temperature in images.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/warmth/-50/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/warmth/-50/" alt="Reduced warmth"/></a><br/>
+    <code>/warmth/-50/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/warmth/50/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/warmth/50/" alt="Increased warmth"/></a><br/>
+    <code>/warmth/50/</code>
+  </td>
+</tr></table>
+
+You can combine any adjustments to achieve the needed outputs.
+Piping the operations won't get you any performance or precision losses
+since all adjustments are applied in one pass.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/saturation/-80/-/contrast/80/-/warmth/50/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/saturation/-80/-/contrast/80/-/warmth/50/" alt="Reduced saturation, increased contrast, and warmth"/></a><br/>
+    Old photo effect.<br/>
+    <code>-/saturation/-80/</code><br/>
+    <code>-/contrast/80/</code><br/>
+    <code>-/warmth/50/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/preview/-/exposure/50/-/saturation/50/-/warmth/-30/" target="_blank">
+      <img src="https://ucarecdn.com/34c53ede-194d-457c-ae68-9cf6da7f81af/-/quality/lighter/-/preview/440x440/-/exposure/50/-/saturation/50/-/warmth/-30/" alt="Increased exposure, saturation, and reduced warmth"/></a><br/>
+    Fresh view.<br/>
+    <code>-/exposure/50/</code><br/>
+    <code>-/saturation/50/</code><br/>
+    <code>-/warmth/-30/</code>
+  </td>
+</tr></table>
+
+## Enhance
+{id="operation-enhance"}
+
+`cdn›-/enhance/`<br/>
+`cdn›-/enhance/:strength/`
+
+Auto-enhances an image by performing the following operations: auto levels, auto
+contrast, and saturation sharpening. `:strength` values should be in the range
+from 0 to 100. The default value is 50.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/resize/440x/-/quality/lighter/" alt="Original image"/></a><br/>
+      Original image. 24Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/preview/-/enhance/50/" target="_blank">
+        <img src="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/resize/440x/-/quality/lighter/-/enhance/50/" alt="Enhanced image"/></a><br/>
+      <code>/enhance/50/</code> 28Kb
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/preview/-/enhance/100/" target="_blank">
+        <img src="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/resize/440x/-/quality/lighter/-/enhance/100/" alt="Max enhanced image"/></a><br/>
+      <code>/enhance/100/</code> 32Kb
+    </td>
+  </tr>
+</table>
+
+## Grayscale
+{id="operation-grayscale"}
+
+Desaturates images. The operation has no additional parameters and simply
+produces a grayscale image output when applied.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/-/grayscale/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/grayscale/-/quality/lightest/" alt="Black and white image"/></a><br/>
+      <code>/grayscale/</code>
+    </td>
+  </tr>
+</table>
+
+## Inverting
+{id="operation-invert"}
+
+Inverts images rendering a 'negative' of the input.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/-/invert/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/invert/-/quality/lightest/" alt="Inverse image"/></a><br/>
+      <code>/invert/</code>
+    </td>
+  </tr>
+</table>
+
+## Filter
+{id="operation-filter"}
+
+`cdn›-/filter/:name/`<br/>
+`cdn›-/filter/:name/:amount/`
+
+Applies one of predefined photo filters by its `:name`.
+The way your images look affects their engagement rates.
+You apply filters thus providing beautiful images consistent
+across content pieces you publish.
+
+The `:name` should be one of the following:
+`adaris`, `briaril`, `calarel`, `carris`, `cynarel`, `cyren`, `elmet`,
+`elonni`, `enzana`, `erydark`, `fenralan`, `ferand`, `galen`, `gavin`,
+`gethriel`, `iorill`, `iothari`, `iselva`, `jadis`, `lavra`, `misiara`,
+`namala`, `nerion`, `nethari`, `pamaya`, `sarnar`, `sedis`, `sewen`,
+`sorahel`, `sorlen`, `tarian`, `thellassan`, `varriel`, `varven`,
+`vevera`, `virkas`, `yedis`, `yllara`, `zatvel`, `zevcen`.
+
+`:amount` can be set in the range from -100 to 200 and defaults to 100.
+The `:amount` of:
+* 0 stands for no changes in the image, the output is equal to the original.
+* Values in the range from 0 to 100 gradually increase filter strength;
+  100 makes filters work as designed.
+* Values over 100 emphasizes filter effect: the strength of applied changes.
+* Any negative number would mean subtracting the difference between
+  the filtered and original images from the original.
+  That will produce a "negative filter" effect.
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/vevera/-100/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/-100/" alt="Filtered image"/></a><br/>
+    <code>/filter/vevera/-100/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/" alt="Original image"/></a><br/>
+    Original image.
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/vevera/100/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/100/" alt="Filtered image"/></a><br/>
+    <code>/filter/vevera/100/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/vevera/200/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/200/" alt="Filtered image"/></a><br/>
+    <code>/filter/vevera/200/</code>
+  </td>
+</tr></table>
+
+All filters provide predictable outputs with the `:value` ranging from 0 to 100.
+For some filter presets, setting the `:amount` value outside those bounds
+may produce weird results.
+For example, all filters producing grayscale outputs
+will result in a negative image when set to the `:amount` greater than 100.
+Set to negative values, those will saturate an image.
+
+Here's how all of our filters look like:
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/adaris/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/adaris/" alt="Filtered image"/></a><br/>
+    <code>/filter/adaris/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/briaril/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/briaril/" alt="Filtered image"/></a><br/>
+    <code>/filter/briaril/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/calarel/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/calarel/" alt="Filtered image"/></a><br/>
+    <code>/filter/calarel/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/carris/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/carris/" alt="Filtered image"/></a><br/>
+    <code>/filter/carris/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/cynarel/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/cynarel/" alt="Filtered image"/></a><br/>
+    <code>/filter/cynarel/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/cyren/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/cyren/" alt="Filtered image"/></a><br/>
+    <code>/filter/cyren/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/elmet/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/elmet/" alt="Filtered image"/></a><br/>
+    <code>/filter/elmet/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/elonni/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/elonni/" alt="Filtered image"/></a><br/>
+    <code>/filter/elonni/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/enzana/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/enzana/" alt="Filtered image"/></a><br/>
+    <code>/filter/enzana/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/erydark/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/erydark/" alt="Filtered image"/></a><br/>
+    <code>/filter/erydark/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/fenralan/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/fenralan/" alt="Filtered image"/></a><br/>
+    <code>/filter/fenralan/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/ferand/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/ferand/" alt="Filtered image"/></a><br/>
+    <code>/filter/ferand/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/galen/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/galen/" alt="Filtered image"/></a><br/>
+    <code>/filter/galen/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/gavin/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/gavin/" alt="Filtered image"/></a><br/>
+    <code>/filter/gavin/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/gethriel/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/gethriel/" alt="Filtered image"/></a><br/>
+    <code>/filter/gethriel/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/iorill/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/iorill/" alt="Filtered image"/></a><br/>
+    <code>/filter/iorill/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/iothari/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/iothari/" alt="Filtered image"/></a><br/>
+    <code>/filter/iothari/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/iselva/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/iselva/" alt="Filtered image"/></a><br/>
+    <code>/filter/iselva/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/jadis/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/jadis/" alt="Filtered image"/></a><br/>
+    <code>/filter/jadis/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/lavra/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/lavra/" alt="Filtered image"/></a><br/>
+    <code>/filter/lavra/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/misiara/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/misiara/" alt="Filtered image"/></a><br/>
+    <code>/filter/misiara/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/namala/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/namala/" alt="Filtered image"/></a><br/>
+    <code>/filter/namala/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/nerion/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/nerion/" alt="Filtered image"/></a><br/>
+    <code>/filter/nerion/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/nethari/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/nethari/" alt="Filtered image"/></a><br/>
+    <code>/filter/nethari/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/pamaya/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/pamaya/" alt="Filtered image"/></a><br/>
+    <code>/filter/pamaya/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/sarnar/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/sarnar/" alt="Filtered image"/></a><br/>
+    <code>/filter/sarnar/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/sedis/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/sedis/" alt="Filtered image"/></a><br/>
+    <code>/filter/sedis/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/sewen/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/sewen/" alt="Filtered image"/></a><br/>
+    <code>/filter/sewen/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/sorahel/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/sorahel/" alt="Filtered image"/></a><br/>
+    <code>/filter/sorahel/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/sorlen/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/sorlen/" alt="Filtered image"/></a><br/>
+    <code>/filter/sorlen/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/tarian/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/tarian/" alt="Filtered image"/></a><br/>
+    <code>/filter/tarian/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/thellassan/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/thellassan/" alt="Filtered image"/></a><br/>
+    <code>/filter/thellassan/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/varriel/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/varriel/" alt="Filtered image"/></a><br/>
+    <code>/filter/varriel/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/varven/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/varven/" alt="Filtered image"/></a><br/>
+    <code>/filter/varven/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/vevera/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/" alt="Filtered image"/></a><br/>
+    <code>/filter/vevera/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/virkas/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/virkas/" alt="Filtered image"/></a><br/>
+    <code>/filter/virkas/</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/yedis/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/yedis/" alt="Filtered image"/></a><br/>
+    <code>/filter/yedis/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/yllara/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/yllara/" alt="Filtered image"/></a><br/>
+    <code>/filter/yllara/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/zatvel/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/zatvel/" alt="Filtered image"/></a><br/>
+    <code>/filter/zatvel/</code>
+  </td>
+  <td>
+    <a href="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/preview/-/filter/zevcen/" target="_blank">
+      <img src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/zevcen/" alt="Filtered image"/></a><br/>
+    <code>/filter/zevcen/</code>
+  </td>
+</tr></table>
+
+## Color Profile Management
+{id="image-color-profile-management"}
+
+This section covers [Image Transformations][transformations-image]
+(or CDN API methods) that provide color profile management and configure
+Uploadcare’s CDN behavior depending on the size of <abbr title="International Color Consortium">ICC</abbr>
+profiles embedded in images.
+
+* [Color Models and ICC Profiles](#color-model-profile)
+* [Configure Conversion to sRGB](#operation-srgb), `srgb`
+* [Setting the ICC Profile Size Threshold](#operation-max-icc-size), `max_icc_size`
+
+### Color Models and ICC Profiles
+{id="color-model-profile"}
+
+Digital images can be stored in different color models depending on how we use
+them: whether it is displaying, printing, or something else.
+The most common model for images intended for viewing is RGB, while CMYK is
+widely used for printing.
+
+While CMYK images are common, some browsers support them poorly. But more
+importantly, CMYK support is inconsistent across different browsers. This means
+that if you happen to serve CMYK images on your site, the colors will vary.
+
+To eliminate the inconsistency, by default, we convert all CMYK images to sRGB.
+Another drawback of rendering CMYK images on a page is the large size of CMYK
+ICC profiles (those weight more than a regular 1920x1080 JPEG image). This
+negatively affects your page performance metrics such as
+First Meaningful Paint (FMP) and Time to Interactive (TTI).
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/afad561c-81be-4888-928e-d82e3c85624a/-/preview/-/srgb/fast/" target="_blank">
+        <img src="https://ucarecdn.com/afad561c-81be-4888-928e-d82e3c85624a/-/resize/440x/-/quality/lighter/-/srgb/fast/" alt="sRGB converted image"/></a><br/>
+      <code>/srgb/fast/</code>, 33Kb<br/>
+      CMYK image converted to sRGB.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/afad561c-81be-4888-928e-d82e3c85624a/-/preview/-/srgb/icc/" target="_blank">
+        <img src="https://ucarecdn.com/afad561c-81be-4888-928e-d82e3c85624a/-/resize/440x/-/quality/lighter/-/srgb/icc/" alt="sRGB converted image using ICC profile"/></a><br/>
+      <code>/srgb/icc/</code>, 33Kb<br/>
+      CMYK image converted to sRGB using ICC profile.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/afad561c-81be-4888-928e-d82e3c85624a/-/preview/-/srgb/keep_profile/" target="_blank">
+        <img src="https://ucarecdn.com/afad561c-81be-4888-928e-d82e3c85624a/-/resize/440x/-/quality/lighter/-/srgb/keep_profile/" alt="sRGB converted image that includes original ICC profile (increased size)"/></a><br/>
+      <code>/srgb/keep_profile/</code>, 617Kb<br/>
+      CMYK image with the original ICC profile. Colors depend on a browser.
+    </td>
+  </tr>
+</table>
+
+In turn, an ICC profile defines how we interpret colors for the given color
+model. ICC profiles are binary files, which can be either embedded in an image
+or distributed as is.
+
+With RGB images, embedding a profile is optional. If there is no embed, sRGB is
+assumed as [default color space][ext-w3org-css-color]. Since most of the images
+on the internet are in sRGB, they commonly don’t include any profile embeds.
+For CMYK images, an embedded ICC profile is mandatory, while still can be
+absent. In the last case, we assume that the image is in the “Web Coated (SWOP)
+v2” color space.
+
+### Conversion to sRGB
+{id="operation-srgb"}
+
+`cdn›-/srgb/fast/`<br/>
+`cdn›-/srgb/icc/`<br/>
+`cdn›-/srgb/keep_profile/`
+
+The operation sets how Uploadcare behaves depending on different color profiles
+of uploaded images. See the table below to learn more about the possible
+outcomes. We also provide an option to omit the conversion for the cases where
+you explicitly want CMYK outputs.
+
+The operation defaults to the `fast` value. However, we plan to optimize our
+image processing infrastructure to make `icc` faster and make it default. Both
+operations ensure consistently displaying images across different browsers.
+
+Depending on the input color model, the parameter you include in the operation,
+and threshold you set with [`max_icc_size`](#operation-max-icc-size), one of the
+four possible outcomes will occur: profile embedding, profile discarding, color
+conversion, and fast color conversion.
+
+| Input Image        | `fast`          | `icc`       | `keep_profile` |
+|--------------------|-----------------|-------------|----------------|
+| RGB, small profile | embedding       | embedding   | embedding      |
+| RGB, large profile | discarding      | conversion  | embedding      |
+| CMYK image         | fast conversion | conversion  | embedding*     |
+
+“small profile” and “large profile” stand for profile sizes below and above the
+`max_icc_size` setting respectively.
+
+Here is the definition for every possible outcome:
+
+* Profile embedding: no changes in image model or colors.
+  ICC profile, if present in the source image, stays embedded.
+* Profile discarding: no changes in image model or colors.
+  ICC profile, if present, gets stripped off an image.
+* Color conversion: an image will be converted to sRGB using a full-featured
+  color management system.
+* Fast color conversion is performed using a simple formula which doesn’t
+  consider any color profile and thus provides a result different from a
+  color-managed version.
+
+\* While we try to preserve the color model and profile for CMYK images with the
+`cdn›-/srgb/keep_profile/` setting, this is not always possible. Certain Image
+Transformations require RGB color model, and thus we automatically convert the
+subjected images to sRGB using the `icc` mode. The list of operations
+incompatible with CMYK includes:
+[`setfill`][transformations-image-setfill], [`overlay`][transformations-image-overlays],
+[`enhance`][transformations-image-enhance], [`filter`][transformations-image-filter], and
+[Color Adjustments][transformations-image-colors-operations].
+
+### ICC Profile Size Threshold
+{id="operation-max-icc-size"}
+
+`cdn›-/max_icc_size/0/`<br/>
+`cdn›-/max_icc_size/:number/`
+
+The operation defines which RGB color profile sizes will be considered “small”
+and “large” when using [`srgb`](#operation-srgb) in `fast` or `icc` modes. The
+`:number` stands for the ICC profile size in kilobytes.
+
+The default value is 10 (10240 bytes). Most of the common RGB profile sizes
+(sRGB, Display P3, ProPhoto, Adobe RGB, Apple RGB) are below the threshold.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/6374b0f2-f9f9-4dcc-b709-22507e1976b8/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/6374b0f2-f9f9-4dcc-b709-22507e1976b8/-/scale_crop/440x500/-/quality/lighter/" alt="Display P3 color profile image"/></a><br/>
+      Image with the original<br/>
+      Display P3 color profile. 25Kb.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/6374b0f2-f9f9-4dcc-b709-22507e1976b8/-/max_icc_size/0/-/srgb/fast/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/6374b0f2-f9f9-4dcc-b709-22507e1976b8/-/max_icc_size/0/-/srgb/fast/-/scale_crop/440x500/-/quality/lighter/" alt="No profile"/></a><br/>
+      <code>/max_icc_size/0/-/srgb/fast/</code><br/>
+      No ICC profile, small color shift. 24.5Kb.
+    </td>
+  </tr>
+</table>

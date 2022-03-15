@@ -1,0 +1,174 @@
+---
+layoutPreset: integrations
+title: Automate Uploading Files to Wix with Uploadcare File Uploader
+description:
+  Add PDFs, images, and video files to your Wix website in a snap. Learn how to
+  build a working uploads-enabled HTML form in just 5 minutes with Uploadcare.
+---
+
+# How to Enable Uploading UGC to Wix: PDFs, Images, Video, and More
+
+[Wix][ext-wix-home] is a free website builder. With Uploadcare, you can allow
+your users to submit media via forms, with no fuss about storage or uploading
+interface.
+
+_In just 5 minutes_ we will **build** a working uploads-enabled form via
+[Uploadcare File Uploader][feature-file-uploader] using just a few lines of
+code.
+
+## How Uploadcare Uploads Files to Wix
+{id="how-uc-uploads"}
+
+Our responsive and mobile-ready File Uploader provided as a standard
+JavaScript library. Technically, File Uploader replaces your basic
+`<input type="file">` controls, which then become buttons that activate the file
+uploader dialog. Every piece of content uploaded via Uploadcare gets instantly
+cached on our CDN and swiftly and reliably delivered across 130+ countries.
+
+What does it look like for an end user? For example, let’s say you need your
+users to upload scans of their documents. With File Uploader integrated, they
+see a submission form where they can easily add PDF files to your Wix website.
+
+But of course, it’s not only about PDFs. Images and video files that are stored
+in various sources, from local folders on your PC to social media, can also be
+uploaded to Wix.
+
+So, let’s get started.
+
+- [Step 1. Setup](#setup)
+- [Step 2. Create an HTML Block](#add-html-block)
+- [Step 3. Add File Uploader](#add-file-uploader)
+- [Step 4. Publish Your Upload Form to Wix](#results)
+- [Conclusion](#conclusion)
+
+<Image uuid='a334ba47-55b5-4ee1-bd99-2de5a08d2ebb' desc='Adding a PDF to Wix' />
+
+## Step 1. Setup
+{id="setup"}
+
+Before we begin, let’s make sure everything is in place.
+
+First of all, you need a Wix-powered website. If you don’t have one, it will
+only take you a few clicks to [create one][ext-wix-home].
+
+Second, you need to have an Uploadcare account. If you don’t, [Sign
+Up][account-signup] for one. Once you’ve created it, navigate to your
+[dashboard][account] to create a new [project][settings-projects] or discover
+your [Public API key][settings-keys] for an existing one.
+
+By the way, if you plan to let users submit non-image files via your form, add
+[billing info][community-billing-info] to your account.
+
+Now that you’re set up, go to your Wix website and proceed to the next step.
+
+## Step 2. Create an HTML Block
+{id="add-html-block"}
+
+Go to the Wix editor and open your website. Use the toolbox on the left side to
+place an HTML element on your page: hit the **plus sign,** then click **More,**
+and choose **HTML iframe in the Embeds** section.
+
+<Image
+  uuid='0ee7b03a-fb37-487e-9922-0beb74a10b74'
+  desc='Adding upload HTML to Wix'
+/>
+
+Now, place the element in your working area. Make sure the block width is at
+least 760px to ensure that File Uploader will display correctly.
+
+## Step 3. Add the Uploadcare File Uploader
+{id="add-file-uploader"}
+
+Select the block you have just placed and click the **Enter Code** button. A
+settings box will appear, providing you with two options: a “Code” radio button
+and an HTML code box. Copy the code below and paste it there.
+
+Don’t forget to replace YOUR_PUBLIC_KEY with the real Public API Key you got
+after signing up for Uploadcare.
+
+```html
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'
+</script>
+<script
+  src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"
+  data-integration="Wix"
+></script>
+
+<fieldset>
+  <legend>Submit Your Question</legend>
+  <form>
+    <p>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" />
+    </p>
+    <p>
+      <label for="question">Your question</label>
+      <textarea id="question" name="question"></textarea>
+    </p>
+    <p>
+      <label for="images">Your files</label>
+      <input
+        type="hidden"
+        id="files"
+        name="files"
+        role="uploadcare-uploader"
+        data-clearable
+        data-images-only
+        data-crop="free,2:3,4:3,16:9"
+      />
+    </p>
+    <p>
+      <button type="submit">Submit</button>
+    </p>
+  </form>
+</fieldset>
+```
+
+<Image
+  uuid='693eaadc-4ff4-445f-859f-9c2a7ca8f409'
+  desc='HTML code for Wix upload'
+/>
+
+The `data-images-only` [option][file-uploader-option-images-only] sits in the
+file uploader config to provide a fail-safe experience when working with
+accounts on the Free plan with no billing info added: those only allow image
+uploads.
+
+## Step 4. Publish Your Upload Form to Wix
+{id="results"}
+
+Click **Update,** and you’re done integrating the file uploader.
+
+<Image
+  uuid='5278a0f4-0ffb-44c2-bc86-b208d71110dd'
+  desc=' The final look of a file uploader for Wix'
+/>
+
+You can rearrange the order of blocks in the Wix editor by moving them a layer
+up or down. Ensure your form is in the topmost layer (Ctrl + Shift + → will do
+that), so no other elements are blocking the view when the dialog is activated.
+
+Note that Wix puts external HTML in an `<iframe>` element, which is not
+guaranteed to be responsive across devices. Test the created form to make sure
+it displays properly on your users’ most popular devices.
+
+## Conclusion
+{id="conclusion"}
+
+You’ve just built an uploads-enabled form via Uploadcare File Uploader 📷
+
+Now, you and your users can easily upload files to Wix; they’re all
+automatically optimized to provide the best page load speed, fit any screen, and
+take up as little space as possible.
+
+Check out our docs to learn how to power up any web app with a ready-to-use file
+platform: uploads, in-browser image editing, media processing, and
+lightning-fast CDN delivery:
+
+- [In-Browser Image Editing via File Uploader][feature-fxtab]
+- [Uploadcare Concepts][concepts]
+- [Integrations][integrations]
+
+If you have any questions, feel free to post them in our [community
+area][community].

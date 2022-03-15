@@ -1,0 +1,110 @@
+---
+  title: 'Uploadcare Image Transformations — rotate and flip'
+  description:
+    'Uploadcare allows applying Image Transformations on the fly with a set of CDN operations that can change image size, compression, colors, as various image modifications.'
+---
+
+# Rotate
+{id="rotate"}
+
+Uploadcare Image Transformations allow rotating images manually and according to
+EXIF, flip and mirror images. Image Rotation follows the general
+[image transformation][transformations-image] workflow.
+
+## Automatic Rotation, EXIF-based
+{id="operation-autorotate"}
+
+`cdn›-/autorotate/yes/`<br/>
+`cdn›-/autorotate/no/`
+
+The default behavior goes with parsing EXIF tags of original images and rotating
+them according to the “Orientation” tag. This is what we call autorotation.
+`cdn›-/autorotate/no/` allows turning off the default behavior.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/da235ef2-e5f6-43b2-8a3e-a08d88c5c2f2/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/da235ef2-e5f6-43b2-8a3e-a08d88c5c2f2/-/scale_crop/440x440/center/-/quality/lightest/" alt="EXIF auto rotate"/></a><br/>
+      Default.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/da235ef2-e5f6-43b2-8a3e-a08d88c5c2f2/-/preview/-/autorotate/no/" target="_blank">
+        <img src="https://ucarecdn.com/da235ef2-e5f6-43b2-8a3e-a08d88c5c2f2/-/scale_crop/440x440/center/-/autorotate/no/-/quality/lightest/" alt="No EXIF auto rotation"/></a><br/>
+      <code>/autorotate/no/</code>
+    </td>
+  </tr>
+</table>
+
+## Manual Right-Angle Rotation
+{id="operation-rotate"}
+
+`cdn›-/rotate/:angle/`
+
+Right-angle image rotation, counterclockwise. The value of `:angle` must be a
+multiple of 90.
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/scale_crop/320x320/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/preview/-/rotate/90/" target="_blank">
+        <img src="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/scale_crop/320x320/-/rotate/90/-/quality/lightest/" alt="Rotate 90 degrees CCV"/></a><br/>
+      <code>/rotate/90/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/preview/-/rotate/180/" target="_blank">
+        <img src="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/scale_crop/320x320/-/rotate/180/-/quality/lightest/" alt="Rotate 180 degrees"/></a><br/>
+      <code>/rotate/180/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/preview/-/rotate/270/" target="_blank">
+        <img src="https://ucarecdn.com/8a6b30ed-3b50-45b9-aabb-b53e1b05b25b/-/scale_crop/320x320/-/rotate/270/-/quality/lightest/" alt="Rotate 90 degrees CV"/></a><br/>
+      <code>/rotate/270/</code>
+    </td>
+  </tr>
+</table>
+
+## Flip
+{id="operation-flip"}
+
+Flips images.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/-/flip/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/flip/-/quality/lightest/" alt="Vertical flip"/></a><br/>
+      <code>/flip/</code>
+    </td>
+  </tr>
+</table>
+
+## Mirror
+{id="operation-mirror"}
+
+Mirrors images.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/quality/lightest/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/-/mirror/" target="_blank">
+        <img src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/mirror/-/quality/lightest/" alt="Vertical flip (mirror)"/></a><br/>
+      <code>/mirror/</code>
+    </td>
+  </tr>
+</table>

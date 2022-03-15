@@ -1,0 +1,42 @@
+---
+  layoutPreset: guides
+  title: How to Transfer Your Files to Uploadcare
+  description:
+    If you came to Uploadcare from a DIY solution or another platform, the first thing to migrate is to copy files from their current place to your Uploadcare.
+---
+
+# How to Transfer Your Files to Uploadcare
+
+If you came to Uploadcare from a DIY solution or another platform, the first
+thing to migrate is to copy files from their current place to your Uploadcare
+storage, so that they’re handled and delivered with an Uploadcare CDN.
+
+A Migro tool ([GitHub][migro-github]) will help you do that.
+
+**Step 1**. Create a text file with a list of files you’d like to transfer to Uploadcare:
+
+```{noAutoLinker}
+https://cdn.filestackcontent.com/YBLVVdUpRqC4nOynxDd8
+https://www.facebook.com/rsrc.php/v3/y7/r/dTQOHZm7Z-3.svg
+uNWvPRXJQmO49MJbPZn9
+```
+
+**Step 2**. Feed it to Migro, and the result will show you a transfer status and a new path with a UUID at Uploadcare for each file:
+
+```{noAutoLinker}
+https://cdn.filestackcontent.com/YBLVVdUpRqC4nOynxDd8       success     https://ucarecdn.com/d8f8de4b-f92e-41a0-b7f9-28fd4baad9ae/
+https://www.facebook.com/rsrc.php/v3/y7/r/dTQOHZm7Z-3.svg   success     https://ucarecdn.com/4a03f3d4-2bd3-456e-89a5-008190980248/
+https://cdn.filestackcontent.com/uNWvPRXJQmO49MJbPZn9       fail        Uploading of these files types is not allowed on your current plan.
+```
+
+**Step 3**. After that, replace the old links with the new ones for files that were successfully copied.
+
+[Migro &rarr;][migro-github]
+
+## Related guides
+
+* [Custom CDN CNAME][delivery-cdn-cname]
+* [Quick start][quickstart]
+* [Proxy][delivery-proxy]
+* [API overview][api]
+* [Migration from Filestack][guide-from-filestack]

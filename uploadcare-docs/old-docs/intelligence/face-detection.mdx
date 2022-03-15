@@ -1,0 +1,68 @@
+---
+  title: 'Uploadcare Face Detection'
+  description:
+    'Uploadcare can detect faces in your images providing you with coordinates for automatic face crop.'
+---
+
+# Face Detection
+
+With Uploadcare Image Transformations, you can detect faces in your images for
+automatic cropping or blurring those out. Face Detection is implemented
+in line with our general Image Transformations
+[workflow][transformations-image], as the `detect_faces` URL directive.
+
+`cdn›/:uuid/detect_faces/`
+
+Note, `detect_faces` is not divided from a file UUID by the `/-/` separator.
+Hence, it can not be piped other operations.
+
+`detect_faces` returns coordinates of faces found in an input image. The output
+is similar to the [`json`][delivery-file-info] operation. The output is a
+JSON with the additional list `faces` that holds coordinates of faces that were
+detected. Data for each of the found faces are put into separate lists that look
+like this:
+
+```json
+[x, y, x_size, y_size]
+```
+
+Further, lists within `faces` contain:
+
+* `x`, `y` — coordinates of the upper-left corner of an area where a face was
+  found.
+* `x_size`, `y_size` — dimensions of that area.
+
+For example, let’s run a face-check for the following image on our CDN,
+
+<p>
+  <img src="https://ucarecdn.com/5128ec65-9957-47b8-a6ad-4c2f172ef660/-/preview/1200x1200/darker.jpg" atl="Compound image with three faces"/>
+</p>
+
+To do so, we put `detect_faces` into the image URL separating it with
+the forward slash `/` from the UUID:
+
+```cdn
+https://ucarecdn.com/5128ec65-9957-47b8-a6ad-4c2f172ef660/detect_faces/
+```
+
+You will get the following `faces` list in the response JSON:
+
+```json
+"faces": [
+  [45, 142, 207, 207],
+  [460, 113, 238, 238],
+  [892, 43, 265, 265]
+]
+```
+
+Technically, the operation detects faces using Haar Cascades. That approach
+deals with machine learning processes which rely on classifiers holding cascades
+of features specific to faces, eyes, etc.
+
+`detect_faces` uses an algorithm that tends to better detect fronts of faces,
+rather than facial profiles. Also, covering important face features with
+different objects leads to a decline in detection accuracy.
+
+The `detect_faces` operation is still subject to testing and recalibrating the
+backend when needed. So, if you ran into any issue with the operation or simply
+got questions, [make a post in our community area][community].

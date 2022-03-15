@@ -1,0 +1,69 @@
+---
+  title: 'Uploadcare Color Recognition'
+  description:
+    'Implement color extraction and matching workflows with Uploadcare Color Recognition.'
+---
+
+import { CdnExample } from "@uploadcare/docs-components";
+
+# Color Recognition
+
+Uploadcare Image Transformations features the `main_colors` operation extracting
+a specified number of prevailing colors from an image. The operation is
+implemented as a URL directive following our general
+[image transformations][transformations-image] workflow.
+
+`cdn›-/main_colors/:number_of_colors/`
+
+`main_colors` is useful for analyzing dominant colors of an image, matching
+colors between images, building image-based palettes or doing something fancy
+with your site or app coloring scheme.
+
+Note, the `main_colors` operation should come last in your image URL.
+
+`:number_of_colors` — a number of prevailing colors you’d like to extract from
+an image: a smaller palette is derived, consisting of colors that are a fine
+match when representing your input. `:number_of_colors` may be omitted, the
+default value of `4` is used in the case.
+
+`main_colors` returns a JSON containing an array of 8-bit RGB values specific to
+the found dominant colors.
+For example, for [this][ucarecdn-get-colors-example-input] input image, the operation
+with no specified parameters will return this JSON,
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/preview/-/main_colors/",
+    "/:uuid/-/preview/-/main_colors/"
+  ]}
+/>
+
+```json
+{
+  "width": 2000,
+  "main_colors": [
+    [138, 142, 143],
+    [85, 74, 65],
+    [193, 211, 224],
+    [49, 42, 36]
+  ],
+  "height": 2000,
+  "id": "/153d750a-049f-44dc-8372-853f49320bad/-/preview/",
+  "original": {
+    "width": 2000,
+    "geo_location": null,
+    "orientation": null,
+    "datetime_original": null,
+    "format": "JPEG",
+    "id": "153d750a-049f-44dc-8372-853f49320bad",
+    "height": 2000
+  }
+}
+```
+
+Note, the `main_colors` algorithm involves random number generation, which may
+lead to slightly different results when applied to a single image repeatedly.
+
+Technically, the operation is an optimized variation of the Local K-means color
+image quantization algorithm. The algorithm is adapted to a wide variety of
+input image data and provides results intuitive in terms of human perception.

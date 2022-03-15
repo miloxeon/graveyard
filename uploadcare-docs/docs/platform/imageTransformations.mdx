@@ -1,0 +1,919 @@
+---
+sidebar_position: 1
+title: Image Transformations
+---
+
+import Filters from '../../src/components/filters'
+import Compression from '../../src/components/compression'
+import Color from '../../src/components/color'
+
+Uploadcare transformations allow changing images on the fly.
+
+Transformations are **immutable** — you can stack as many of them as you'd like. They work like pure
+functions and never change the original image. The transformed image version will be cached on CDN
+nodes to optimize delivery.
+
+Apply and stack transformations like this:
+
+```html
+https://ucarecdn.com/:UUID/[-/:name/:value/][-/:name/:value/]...
+https://ucarecdn.com/:UUID/-/scale_crop/800x600/-/contrast/10/
+```
+
+## Limitations
+
+-  If you want to use transformations, you have to apply either `resize`, `preview` or `scale_crop`
+   before you can apply any other transformations:
+
+**Good:**
+
+```html
+https://ucarecdn.com/:UUID/-/scale_crop/800x600/-/contrast/10/
+```
+
+**Bad:**
+
+```html
+https://ucarecdn.com/:UUID/-/brightness/10/-/contrast/10/
+```
+
+-  Your resulting image should not exceed 3000x3000 pixels.
+-  You can have images up to 5000x5000 pixels if you explicitly set `-/format/jpeg`. You can extend
+   the output max resolution up to 8192x8192 and up to 16384x16384 for JPEGs in trade-off for
+   increased latency. Contact support to arrange it.
+-  Transformations will be ignored for SVG images.
+-  When transforming GIFs, we'll treat them as static, non-animated images. We have GIF-to-video
+   functionality to improve animation performance on the web.
+-  We don’t provide on-the-fly image transformations for images greater than 75 megapixels in
+   resolution.
+
+## List of transformations
+
+### Manual resize
+
+```
+-/resize/:one_or_two_dimensions/
+```
+
+Resizes an image to one or two dimensions. When you set both width and height explicitly, it may
+result in a distorted image. If you specify either side, this operation will preserve the original
+aspect ratio and resize the image accordingly.
+
+```
+/:uuid/-/resize/200x200/
+/:uuid/-/resize/200x/
+/:uuid/-/resize/x200/
+```
+
+### Smart resize with AI upscale
+
+```
+-/smart_resize/:two_dimensions/
+```
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/resize/440x/-/quality/smart_retina/"
+			alt="Original image, 440x500"
+			width={220}
+			height={250}
+		/>
+		<figcaption className="gridFigcaption">Original image, 440x500</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/smart_resize/440x600/-/quality/smart_retina/"
+			alt="/smart_resize/440x600/"
+			width={220}
+			height={300}
+		/>
+		<figcaption className="gridFigcaptionMono">/smart_resize/440x600/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/smart_resize/440x300/-/quality/smart_retina/"
+			alt="/smart_resize/440x300/"
+			width={220}
+			height={150}
+		/>
+		<figcaption className="gridFigcaptionMono">/smart_resize/440x300/</figcaption>
+	</figure>
+</div>
+
+Content-aware resize helps to retain original proportions of faces and other visually sensible
+objects while resizing the rest of the image using intelligent algorithms.
+
+Smart resize works best for solid, gradient, and homogenous backgrounds that'll be expanded. If the
+background can't be stretched without artifacts, the background will be filled with a matching color
+instead.
+
+### Preview — smart aspect-ratio resize
+
+```
+-/preview/
+-/preview/:two_dimensions/
+```
+
+Downscales an image proportionally to fit the given width and height in pixels. If the dimensions
+are not specified, it'll be `2048x2048`.
+
+Wider images will usually have their width reduced to the first dimension. Taller images will have
+their height reduced. Images will retain their aspect ratios.
+
+Overall, your image will be fit inside the imaginary block you've specified.
+
+### Set resize behavior
+
+```
+-/stretch/:mode/
+```
+
+This transformation should come in front of `resize`, `preview` or `scale_crop` to have an effect:
+
+```
+-/stretch/:mode/-/resize/:one_or_two_dimensions/
+-/stretch/:mode/-/preview/
+-/stretch/:mode/-/preview/:two_dimensions/
+-/stretch/:mode/-/scale_crop/:two_dimensions/
+-/stretch/:mode/-/scale_crop/:two_dimensions/:offset/
+```
+
+<div className="grid">
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/resize/220x/"
+			alt="/preview/160x160/-/resize/220x/"
+			width={220}
+			height={147}
+		/>
+		<figcaption className="gridFigcaptionMono">
+			-/preview/160x160/ <br />
+			-/resize/220x/
+		</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/stretch/off/-/resize/220x/"
+			alt="/preview/160x160/-/stretch/off/-/resize/220x/"
+			width={160}
+			height={107}
+		/>
+		<figcaption className="gridFigcaptionMono">
+			-/stretch/off/ <br />
+			-/preview/160x160/ <br />
+			-/resize/220x/
+		</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/setfill/8d8578/-/stretch/fill/-/resize/220x/"
+			alt="/preview/160x160/-/stretch/fill/-/resize/220x/"
+			width={220}
+			height={147}
+		/>
+		<figcaption className="gridFigcaptionMono">
+			-/stretch/fill/ <br />
+			-/preview/160x160/ <br />
+			-/resize/220x/
+		</figcaption>
+	</figure>
+</div>
+
+You can choose whether we should upscale an image or not. Possible `mode` values are:
+
+-  `on` — upscale will be performed if necessary. This is the default value.
+-  `off` — upscale is off. Even if you request an image bigger than the original, the original size
+   image will be delivered.
+-  `fill` — upscale is also off, but the size will be as requested. The original image will be
+   centered within, and the remaining blank area will be filled with the **background color**. By
+   default, the single prominent color is picked. You also can set the color manually with
+   `-/setfill/` (read below).
+
+### Fill background with color
+
+```
+-/setfill/:color/
+```
+
+Sets the fill color used with crop, stretch or when PNG to JPEG. Color should be hex:
+
+```
+-/setfill/ece3d2/
+```
+
+### Manual crop
+
+```
+-/crop/:two_dimensions/
+-/crop/:two_dimensions/:offset/
+```
+
+Crops an image. Dimensions are specified in pixels. Offset is specified in pixels or percent, or as
+a string, one of: `center`, `top`, `right`, `bottom`, `left`.
+
+Offset values are separated by a comma. The first value is an offset from the left edge, the second
+one is the offset from the top.
+
+<img
+	src="https://ucarecdn.com/15296fa3-b105-46cc-8328-e443bf16c56d/crop.jpg"
+	alt="Crop"
+	width="440"
+	height="440"
+/>
+
+If you want to specify the offset in percent, use `%25` or `p` instead of percent sign inside the
+URL. Percents will be calculated from the metric of the image, width or height, minus the
+corresponding metric of the crop area.
+
+For example, if your image is 1000px wide, and your crop area is 400px wide, 100% will be equal to
+600px, and 1% will be equal to 6px.
+
+<img
+	src="https://ucarecdn.com/fcaaa19f-1ec8-4495-9067-6c6c28cb6c5b/croppercents.jpg"
+	alt="Crop in percents"
+	width="440"
+	height="440"
+/>
+
+```
+-/crop/500x500/center/
+-/crop/500x500/200,300/
+
+**Those are the same:**
+-/crop/500x500/20%25,30%25/
+-/crop/500x500/20p,30p/
+```
+
+### Scale crop
+
+```
+-/scale_crop/:two_dimensions/
+-/scale_crop/:two_dimensions/:offset_in_percents/
+```
+
+Scales an image until it fully covers the specified dimensions; the rest gets cropped. Mostly used
+to place images with various dimensions into placeholders (e.g., square shaped).
+
+Offsets syntax is the same as in Manual crop, but offsets in Scale crop only support percents.
+
+![Scale crop](https://ucarecdn.com/575eb77e-e558-441f-8363-c00d1b86c00e/scale_crop.jpg)
+
+### Smart crop with object recognition
+
+```
+-/scale_crop/1024x1024/smart/
+
+-/scale_crop/1024x1024/smart_faces/
+-/scale_crop/1024x1024/smart_objects/
+-/scale_crop/1024x1024/smart_points/
+
+-/scale_crop/1024x1024/smart_objects_faces/
+-/scale_crop/1024x1024/smart_objects_points/
+-/scale_crop/1024x1024/smart_objects_faces_points/
+
+-/scale_crop/1024x1024/smart_faces_objects/
+-/scale_crop/1024x1024/smart_faces_points/
+-/scale_crop/1024x1024/smart_faces_objects_points/ **(same as /smart/)**
+```
+
+Switching the crop type to one of the smart modes enables the content-aware mechanics. Uploadcare
+applies AI-based algorithms to detect faces and other visually sensible objects to crop the
+background and not the main object.
+
+Content-aware mechanics of the smart crop are based on the following methods of image analysis:
+
+-  **Face detection**, `:type` is set to `smart_faces`.
+-  **Object detection**, `:type` is set to `smart_object`.
+-  **Corner points detection**, `:type` is set to `smart_points`. This method analyses image pixels
+   to find the high contrast corners in the image.
+
+The methods you include separating by underscore are applied sequentially. The algorithm switches to
+the next method only if no regions were found by the previous one.
+
+For example, `smart_faces_objects_points` applies face detection initially as the first step. Only
+when no faces are found on the image, the object detection will be used. Finally, when no objects
+are found, the corner points will be detected.
+
+### Convert to JPEG, PNG or WebP
+
+```
+-/format/:format/
+```
+
+Possible `:format` values are `jpeg`, `png`, `webp` and `auto`.
+
+When you choose `auto`, this is how we choose the appropriate format:
+
+-  First, we check the `Accept` header with MIME types to figure out what image format a client
+   browser supports.
+-  WebP is a primary option. It's used when `image/webp` is one of the supported MIME types.
+-  JPEG is used when the original image is fully opaque.
+-  PNG is used when the source image has an alpha channel with non-opaque pixels.
+
+### Compress and optimize for Retina
+
+```
+-/quality/:value/
+```
+
+Applied to JPEG and WebP images. Possible values are:
+
+-  `smart` — uses a **custom-made algorithm** to compress image as much as possible without visible
+   artifacts
+-  `smart_retina` — same as `smart`, but it also optimizes an image for dense screens.
+
+If you want to set the quality manually, you can specify it using the following options:
+
+-  `best` — pristine quality
+-  `better` — 75% file size
+-  `normal` — 55% file size
+-  `lighter` — 45% file size
+-  `lightest` — 25% file size
+
+Here are the examples. All images are 1000x1000 JPEG. Images are clickable — click an image to open
+it full screen.
+
+<Compression />
+
+### Convert JPEG to Progressive JPEG
+
+```
+-/progressive/yes/
+-/progressive/no/
+```
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/15083c72-329c-4cb1-b71e-079565769378/standard.gif"
+			alt="Standard JPEG"
+			width={240}
+			height={160}
+		/>
+		<figcaption className="gridFigcaption">Standard JPEG</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/d2bdbfab-406d-4cd6-af46-d892b0fe4e7b/progressive.gif"
+			alt="Progressive JPEG"
+			width={240}
+			height={160}
+		/>
+		<figcaption className="gridFigcaption">Progressive JPEG</figcaption>
+	</figure>
+</div>
+
+Progressive JPEGs load not from top to bottom, but all at once and initially blurry. They allow for
+a reasonable preview after receiving only a portion of the data. Does not affect non-JPEG images.
+
+### Color adjustment
+
+```
+-/brightness/:value/
+-/exposure/:value/
+-/gamma/:value/
+-/contrast/:value/
+-/saturation/:value/
+-/vibrance/:value/
+-/warmth/:value/
+```
+
+| Operation      | :value range     | Zero point |
+| -------------- | ---------------- | ---------- |
+| `/brightness/` | from -100 to 100 | 0          |
+| `/exposure/`   | from -500 to 500 | 0          |
+| `/gamma/`      | from 0 to 1000   | 100        |
+| `/contrast/`   | from -100 to 500 | 0          |
+| `/saturation/` | from -100 to 500 | 0          |
+| `/vibrance/`   | from -100 to 500 | 0          |
+| `/warmth/`     | from -100 to 100 | 0          |
+
+The demo below uses Uploadcare transformations by just updating `src` whenever you change values:
+
+<Color />
+
+### Smart enhance
+
+```
+-/enhance/
+-/enhance/:strength/
+```
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/resize/440x/-/quality/lighter/"
+			alt="Original"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/resize/440x/-/quality/lighter/-/enhance/50/"
+			alt="-/enhance/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/enhance/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/153d750a-049f-44dc-8372-853f49320bad/-/resize/440x/-/quality/lighter/-/enhance/100/"
+			alt="-/enhance/100/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/enhance/100/</figcaption>
+	</figure>
+</div>
+
+Enhance automatically adjusts levels, contrast and saturation. Default strength is 50.
+
+### Grayscale and invert
+
+```
+-/grayscale/
+-/invert/
+```
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/quality/lightest/"
+			alt="Original"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/grayscale/-/quality/lightest/"
+			alt="-/grayscale/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/grayscale/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/13448644-f240-4171-bad7-8e079eee491a/-/preview/440x440/-/invert/-/quality/lightest/"
+			alt="-/invert/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/invert/</figcaption>
+	</figure>
+</div>
+
+### Apply filter
+
+```
+-/filter/:name/
+-/filter/:name/:amount/
+```
+
+Amount can be set in the range from -100 to 200 and defaults to 100:
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/-100/"
+			alt="-/vevera/-100/"
+			width={150}
+			height={213}
+		/>
+		<figcaption className="gridFigcaptionMono">-/vevera/-100/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/-100/"
+			alt="Original"
+			width={150}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/100/"
+			alt="-/vevera/100/"
+			width={150}
+		/>
+		<figcaption className="gridFigcaptionMono">-/vevera/100/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8/-/quality/lighter/-/preview/320x320/-/filter/vevera/200/"
+			alt="-/vevera/200/"
+			width={150}
+		/>
+		<figcaption className="gridFigcaptionMono">-/vevera/200/</figcaption>
+	</figure>
+</div>
+
+Here are the available filters:
+
+<Filters />
+
+### Change color profile, ICC, convert to sRGB
+
+```
+-/srgb/fast/
+-/srgb/icc/
+
+-/srgb/fast/-/max_icc_size/:number/
+-/srgb/icc/-/max_icc_size/:number/
+
+-/srgb/keep_profile/
+```
+
+We automatically convert all uploaded images to sRGB. If an uploaded image uses CMYK color space and
+has no embedded profile, we assume it to be `Web Coated (SWOP) v2` when we perform a conversion.
+
+Here's how our conversion algorithm works with color profiles:
+
+| Input Image        | fast            | icc        | keep_profile           |
+| ------------------ | --------------- | ---------- | ---------------------- |
+| RGB, small profile | embedding       | embedding  | embedding              |
+| RGB, large profile | discarding      | conversion | embedding              |
+| CMYK               | fast conversion | conversion | embedding, if possible |
+
+CMYK images in fast mode are converted using a quicker algorithm which **doesn't consider an
+embedded color profile**. While it's quicker, some **color mismatches** are possible.
+
+Note that some transformations require an RGB color space. Thus, using `keep_profile` mode on CMYK
+images doesn't always guarantee that the original profile will be preserved.
+
+### Blur
+
+```
+-/blur/
+-/blur/:strength/
+-/blur/:strength/:amount/
+```
+
+Applies Gaussian blur of `:strength` to the image. Default strength is 10, maximum is 5000. Blur
+strength doesn't affect performance.
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/220x220/-/quality/lightest/"
+			alt="Original"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/220x220/-/blur/10/"
+			alt="-/blur/20/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/blur/20/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/9eaf4b7b-6688-43e9-a6e5-9690142d765a/-/preview/220x220/-/blur/100/"
+			alt="-/blur/100/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/blur/100/</figcaption>
+	</figure>
+</div>
+
+`:amount` allows mixing an original image and the blurred one. 100 is the regular blur (default
+value), 0 will result in an original image without any blur regardless of `:strength`, and negative
+values allow for increasing sharpness.
+
+### Unsharp masking
+
+```
+-/blur/:strength/:negative_amount/
+```
+
+Setting **negative blur amounts**, you can achieve the effect of unsharp masking. The algorithm will
+find a **difference** between **original** and **blurred** image and will **subtract** that
+difference from the original image.
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/"
+			alt="Original"
+			width={220}
+			height={150}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/blur/100/-50/"
+			alt="-/blur/100/-50/"
+			width={220}
+			height={150}
+		/>
+		<figcaption className="gridFigcaptionMono">-/blur/100/-50/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/blur/100/-120/"
+			alt="-/blur/100/-120/"
+			width={220}
+			height={150}
+		/>
+		<figcaption className="gridFigcaptionMono">-/blur/100/-120/</figcaption>
+	</figure>
+</div>
+
+Unsharp masking helps to make images sharper and increase clarity without typical artifacts of
+common sharping algorithms.
+
+The difference is that unsharp masking helps to increase the local contrast. It allows to minimize
+the effects of haze, lens flare, and overall dullness.
+
+The best results are achieved with small amounts of `-/sharp/` and small to moderate amounts of
+unsharp masking.
+
+<img
+	src="https://ucarecdn.com/fe03fd00-1632-4afe-afce-135d043b595f/-/scale_crop/440x300/-/quality/lightest/-/sharp/10/-/blur/90/-50/"
+	alt="-/sharp/10/-/blur/90/-50/"
+	width="440"
+	height="300"
+/>
+
+`-/blur/10/-200/` and `-/sharp/20/` are equivalent, though the latter works much faster.
+
+### Blur an image region
+
+```
+-/blur_region/:two_dimensions/:two_coords/
+-/blur_region/:two_dimensions/:two_coords/:strength/
+```
+
+Same as blur, but the effect is applied to an image region.
+
+<img
+	src="https://ucarecdn.com/a30ee5c8-9303-40b9-813a-6d1743041b49/blur_region.jpg"
+	alt="Blur region"
+	width="440"
+	height="440"
+/>
+
+Dimensions determine the size of blurred area. Coordinates determine the relative position of the
+**top left** corner of blur area to the **top left** corner of an image.
+
+### Blur faces
+
+```
+-/blur_region/faces/
+-/blur_region/faces/:strength/
+```
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/quality/lighter/"
+			alt="Original"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/1fa70a63-0172-4d2c-b2e5-030a7f550011/-/preview/440x440/-/blur_region/faces/-/quality/lighter/"
+			alt="-/blur-regions/faces/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/sharp/10/</figcaption>
+	</figure>
+</div>
+
+Automatically finds and blurs faces using our face detection algorithm.
+
+### Sharpen
+
+```
+-/sharp/
+-/sharp/:strength/
+```
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/220x220/"
+			alt="Original"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaption">Original</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/220x220/-/sharp/10/"
+			alt="-/sharp/10/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/sharp/10/</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/a15a0473-5262-48c7-82e3-2fefcd14e293/-/preview/220x220/-/sharp/20/"
+			alt="-/sharp/20/"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">-/sharp/20/</figcaption>
+	</figure>
+</div>
+
+Sharpens an image. Default strength is 5, the range is 0 to 20.
+
+### Overlay with another image
+
+```
+-/overlay/:uuid/
+
+-/overlay/:uuid/:relative_coordinates/
+-/overlay/:uuid/:relative_coordinates/:opacity/
+
+-/overlay/:uuid/:relative_dimensions/
+-/overlay/:uuid/:relative_dimensions/:opacity/
+
+-/overlay/:uuid/:relative_dimensions/:relative_coordinates/
+-/overlay/:uuid/:relative_dimensions/:relative_coordinates/:opacity/
+```
+
+<img
+	src="https://ucarecdn.com/fafedc32-7b8d-4f51-b1d0-01f15e2112ab/overlay.jpg"
+	alt="Overlay with another image"
+	width="440"
+	height="440"
+/>
+
+Overlay the image with another image. Useful for watermarks and many other scenarios.
+
+-  `uuid` should belong to an image of your account, including all your projects.
+-  `relative_dimensions` are the dimensions of the **imaginary area** that has the **same aspect
+   ratio** as the original image. The overlay image will be **fit** into this area. For example, if
+   the original image is 1000 by 500 pixels, and you set the relative dimensions to `100px50p`
+   (100%x50%), the overlay area will be 1000 pixels wide and 250 pixels high (50% of 500 pixels). If
+   you use `50px100p`, the overlay area will be 500 pixels wide (50% of 1000 pixels, which is the
+   original width of the image) and 500 pixels high (100% of 500 pixels, which is the original
+   height of the image).
+-  `relative_coordinates` can be two numbers or a string. If it's numbers, like `100,200`, they
+   represent the position of the **top left** corner of the overlay area relative to the **top
+   left** corner of the image. If it's a string, it represents a positioning preset. Allowed values
+   are `center`, `top`, `right`, `bottom` and `left`.
+-  `opacity` should be stated as percents.
+
+### Overlay with itself
+
+```
+-/overlay/self/
+-/overlay/self/:relative_dimensions/:opacity/
+-/overlay/self/:relative_dimensions/:relative_coordinates/
+-/overlay/self/:relative_dimensions/:relative_coordinates/:opacity/
+```
+
+Works the same. Useful for batch creation of placeholder images of specific, predefined size.
+
+You can transform an image to make the background out of it. Then, you can overlay it with its
+original version:
+
+<div className="grid" style={{ alignItems: 'flex-end' }}>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/quality/smart_retina/Promenade.jpg"
+			alt="Scale and crop an image"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaption">1. Scale and crop an image</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/quality/smart_retina/Promenade.jpg"
+			alt="Blur it"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">2. Blur it</figcaption>
+	</figure>
+	<figure className="gridFigure">
+		<img
+			className="gridPic"
+			src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/overlay/self/100px100p/center/-/quality/smart_retina/Promenade.jpg"
+			alt="Overlay it with the original"
+			width={220}
+			height={220}
+		/>
+		<figcaption className="gridFigcaptionMono">3. Overlay it with the original</figcaption>
+	</figure>
+</div>
+
+```
+-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/overlay/self/100px100p/center/
+```
+
+### Manual rotation
+
+```
+-/rotate/:angle/
+```
+
+Angle should be divisible by 90.
+
+### Auto-rotate
+
+```
+-/autorotate/yes/
+-/autorotate/no/
+```
+
+Parses "Orientation" EXIF tag and rotates the image accordingly.
+
+### Flip and mirror
+
+```
+-/flip/
+-/mirror/
+```
+
+`Mirror` flips the image across the vertical axis. `Flip` does the same, but across the horizontal
+axis.
+
+### Making browser download images instead of opening them
+
+```jsx
+-/inline/yes/
+-/inline/no/
+```
+
+By default, Uploadcare makes the browser show images and download other file types. You can override
+that behavior.
+
+-  `yes` will make the browser display the file. For example, PDF files will open in a new tab
+   instead of being downloaded.
+-  `no` will make the browser download the file. Images will not be opened in a new tab but will be
+   downloaded instead
+
+### GIF to video
+
+```
+/:uuid/gif2video/
+/:uuid/gif2video/-/format/:format/
+/:uuid/gif2video/-/quality/:quality/
+```
+
+This feature is available for paid plans only.
+
+Notice the lack of dash symbol — this operation can't be stacked with others.
+
+It converts GIF files to video on the fly. Video files are much smaller than GIFs, without any
+quality loss. Their delivery to end users is much faster. In case your source file is not an
+animated GIF or the conversion feature is disabled for your project, you’ll get an HTTP 400 error.
+
+-  `format` can be `mp4` or `webm`. The default is `mp4`. MP4 uses the H.264 codec, while WebM uses
+   VP8.
+-  `quality` can be `lightest`, `lighter`, `normal`, `better` or `best`. The default is `normal`.

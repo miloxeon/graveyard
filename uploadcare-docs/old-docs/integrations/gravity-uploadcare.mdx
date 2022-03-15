@@ -1,0 +1,212 @@
+---
+  layoutPreset: integrations
+  title: Serverless File Uploads for Gravity Forms
+  description:
+    Learn how to enable serverless file uploads in your Gravity Forms
+    with Uploadcare and start receiving files and user generated content
+    in minutes. No backend or storage required.
+---
+
+# Serverless File Uploads for Gravity Forms
+
+This tutorial covers building [Gravity Forms][ext-gravity-forms] able to receive
+user-generated content via [Uploadcare][home].
+In case you are running a WordPress powered website, you might also want to
+check out our [WP integration tutorial][guide-wordpress].
+
+Integrating with Uploadcare also ensures you need no [storage][storage] for
+user media. Every uploaded media is delivered via our [smart CDN][delivery-cdn]
+providing improved load times for your system and saving bandwidth.
+
+Gravity Forms can be highly customized. One of the ways to do that is by using
+“filters.” WordPress defines [filters][ext-filters] as special functions allowing
+plugins to modify various types of internal data.
+
+Let’s build an example form for submitting travel expenses.
+
+## Before we begin
+{id="before-we-begin"}
+
+Before proceeding with the integration, let’s make sure everything is in place:
+
+1. Gravity Forms [account][ext-basic-license].
+2. Uploadcare [account][account-signup].
+3. Uploadcare free [API keys][settings-keys].
+
+Once you create an Uploadcare account, navigate to your [dashboard][dashboard]
+to create a new project or discover [API keys][settings-keys] for an existing one.
+You will need a _public key_: it defines a target project user uploads will go
+to.
+
+If you plan uploading non-image content, add [billing info][account-billing] to your account.
+
+## Step 1: Add scripts with Uploadcare File Uploader
+{id="add-scripts"}
+
+Locate the `header.php` file under a root directory of your WordPress theme and
+place the following line in its `<head>` section:
+
+```html
+<script>UPLOADCARE_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';</script>
+<script src="https://ucarecdn.com/libs/widget/2.x/uploadcare.full.min.js" data-integration="GravityForms"></script>
+```
+
+## Step 2: Add a field button to your admin interface
+{id="add-field-button"}
+
+Use the code below to add a field. Put it in `functions.php`. The file is
+usually located under your WordPress theme directory,
+e.g., `/var/www/wordpress/wp-content/themes/twentyfifteen/functions.php`.
+
+```php
+add_filter('gform_add_field_buttons', 'ih_gform_add_field_buttons');
+function ih_gform_add_field_buttons($field_groups) {
+  foreach ($field_groups as &$group) {
+    if ($group['name'] == 'advanced_fields') {
+      $group['fields'][] = array(
+        'class' => 'button',
+        'value' => __('Uploadcare', 'gravityforms'),
+        'data-type' => 'uploadcare'
+       );
+      break;
+    }
+  };
+  return $field_groups;
+}
+```
+
+## Step 3: Add form settings to the Uploadcare field
+{id="add-form-settings"}
+
+Use the code below to inject settings attributes into file uploader fields. Feel free
+to use multiple settings if needed. This allows you to control file uploader labels,
+descriptions, layouts, and validation settings via the Gravity Forms admin
+interface.
+
+```php
+add_action('gform_editor_js', 'editor_script', 10, 5);
+function editor_script(){
+?>
+<script>
+  fieldSettings['uploadcare'] = '.label_setting, .description_setting, .admin_label_setting, .size_setting, .default_value_textarea_setting, .error_message_setting, .css_class_setting, .visibility_setting'
+</script>
+<?php
+}
+add_filter('gform_admin_pre_render', 'ih_gform_admin_pre_render');
+function ih_gform_admin_pre_render($form) {
+  foreach ($form['fields'] as $i => $field) {
+    if ($field['type'] == 'uploadcare') {
+      $form['fields'][$i]['displayAllCategories'] = true;
+      $form['fields'][$i]['adminLabel'] = 'Receipts';
+      $form['fields'][$i]['adminOnly'] = false;
+    }
+   }
+  return $form;
+}
+```
+
+We’ve just changed our field lable to “Receipts”. That is to hint users at the
+type of content to upload.
+
+![][ucarecdn-guides-gravity-entry-attribute]
+
+## Step 4: Adding Uploadcare File Uploader to your form
+{id="add-widget"}
+
+That step is about actually adding the file uploader to the from we’ve been
+building. For the custom receipt field, we’ll be using
+[`gform_field_input`][ext-gform-field-input]. And here’s how:
+
+```php
+add_action('gform_field_input', 'ih_gform_field_input', 10, 5);
+function ih_gform_field_input($input, $field, $value, $lead_id, $form_id) {
+  if ($field['type'] == 'uploadcare') {
+    $input = sprintf(
+      '<p><input type="hidden" name="input_%s" role="uploadcare-uploader" id="%s" class="gform_uploadcare" data-multiple data-images-only value="" /></p>',
+      $field['id'],
+      'uploadcare-'.$field['id']
+    );
+  }
+  return $input;
+}
+```
+
+`$input` can be modified to hold any number of local [file uploader options][file-uploader-options].
+The `data-images-only` [option][file-uploader-option-images-only] sits in the file uploader
+config to provide a fail-safe experience when working with accounts on the
+Free plan with no billing info added: those only allow image uploads.
+
+In the example above, `data-images-only` is used to allow image file uploading
+only, and `data-multiple` to let users send many files in one go.
+
+Next, locate your Gravity Toolbox, switch to “Advanced Fields,” and click
+“Uploadcare” as shown in the picture.
+
+![][ucarecdn-guides-gravity-toolbox-advanced-fields]
+
+You should now be able to see the Uploadcare button in your Gravity Forms
+toolbox.
+
+Admin page:
+
+![][ucarecdn-guides-gravity-uploads-button-admin].
+
+Public page:
+
+![][ucarecdn-guides-gravity-uploads-button-public]
+
+The guide does not cover adding simple date and text fields to the form: those
+are intuitive.
+
+## Step 5: Uploadcare File Uploader custom styling (Optional)
+{id="widget-styles"}
+
+This step is optional and covers changing the file uploader's button caption and
+styling.
+
+For instance, you want a black button.
+
+Create a file called `uploadcare-style.css` and put the following code in there:
+
+```css
+.uploader-dark-button .uploadcare-widget-button-open {
+    background-color: #333333;
+    border-radius: 0;
+}
+.uploader-dark-button .uploadcare-widget-button-open:hover {
+    background-color: #333333;
+}
+```
+
+Put the file in your base directory,
+e.g. `wp-content/plugins/gravityforms/css/uploadcare-style.css`.
+
+Next, inject the stylesheet into your page. Gravity Forms renders custom scripts
+through [gform_enqueue_scripts][ext-gform-enqueue-scripts]. So, the next step is
+about adding the snippet provided below to `functions.php`. Please, refer to
+Steps 2-4 for details.
+
+```php
+add_action('gform_enqueue_scripts', 'enqueue_custom_script');
+function enqueue_custom_script() {
+  wp_enqueue_style('gforms_uploadcare_css', GFCommon::get_base_url().'/css/uploadcare-style.css');
+}
+```
+
+Finally, choose the Uploadcare field and go to the “Appearance” tab to locate
+another field named “Custom CSS class.” Enter `uploader-dark-button` and click
+“Update.”
+
+![][ucarecdn-guides-gravity-add-custom-css]
+
+![][ucarecdn-guides-gravity-uploads-enabled-form]
+
+Gravity Forms is able to pick up and apply styles to your file uploader automatically.
+For more ideas on styles, you can check out
+the [file uploader docs][file-uploader-styling].
+
+## Conclusion
+
+We have just allowed users to add media to a form by integrating
+[Uploadcare File Uploader][feature-file-uploader] into Gravity Forms. It took four simple
+steps and will just work.

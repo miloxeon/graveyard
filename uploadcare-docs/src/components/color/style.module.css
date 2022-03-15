@@ -1,0 +1,24 @@
+.root {
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.img {
+	display: inline-block;
+	margin-bottom: 1rem;
+}
+
+.label {
+	font-family: monospace;
+}
+
+.value {
+	font-family: monospace;
+}
+
+.filters {
+	display: inline-grid;
+	grid-template-columns: min-content auto 2rem;
+	align-items: center;
+	gap: 0 1rem;
+}

@@ -1,0 +1,81 @@
+---
+  title: Widget Visual Tweaks
+  noindex: true
+  description:
+    'Discover the collection of selected tweaks to amplify your
+    widget workflow: changing uploader button color,
+    uploading circle color, custom progress bar, uploaded image
+    preview. Try it now!'
+---
+
+import { CodePen, Messages, Migration, WidgetV2Warning } from "@uploadcare/docs-components";
+
+#  Widget Visual Tweaks
+
+<Messages>
+  <WidgetV2Warning link='/docs/uploads/file-uploader/' />
+  <Migration />
+</Messages>
+
+* [Color Buttons](#color-buttons)
+* [Uploading Circle Color](#uploading-circle-color)
+* [Custom Progress Bar](#custom-progress-bar)
+* [Uploaded Image Preview](#uploaded-image-preview)
+
+## Color Buttons
+{id="color-buttons"}
+
+One of the things you can do is change upload button color.
+This can be easily done using CSS.
+
+<!-- https://codepen.io/uploadcare/pen/QRvwYQ -->
+<CodePen defaultTab="html" id="QRvwYQ" title="Color buttons example" />
+
+## Uploading Circle Color
+{id="uploading-circle-color"}
+
+Uploading circle fill color can be changed via CSS `color` property
+and backgroud color can be changed via `border-color` property.
+
+<!-- https://codepen.io/uploadcare/pen/vwmEMK -->
+<CodePen defaultTab="html,result" id="vwmEMK" title="Uploading circle color example #1" />
+
+<!-- https://codepen.io/uploadcare/pen/Ezmazz -->
+<CodePen defaultTab="result" id="Ezmazz" title="Uploading circle color example #2" />
+
+## Custom Progress Bar
+{id="custom-progress-bar"}
+
+If you want to replace builtin progress bar, you need to listen current widget
+object. You can obtain it in `onChange` callback. It will be file object
+for regular widget and group object for multiple widget. Then you need
+to listen to `progress` event and change your progress bar in accordance with
+current `uploadProgress`.
+
+This is done in following `installProgressBar` function. It receives
+two arguments: Uploadcare widget instance and your progress bar DOM element.
+Anything else, including animation, is done via CSS.
+
+<!-- https://codepen.io/uploadcare/pen/zQwxVQ -->
+<CodePen id="zQwxVQ" title="Custom progress bar example" />
+
+## Uploaded Image Preview
+{id="uploaded-image-preview"}
+
+When user selects some image, it will be shown in the upload dialog.
+But what to do if you want to show image preview right on the page
+near to uploading widget.
+Such preview is more informative for user than file name and size.
+
+<!-- https://codepen.io/uploadcare/pen/EzmjYB -->
+<CodePen id="EzmjYB" title="Uploaded image preview example #1" />
+
+You have full control of size and position, it can be changed via CSS.
+
+Image preview for multiupload widget may look different:
+
+<!-- https://codepen.io/uploadcare/pen/PvmqwK -->
+<CodePen id="PvmqwK" title="Uploaded image preview example #2" />
+
+You can choose different images or just rearrange existing ones:
+all changes in widget will be reflected in the thumbnail list.

@@ -1,0 +1,342 @@
+---
+  title: 'Uploadcare Image Transformations — resize and crop'
+  description:
+    'Uploadcare allows applying Image Transformations on the fly with a set of CDN operations that can change image size, compression, colors, as various image modifications.'
+---
+
+import { CdnExample } from "@uploadcare/docs-components";
+
+
+# Resize and Crop
+{id="size"}
+
+Resizing and cropping images are the two basic geometry transformations. Like
+other Uploadcare image transformations, they're non-destructive and applied at
+the CDN delivery stage.
+
+The order of operations is important. For example, when you resize an image
+first, the following crop operation will use the coordinates of the resized
+image.
+
+## Preview
+{id="operation-preview"}
+
+`cdn›-/preview/`<br/>
+`cdn›-/preview/:two_dimensions/`
+
+Downscales an image proportionally to fit the given width and height in pixels.
+If the dimensions are not specified, it'll be `2048x2048`.
+
+<CdnExample
+  examples={[
+    [
+      "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/preview/",
+      "/:uuid/-/preview/"
+    ],
+    [
+      "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/preview/300x500/",
+      "/:uuid/-/preview/300x500/"
+    ]
+  ]}
+/>
+
+## Resize
+{id="operation-resize"}
+
+`cdn›/resize/:one_or_two_dimensions/`
+
+Resizes an image to one or two dimensions. When you set both width and height
+explicitly, it may result in a distorted image. If you specify either side, this
+operation will preserve the original aspect ratio and resize the image
+accordingly.
+
+<CdnExample
+  examples={[
+    [
+      "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/resize/200x200/",
+      "/:uuid/-/resize/200x200/"
+    ],
+    [
+      "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/resize/200x/",
+      "/:uuid/-/resize/200x/"
+    ],
+    [
+      "https://ucarecdn.com/85b5644f-e692-4855-9db0-8c5a83096e25/-/resize/x200/",
+      "/:uuid/-/resize/x200/"
+    ]
+  ]}
+/>
+
+### Change resize behavior
+{id="operation-stretch"}
+
+`cdn›-/stretch/:mode/`
+
+Sets the `resize` and `scale_crop` behavior when a source image is smaller than
+the requested dimensions.
+
+* `on` — an image can be scaled up (default).
+* `off` — an image won't be scaled up.
+* `fill` — no image scaling up. The [background color][transformations-image-setfill]
+  fills the remaining parts.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/resize/220x/" target="_blank">
+        <img src="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/resize/220x/" alt="Resized image but stretched"/></a><br/>
+      <code>/preview/160x160/-</code><br/>
+      <code>/resize/220x/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/stretch/off/-/resize/240x160/" target="_blank">
+        <img src="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/stretch/off/-/resize/220x/" alt="Resized image, same dimensions" style={{width: '160px'}}/></a><br/>
+      <code>/preview/160x160/-</code><br/>
+      <code>/stretch/off/-</code><br/>
+      <code>/resize/220x/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/setfill/8d8578/-/stretch/fill/-/resize/220x/" target="_blank">
+        <img src="https://ucarecdn.com/52da3bfc-7cd8-4861-8b05-126fef7a6994/-/quality/best/-/preview/160x160/-/setfill/8d8578/-/stretch/fill/-/resize/220x/" alt="Resized image, same placeholder size with a background fill"/></a><br/>
+      <code>/preview/160x160/-</code><br/>
+      <code>/stretch/fill/-</code><br/>
+      <code>/resize/220x/</code>
+    </td>
+  </tr>
+</table>
+
+## Smart resize
+{id="operation-smart-resize"}
+
+`cdn›-/smart_resize/:two_dimensions/`
+
+Content-aware resize helps retaining original proportions of faces and other
+visually sensible objects while resizing the rest of the image using intelligent
+algorithms.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td style={{verticalAlign: 'bottom'}}>
+      <a href="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/resize/440x/-/quality/smart/" target="_blank">
+        <img src="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/resize/440x/-/quality/smart_retina/" alt=""/></a><br/>
+      Original image, <code>440x500</code><br/>
+    </td>
+    <td style={{verticalAlign: 'bottom'}}>
+      <a href="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/smart_resize/440x600/-/quality/smart/" target="_blank">
+        <img src="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/smart_resize/440x600/-/quality/smart_retina/" alt=""/></a><br/>
+      <code>/smart_resize/440x600/</code><br/>
+    </td>
+    <td style={{verticalAlign: 'bottom'}}>
+      <a href="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/smart_resize/440x300/-/quality/smart/" target="_blank">
+        <img src="https://ucarecdn.com/866a423b-8225-49a4-8253-30c1829b7d7c/-/smart_resize/440x300/-/quality/smart_retina/" alt=""/></a><br/>
+      <code>/smart_resize/440x300/</code><br/>
+    </td>
+  </tr>
+</table>
+
+Smart resize works best for solid, gradient, and homogenous backgrounds that'll
+be expanded. If background stretching can't be done without artifacts, a solid
+fill with a matching color will be applied instead.
+
+**Note:** We are working on improving Smart resize and behaviour may change.
+[Contact us][mail-help] if you found out regression.
+
+## Crop
+{id="operation-crop"}
+
+`cdn›-/crop/:two_dimensions/`<br/>
+`cdn›-/crop/:two_dimensions/:two_coords/`<br/>
+`cdn›-/crop/:two_dimensions/:alignment/`
+
+Crops an image using specified dimensions and offsets. You can set offset in
+pixels and percent. `:alignment` values: `center`, `top`, `right`, `bottom`,
+`left`. If no values are set, the top-left image corner is used.
+
+> **Note:** In URL, `%` is an escape character. Therefore, use a `%25` escape
+> sequence or a `p` shortcut for percent.
+
+<!-- TODO: replace with component -->
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/preview/440x440/" alt="Original image"/></a><br/>
+      Original image.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/2000x1325/center/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/2000x1325/center/-/preview/440x440/-/quality/lightest/" alt="Crop to center"/></a><br/>
+      <code>/crop/2000x1325/center/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/640x424/2560,830/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/crop/640x424/2560,830/-/preview/440x440/-/quality/lightest/" alt="Crop to coordinates"/></a><br/>
+      <code>/crop/960x636/2400,700/</code>
+    </td>
+  </tr>
+</table>
+
+If given dimensions are greater than the ones of the original image, the image
+is rendered inside a color-filled box. The color of that box can be changed via
+the [`setfill`][transformations-image-setfill] operation.
+
+## Scale Crop
+{id="operation-scale-crop"}
+
+`cdn›-/scale_crop/:two_dimensions/`<br/>
+`cdn›-/scale_crop/:two_dimensions/:offsets/`
+
+Scales an image until it fully covers the specified dimensions; the rest gets
+cropped. Mostly used to place images with various dimensions into
+placeholders (e.g., square shaped).
+
+Here's an example that shows the difference between three operations:
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/resize/1024x1024/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/resize/1024x1024/-/preview/440x440/-/quality/lighter/" alt="Resize image to a size, stretched"/></a><br/>
+      <code>/resize/1024x1024/</code><br/>
+      Requested size.<br/>
+      Distorted.
+    </td>
+    <td style={{verticalAlign: 'bottom'}}>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/1024x1024/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/1024x1024/-/preview/440x440/-/quality/lighter/" alt="Adjust size, keep dimensions"/></a><br/>
+      <code>/preview/1024x1024/</code><br/>
+      Adjusted size.<br/>
+      No distortion.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/scale_crop/1024x1024/center/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/scale_crop/1024x1024/center/-/preview/440x440/-/quality/lighter/" alt="Resize image to a placeholder, zoom and crop"/></a><br/>
+      <code>/scale_crop/1024x1024/</code><br/>
+      Requested size.<br/>
+      No distortion.
+    </td>
+  </tr>
+</table>
+
+* `:offsets` — `string`, format: `M%,N%`, where `M` and `N` are the
+optional offsets along one or both of the axes in percentages; other possible
+values include:
+* `center` — a keyword responsible for centering the crop focus.
+
+## Smart Crop
+{id="operation-smart-crop"}
+
+When smart `:type` is specified.
+
+Switching the crop type to one of the `smart` modes enables the content-aware
+mechanics. Uploadcare applies AI-based algorithms to detect faces and other
+visually sensible objects to crop the background and not the main object.
+
+Example:
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/scale_crop/1024x1024/smart/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/scale_crop/1024x1024/smart/-/preview/440x440/-/quality/lighter/" alt="Smart crop to an object"/></a><br/>
+      <code>/scale_crop/1024x1024/smart/</code><br/>
+      Smart cropping.<br/>
+    </td>
+  </tr>
+</table>
+
+Content-aware mechanics of the smart crop are based on the following methods of
+image analysis:
+
+* Face Detection, `:type` is set to `smart_faces`. Face detection identifies and
+  locates human faces in digital images.
+* Object Detection, `:type` is set to `smart_object`. Object detection
+  identifies and locates most visually important regions in the image.
+* Corner Points Detection, `:type` is set to `smart_points`. This method
+  analyses image pixels to find the high contrast corners in the image, useful
+  for abstract, landscape, and art images. The corner points have much less
+  semantic information than other methods and designed to be used as a fallback.
+
+The methods you include separating by underscore are applied sequentially. The
+algorithm switches to the next method only if no regions were found by the
+previous one. For example `smart_faces_objects_points` applies face detection
+initially as the first step. Only when no faces are found on an image, the
+object detection will be used. Finally, when no objects are found, the corner
+points will be detected.
+
+If specified methods were unable to find regions or points of interest, the
+`:offset` setting will be used to crop an image. When no `:offsets` are
+specified, images get center-cropped.
+
+Smart crop always tries to save the maximum amount of pixels from the original
+image. It first applies scale operation and then cuts horizontal or vertical
+excesses.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_faces_objects/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_faces_objects/-/preview/300x300/-/quality/lighter/" alt="Cropped image, auto centered on a face"/></a><br/>
+      <code>smart_faces_objects</code><br/>
+      Centering on faces or objects <br/> when no faces found.<br/>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_objects_faces_points/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_objects_faces_points/-/preview/300x300/-/quality/lighter/" alt="Cropped image, auto centered on objects and faces"/></a><br/>
+      <code>smart_objects_faces</code><br/>
+      Centering on objects or faces <br/> when no objects found.<br/>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_points/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_points/-/preview/300x300/-/quality/lighter/" alt="Image centering on hard edges"/></a><br/>
+      <code>smart_points</code><br/>
+      Centering on corner points.<br/>
+    </td>
+  </tr>
+</table>
+
+### Possible `:type` values:
+{id="type-values"}
+
+* `smart` (alias for `smart_faces_objects_points`)
+* `smart_faces_objects`
+* `smart_faces_points`
+* `smart_objects_faces_points`
+* `smart_objects_faces`
+* `smart_objects_points`
+* `smart_points`
+* `smart_objects`
+* `smart_faces`
+
+## Set fill color
+{id="operation-setfill"}
+
+`cdn›-/setfill/:color/`
+
+Sets the fill color used with [`crop`](#operation-crop),
+[`stretch`](#operation-stretch) or when converting an alpha channel enabled
+image to JPEG. The operation uses hexadecimal notation to define colors.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/preview/440x380/-/crop/440x380/center/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/quality/lightest/-/preview/440x380/-/crop/440x380/center/" alt="Image, cropped to center, resized on a white background"/></a><br/>
+      <code>/preview/440x380/-</code><br/>
+      <code>/crop/440x380/center/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/preview/440x380/-/setfill/ece3d2/-/crop/440x380/center/" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/quality/lightest/-/preview/440x380/-/setfill/ece3d2/-/crop/440x380/center/" alt="Image, cropped to center, resized with a color filled background"/></a><br/>
+      <code>/preview/440x380/-</code><br/>
+      <code>/setfill/ece3d2/-</code><br/>
+      <code>/crop/440x380/center/</code>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/b18b5179-b9f6-4fdc-9920-5539f938fc44/-/setfill/ece3d2/-/format/jpeg/" target="_blank">
+        <img src="https://ucarecdn.com/b18b5179-b9f6-4fdc-9920-5539f938fc44/-/quality/better/-/setfill/ece3d2/-/format/jpeg/-/crop/220x190/center/" alt="PNG image with alpha channel converted to JPEG with a background fill"/></a><br/>
+      <code>/setfill/ece3d2/-</code><br/>
+      <code>/format/jpeg/</code>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,20 @@
+.root th {
+	text-align: left;
+}
+
+/* property */
+.root td:nth-child(1) {
+	white-space: nowrap;
+	min-width: 10rem;
+}
+
+/* type */
+.root td:nth-child(2) {
+	white-space: nowrap;
+	min-width: 5rem;
+}
+
+/* description */
+.root td:nth-child(3) {
+	min-width: 30rem;
+}

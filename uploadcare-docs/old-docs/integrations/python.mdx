@@ -1,0 +1,88 @@
+---
+  layoutPreset: integrations
+  title: Python API Client for File Upload and Management
+  description:
+    Python Uploadcare API client for Fast & Reliable File Uploads; File,
+    Group, Project Operations & More.
+---
+
+# Python API Client
+
+Python integration handles uploads and file operations by wrapping Uploadcare
+[Upload API][api-reference-upload] and [REST API][api-reference-rest]. This
+comprehensive API client lets you use most of the Uploadcare features from within
+your Python app.
+
+[GitHub &rarr;][pyuploadcare-github-readme]
+
+## Features
+
+Upload features:
+* Upload files from local storage and URLs (up to 5 TB)
+* Multipart uploading for large files
+* Uploading network to speed uploading jobs (like CDN)
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+
+## Requirements
+
+* Python 2.7, 3.5, 3.6, 3.7, 3.8
+
+If you're using `pyuploadcare` with Django, check `.travis.yml` for supported
+Python-Django combinations.
+
+## Install
+
+In order to install `pyuploadcare`, run these commands in CLI:
+
+```bash
+pip install pyuploadcare
+```
+
+or, if you prefer it the old way:
+
+```bash
+easy_install pyuploadcare
+```
+
+## Usage example
+
+Here is an example how to include Uploadcare `ImageField` into an existing
+Django project.
+
+```python{noAutoLinker}
+from django import forms
+from django.db import models
+
+from pyuploadcare.dj.models import ImageField
+from pyuploadcare.dj.forms import FileWidget
+
+class Candidate(models.Model):
+    photo = ImageField(blank=True, manual_crop="")
+
+# optional. provide advanced widget options: https://uploadcare.com/docs/uploads/file-uploader-options/#options
+class CandidateForm(forms.Form):
+    photo = ImageField(widget=FileWidget(attrs={
+        'data-cdn-base': 'https://cdn.super-candidates.com',
+        'data-image-shrink': '1024x1024',
+    }))
+```
+
+## Testing
+
+```
+$ pip install tox
+$ tox
+```
+
+## Related guides
+
+* [Integration with Django][guide-django]

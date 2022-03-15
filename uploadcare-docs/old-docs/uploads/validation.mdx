@@ -1,0 +1,138 @@
+---
+  title: 'Uploadcare Content Validation'
+  description:
+    'You can moderate uploaded content through validation. Implement guidelines: impose restrictions on file size, file type, image dimensions, and more.'
+---
+
+import { CodePen, Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# Validation
+
+<Messages>
+  <WidgetV3Warning link='/docs/uploads/v2/' />
+  <Migration />
+</Messages>
+
+Content validation is a common case. You want to allow users to only upload
+files of certain sizes, types, image dimensions, etc. That’s where File
+Validation comes in. It’s carried out via validators.
+
+Validator is a JavaScript function that receives a `fileInfo` object for each
+uploaded file and throws an exception if that file does not meet validation
+requirements.
+
+## Simple File Size Check
+{id="size-simple"}
+
+The simplest validatior, which checks file sizes, can look like this:
+
+```js
+widget.validators.push(function(fileInfo) {
+  if (fileInfo.size !== null && fileInfo.size > 1024 * 1024) {
+    throw new Error("fileMaximumSize");
+  }
+});
+```
+
+## Wrapping Validators in Functions
+{id="functions"}
+
+It is better to wrap validators in a function that receives a constant, like a
+file size threshold. Such validators can then be reused by different file uploaders:
+
+```js
+function maxFileSize(size) {
+  return function(fileInfo) {
+    if (fileInfo.size !== null && fileInfo.size > size) {
+      throw new Error("fileMaximumSize");
+    }
+  };
+}
+// limit file size to 1 MB
+widget1.validators.push(maxFileSize(1024 * 1024));
+// limit file size to 2 MB
+widget2.validators.push(maxFileSize(2 * 1024 * 1024));
+```
+
+## Validation Based on Data Attributes of Input Elements
+{id="auto"}
+
+Validation can also be implemented based on data attributes of input elements.
+For example, if your file uploader has the `data-max-size` option enabled, we can add
+the `maxFileSize` validatior in the following manner:
+
+```js
+$(function() {
+  $('[role=uploadcare-uploader][data-max-size]').each(function() {
+    var widget = uploadcare.Widget(this);
+    widget.validators.push(maxFileSize($(this).data('maxSize')));
+  });
+});
+```
+
+## Common Validators
+{id="cases"}
+
+Here are some common validation cases for you to consider,
+
+* [Limit File Size](#file-size)
+* [Restrict File Type](#file-type)
+* [Image Dimensions](#image-dimensions)
+* [Image Orientation](#image-orientation)
+
+### File Size
+{id="file-size"}
+
+The example below shows how to add validation for both min and max file sizes.
+A validator is automatically added to each file uploader with `data-min-size` and
+`data-max-size` custom attributes.
+
+<!-- https://codepen.io/uploadcare/pen/arJgqE -->
+<CodePen defaultTab="js,result" id="arJgqE" title="File size validation example" />
+
+### File Type
+{id="file-type"}
+
+`fileTypeLimit` is another validator that can be added to file uploaders with the
+`data-file-types` custom attribute whose value is a space-separated list of
+allowed files extensions. `data-file-types` can be combined with the
+`data-input-accept-types` attribute that holds accepted MIME types: `audio/mpeg`
+in the example below.
+
+<!-- https://codepen.io/uploadcare/pen/MdmgxY -->
+<CodePen defaultTab="js,result" id="MdmgxY" title="File type validation example" />
+
+### Image Dimensions
+{id="image-dimensions"}
+
+For images, you can define the `maxDimensions` validator that will be added to
+file uploaders with either `data-max-width` or `data-max-height` custom attributes.
+Please note, `maxDimensions` only checks image dimensions even though it accepts
+any file type. You can combine it with the `data-images-only` attribute to change
+this behavior.
+
+<!-- https://codepen.io/uploadcare/pen/wbdwLN -->
+<CodePen defaultTab="js,result" id="wbdwLN" title="Image dimensions validation example" />
+
+### Image Orientation
+{id="image-orientation"}
+
+This validator denies landscape images with the `data-portrait-only="true"`
+attribute and portrait images with the `data-landscape-only="true"` attribute.
+There is no point in adding both of those attributes to the same file uploader.
+
+<!-- https://codepen.io/uploadcare/pen/GamRJX -->
+<CodePen defaultTab="js,result" id="GamRJX" title="Image dimensions validation example" />
+
+## Validators as File Uploader Options
+{id="validators-as-options"}
+
+You can also moderate content via [file uploader options][file-uploader-options]. Such options
+are called [validators][file-uploader-option-validators]. Here are the most common
+ones:
+
+* Allow [images only][file-uploader-option-images-only]
+* Allow certain [input accept types][file-uploader-option-input-accept-types]
+* Set file uploader [preferred MIME types][file-uploader-option-preferred-types]
+
+<!-- Anton: Maybe add link to the # JavaScript API — File Validation -->

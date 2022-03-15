@@ -1,0 +1,293 @@
+---
+  title: 'Uploadcare Object Recognition'
+  description:
+    'Uploadcare provides object recognition capabilities that are useful when categorizing content or implementing image tagging.'
+---
+
+# Object Recognition
+
+Object Recognition allows categorizing and tagging images. The feature is
+currently in beta and runs on the REST API v0.6. Consider implementing Object
+Recognition for testing purposes only. We’ll notify you about the feature status
+updates via Uploadcare [changelog][changelog].
+
+When using Uploadcare Object Recognition, you get a list of objects detected in
+your image paired with confidence levels for every object class.
+
+<a href="https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/-/preview/house-pond.jpg" target="_blank">
+  <img src="https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/-/preview/680x680/house-pond.jpg"
+    srcSet="https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/-/preview/1360x1360/-/quality/lightest/house-pond.jpg 2x"
+    alt="Image with water, trees and houses" />
+</a><br/>
+
+```json
+"rekognition_info": {
+  "Building": 0.63291,
+  "House": 0.63291,
+  "Housing": 0.63291,
+  "Architecture": 0.63008,
+  "Outdoors": 0.55667,
+  "Cottage": 0.63291,
+  "Pond": 0.55667,
+  "Castle": 0.63008,
+  "Moat": 0.63008,
+  "Fort": 0.63008
+}
+```
+
+## Enabling Object Recognition
+{id="enable"}
+
+The feature works on a per-project basis and is currently in beta. Consider
+making a separate project via your [dashboard][dashboard] and drop us a line
+with your feature request and the project’s [Public API Key][settings-keys] at
+[sales@uploadcare.com][mail-sales].
+
+## How It Works
+{id="how-it-works"}
+
+Once we enable Object Recognition for one of your projects, we analyze every
+image that goes there. Hence, you should upload at least one image to a
+recognition-enabled project to proceed.
+
+You can either upload an image right in your [dashboard][dashboard] by
+navigating to the “Files” section of your project or use
+[Upload API][api-reference-upload].
+
+Once an image is uploaded to a recognition-enabled project, you can make an
+API call to acquire a list of detected objects and related confidence levels.
+
+## Getting Image Info
+{id="get-info"}
+
+Here’s where the technical details begin ⚙️ Feel free to reference this section
+of the document by using this
+[link][intelligence-object-recognition-get-info].
+
+Object Recognition is performed automatically for every image that is uploaded
+to a recognition-enabled project. While this happens on upload, it can take
+some extra time after a file `is_ready`. We currently use AWS Rekognition for
+the analyses and plan adding options like Google Vision in the future.
+
+Acquiring info on detected objects is performed via the Uploadcare
+[REST API][api-reference-rest]. Object Recognition will only work with the API
+`v0.6`, which is currently unreleased and requires explicit declaration.
+
+To do so, you make [file info][api-reference-get-file-example] requests to our
+API endpoint specifying the `add_fields` parameter.
+
+The endpoint for requesting Object Recognition info is:
+
+```html
+https://api.uploadcare.com/files/
+```
+
+There are two methods for getting info on detected objects via GET requests,
+for multi-file and single-file cases:
+
+```html
+GET /files/?add_fields=rekognition_info
+
+or
+
+GET /files/:uuid/?add_fields=rekognition_info
+```
+
+Where:
+
+* `add_field` parameter points our API to include `rekognition_info`, a list
+  holding object classes and confidence levels, in the response JSON.
+* `:uuid` identifies the unique image for which you are requesting info on
+  detected objects.
+
+<!-- Roma: Looks like something from api-refs. -->
+### Request Example
+{id="get-info-request"}
+
+Single-file example:
+
+```bash{noAutoLinker}
+curl -H "Accept: application/vnd.uploadcare-v0.6+json" \
+     -H "Authorization: Uploadcare.Simple publickey:secretkey" \
+     "https://api.uploadcare.com/files/:uuid/?add_fields=rekognition_info"
+```
+
+Multi-file example:
+
+```bash
+curl -H "Accept: application/vnd.uploadcare-v0.6+json" \
+     -H "Authorization: Uploadcare.Simple publickey:secretkey" \
+     "https://api.uploadcare.com/files/?add_fields=rekognition_info"
+```
+
+Where:
+
+* Note, `Accept` header points at the REST API v0.6. That should be set
+  explicitly because the default current API version is v0.5; it does not
+  support the `add_fields` parameter.
+* `Uploadcare.Simple` stands for the [auth-scheme][api-reference-rest-auth] that
+  requires your Uploadcare project Public and Secret
+  [keys][settings-keys].
+* In a single-file example, `:uuid` identifies the image we get info for.
+* In a multi-file example, no `:uuid` is provided; you will receive detection
+  info for all files in your project 🧢
+
+<!-- Roma: Looks like something from api-refs. -->
+### Response Example
+{id="get-info-response"}
+
+Let’s request Object Recognition info for the cover image of this section. Here
+is how it looked like:
+
+<a href="https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/-/preview/house-pond.jpg" target="_blank">
+  <img src="https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/-/preview/680x680/house-pond.jpg"
+    srcSet="https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/-/preview/1360x1360/-/quality/lightest/house-pond.jpg 2x"
+    alt="Image with water, trees and houses" />
+</a><br/>
+
+Once we make a single-file request that is properly authenticated, that’s a
+response JSON we get:
+
+```json
+{
+  "datetime_removed": null,
+  "datetime_stored": "2018-08-07T05:31:47.326146Z",
+  "datetime_uploaded": "2018-08-07T05:31:47.132454Z",
+  "image_info": {
+    "orientation": null,
+    "sequence": false,
+    "format": "JPEG",
+    "height": 2432,
+    "width": 3648,
+    "geo_location": null,
+    "datetime_original": null,
+    "dpi": [
+        72,
+        72
+    ]
+  },
+  "is_image": true,
+  "is_ready": true,
+  "mime_type": "image/jpeg",
+  "original_file_url": "https://ucarecdn.com/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/house-pond.jpg",
+  "original_filename": "eberhard-grossgasteiger-767950-unsplash.jpg",
+  "size": 2363253,
+  "url": "https://api.uploadcare.com/files/af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e/",
+  "uuid": "af9b7f02-6cbe-45bd-9bb6-9c928bf8a72e",
+  "variations": null,
+  "video_info": null,
+  "rekognition_info": {
+    "Building": 0.63291,
+    "House": 0.63291,
+    "Housing": 0.63291,
+    "Architecture": 0.63008,
+    "Outdoors": 0.55667,
+    "Cottage": 0.63291,
+    "Pond": 0.55667,
+    "Castle": 0.63008,
+    "Moat": 0.63008,
+    "Fort": 0.63008
+  }
+}
+```
+
+As you can see in the response, highest confidence levels can be found in
+`rekognition_info` for `Building`, `House`, and `Housing` classes.
+
+The possible values for `rekognition_info` are:
+
+* `null`, the analysis has not yet finished.
+* `{}`, Object Recognition was unable to identify any known objects in an image.
+* `{object0: confidence0, object1: confidence1, ...}`, info on detected objects
+  and related confidence levels.
+
+The common use case with confidence levels would be setting a threshold based
+on which your system will then operate.
+
+## Recognition Results
+{id="detection-examples"}
+
+Here are some examples analyzed via our Object Recognition. Resulting data look
+like lists wrapped in JSON.
+
+You can find detected object classes like `Town`, `Carrot`, `Balcony`, and more.
+
+The provided confidence levels are floating point numbers in the range
+from 0 to 1. Check out the levels for `Urban` and `Building` classes for the
+image below. Uploadcare points those are the prevailing things in it. If you
+prefer percents, just multiply those numbers by 100. It can then be interpreted
+as Uploadcare is 92% sure `Building` is in the following image:
+
+<a href="https://ucarecdn.com/1b4910d6-2f93-40ad-b286-a856c27ca52e/-/preview/skyscrapers.jpg" target="_blank">
+  <img src="https://ucarecdn.com/1b4910d6-2f93-40ad-b286-a856c27ca52e/-/preview/680x680/skyscrapers.jpg"
+    srcSet="https://ucarecdn.com/1b4910d6-2f93-40ad-b286-a856c27ca52e/-/preview/1360x1360/-/quality/lightest/skyscrapers.jpg 2x"
+    alt="City landscape" />
+</a><br/>
+
+```JSON
+"rekognition_info": {
+  "Town": 0.91803,
+  "City": 0.91803,
+  "Nature": 0.56342,
+  "High Rise": 0.81656,
+  "Downtown": 0.86856,
+  "Architecture": 0.79969,
+  "Urban": 0.91803,
+  "Building": 0.91803,
+  "Landscape": 0.56342,
+  "Skyscraper": 0.79969
+}
+```
+
+The second example shows how you can get some additional context from an image.
+We are 94% sure there are carrots in the image and with the same level of
+confidence those carrots are `Vegetable` and `Food`, good to know 😌
+
+Those additional context layers are not just useful for categorizing content,
+but building some smart decision-making workflows for your system 🤓
+
+<a href="https://ucarecdn.com/45fd2e86-b208-4bf7-a175-928180453d3a/-/preview/carrots.jpg" target="_blank">
+  <img src="https://ucarecdn.com/45fd2e86-b208-4bf7-a175-928180453d3a/-/preview/680x680/carrots.jpg"
+    srcSet="https://ucarecdn.com/45fd2e86-b208-4bf7-a175-928180453d3a/-/preview/1360x1360/-/quality/lightest/carrots.jpg 2x"
+    alt="Carrots and salad" />
+</a><br/>
+
+```JSON
+"rekognition_info": {
+  "Plant": 0.93765,
+  "Flora": 0.93765,
+  "Food": 0.93765,
+  "Tree": 0.51218,
+  "Produce": 0.93765,
+  "Carrot": 0.93765,
+  "Conifer": 0.51218,
+  "Vegetable": 0.93765,
+  "Ivy": 0.60237,
+  "Vegetation": 0.50727
+}
+```
+
+The third example uncovers that you can go beyond objects like `Balcony` to
+recognizing patterns. Say, we know there are `Ornament`, `Arabesque Pattern`,
+and `Brick` in the image below 🖼️
+
+<a href="https://ucarecdn.com/3e9e446b-d0e4-4626-9d7d-8538c4b7e145/-/preview/street-slope.jpg" target="_blank">
+  <img src="https://ucarecdn.com/3e9e446b-d0e4-4626-9d7d-8538c4b7e145/-/preview/680x680/street-slope.jpg"
+    srcSet="https://ucarecdn.com/3e9e446b-d0e4-4626-9d7d-8538c4b7e145/-/preview/1360x1360/-/quality/lightest/street-slope.jpg 2x"
+    alt="Street photo with a building with windows, balconies, and doors" />
+</a><br/>
+
+```JSON
+"rekognition_info": {
+  "Art": 0.60401,
+  "Home Decor": 0.719,
+  "Ornament": 0.60401,
+  "Shutter": 0.719,
+  "Arabesque Pattern": 0.60401,
+  "Window": 0.719,
+  "Curtain": 0.719,
+  "Brick": 0.75331,
+  "Window Shade": 0.719,
+  "Balcony": 0.70572
+}
+```

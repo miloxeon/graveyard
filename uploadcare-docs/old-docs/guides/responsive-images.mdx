@@ -1,0 +1,362 @@
+---
+  layoutPreset: guides
+  title: Implementing Responsive Images
+  description:
+    Uploadcare provides an extensive Responsive Images toolkit. Build
+    adaptive designs and optimize your web app performance. To use the
+    feature, learn more information in Uploadcare docs.
+---
+
+import { CodePen } from "@uploadcare/docs-components";
+
+# Implementing Responsive Images
+
+<!-- TODO: replace with component -->
+<p>
+  <img
+    src="https://ucarecdn.com/81c96e9f-f430-41c1-a147-e315a9cc54a1/-/format/jpeg/-/crop/1300x642/100,100/-/resize/650x/-/quality/better/"
+    srcSet="https://ucarecdn.com/81c96e9f-f430-41c1-a147-e315a9cc54a1/-/format/jpeg/-/crop/1300x642/100,100/-/quality/lighter/ 2x"
+    alt="Responsive image on mobile devices, laptop, and desktop"
+  />
+</p>
+
+When developing a website, implementing responsive designs means handling
+responsive images,the ones that can adapt to user devices and browsers.
+
+Uploadcare [Image Transformations][transformations-image] help you prepare a
+virtually infinite number of image versions to use with Responsive Images.
+This article describes the possible Image Transformations approaches to
+Responsive Images with HTML and CSS.
+
+* [Responsive Images via HTML](#ri-html)
+  * [Using the `img` Element](#ri-html-img)
+  * [HiDPI Screens and `srcset`](#ri-html-hidpi)
+  * [Variable Widths, `srcset` and `sizes`](#ri-html-widths)
+  * [The `picture` Element Superpowers](#ri-html-picture)
+    * [Art Direction](#ri-html-picture-art)
+    * [Breakpoints](#ri-html-picture-bp)
+* [Responsive Images via CSS](#ri-css)
+  * [`background-image`](#ri-css-bg-img)
+  * [`background-image`, Sass Version](#ri-css-bg-img-sass)
+* [Conclusion](#ri-conclusion)
+<!-- * [More on Responsive Images by Standards](#ri-further-reading) -->
+
+## Responsive Images via HTML
+{id="ri-html"}
+
+### Using the `img`  Element
+{id="ri-html-img"}
+
+Here’s a simple way to make an image responsive with HTML &mdash; use the
+`<img>` element and set the width as a percentage for `<img>` in CSS.
+
+The image width adapts to the width of the container.
+
+[Live example #1][ext-live-example-1]
+
+ ```html{noAutoLinker}
+<img src="https://ucarecdn.com/:uuid/-/resize/1000x/">
+
+<style>
+  img {
+    width: 100%;
+    height: auto;
+  }
+</style>
+```
+
+> **Tip:** Use [Chrome DevTools][ext-devtools], [device mode][ext-devtools-device-mode]
+and [network tab][ext-devtools-network-tab] to see how the image changes for this and
+ensuing examples.
+
+In this example, the [original image][ucarecdn-original-image] size is
+4928x3280px and file size is 1.85 MB. When we obtain the smaller version of the
+image using Uploadcare CDN [`resize` operator][transformations-image-resize],
+the image width is reduced to 1000px and file size is reduced to 125 KB only.
+
+### HiDPI Screens and `srcset`
+{id="ri-html-hidpi"}
+
+Set the version of the image for HiDPI screens with the [`srcset` attribute][ext-srcset-attribute]
+of the `<img>` element and the `x` descriptor.
+
+[Live example #2][ext-live-example-2]
+
+```html{noAutoLinker}
+<img
+    src="https://ucarecdn.com/:uuid/-/resize/1000x/1.jpg"
+    srcset="https://ucarecdn.com/:uuid/-/resize/2000x/-/quality/lightest/1.jpg 2x">
+```
+
+For devices with pixel ratio equal to 2 you need a double size image.
+
+> **Tip**: use the [`quality` operator][transformations-image-quality] to reduce
+> the quality of an image. High quality is not necessary, but you can get a file
+> with smaller size.
+
+On devices with a pixel ratio equal to 2, we can get a version of the image that
+is 2000px wide and that weighs 200 KB.
+
+That’s pretty good, but still too big for loading onto mobile devices. For
+example, for the iPhone 5, an image width of 640px is enough because the screen
+width is 320px and the DRP is 2.
+
+Our 640px picture weighs only 59.5 KB.
+
+### Variable Widths, `srcset` and `sizes`
+{id="ri-html-widths"}
+
+To load an image that fits certain screen parameters, use the `w` descriptor in
+`srcset` as well as the [`sizes` attribute][ext-sizes-attribute].
+
+[Live example #3][ext-live-example-3]
+
+```html{noAutoLinker}
+<img src="https://ucarecdn.com/:uuid/-/resize/1000x/fallback.jpg"
+     srcset="https://ucarecdn.com/:uuid/-/resize/320x/320.jpg 320w,
+             https://ucarecdn.com/:uuid/-/resize/450x/450.jpg 450w,
+             https://ucarecdn.com/:uuid/-/resize/640x/640.jpg 640w,
+             https://ucarecdn.com/:uuid/-/resize/750x/750.jpg 750w,
+             https://ucarecdn.com/:uuid/-/resize/800x/800.jpg 800w,
+             https://ucarecdn.com/:uuid/-/resize/900x/900.jpg 900w,
+             https://ucarecdn.com/:uuid/-/resize/1000x/-/quality/lighter/1000.jpg 1000w,
+             https://ucarecdn.com/:uuid/-/resize/1200x/-/quality/lighter/1200.jpg 1200w,
+             https://ucarecdn.com/:uuid/-/resize/1500x/-/quality/lighter/1500.jpg 1500w,
+             https://ucarecdn.com/:uuid/-/resize/1600x/-/quality/lighter/1600.jpg 1600w,
+             https://ucarecdn.com/:uuid/-/resize/2000x/-/quality/lightest/2000.jpg 2000w"
+     sizes="(min-width: 1000px) 50vw, 100vw">
+```
+
+We tell the browser that image
+`https://ucarecdn.com/:uuid/-/resize/320x/320.jpg` has a width of 320px, image
+`https://ucarecdn.com/:uuid/-/resize/640x/640.jpg` is 640px wide, and so on. The
+browser will select an image depending on the viewport as well as the device
+pixel ratio.
+
+In `sizes` we can set information about what part of the viewport image will be
+occupied.
+
+```
+sizes="(min-width: 1000px) 50vw, 100vw"
+```
+
+On screens with a width of 1000px, an image takes 50% of the width. In other
+cases, i.e. smaller screens, it will occupy the entire width.
+
+### The `picture`  Element Superpowers
+{id="ri-html-picture"}
+
+The [`<picture>` element][ext-picture-element] is a new HTML element, and it
+extends the `<img>` element. It contains multiple [`<source>` elements][ext-source-elements]
+that have an `srcset` attribute and can have `sizes` and `media` attributes. The
+`media` attribute allows you to specify [media queries][ext-media-queries] like
+in CSS. The browser will select the most suitable source.
+
+Let’s see how we can use it.
+
+We have a wide image, and in previous examples, it looks on smartphones like it
+does on a desktop.
+
+<!-- TODO: replace with component -->
+<p>
+  <img
+    src="https://ucarecdn.com/13e0f19e-579b-485b-acf9-2b5e5e5fc464/-/crop/1300x546/100,153/-/resize/650x/"
+    srcSet="https://ucarecdn.com/13e0f19e-579b-485b-acf9-2b5e5e5fc464/-/crop/1300x546/100,153/-/quality/lightest/ 2x"
+    alt="Landscape-oriented image resized on smartphone"
+  />
+</p>
+
+But what we want to see is a tall and thin image in a portrait orientation on
+smartphones.
+
+<!-- TODO: replace with component -->
+<p>
+  <img
+    src="https://ucarecdn.com/fea6ab4e-b90d-4780-996b-dd13ff7971f7/-/crop/400x451/100,246/-/resize/200x/"
+    srcSet="https://ucarecdn.com/fea6ab4e-b90d-4780-996b-dd13ff7971f7/-/crop/400x451/100,246/-/quality/lightest/ 2x"
+    alt="Portrait-oriented resize works for smartphone better"
+  />
+</p>
+
+We pick `<img>` code from the previous example and add a `<picture>` container
+with one `<source>` element.
+
+[Live example #4][ext-live-example-4]
+
+```html{noAutoLinker}
+<picture>
+    <source
+        srcset="https://ucarecdn.com/:uuid/-/scale_crop/320x569/center/320-569.jpg 320w,
+                https://ucarecdn.com/:uuid/-/scale_crop/640x1138/center/-/quality/lightest/640-1138.jpg 640w,
+                https://ucarecdn.com/:uuid/-/scale_crop/450x800/center/450-800.jpg 450w,
+                https://ucarecdn.com/:uuid/-/scale_crop/900x1600/center/-/quality/lightest/900-1600.jpg 900w"
+        sizes="100vw"
+        media="(max-width: 450px) and (orientation: portrait)">
+
+    <img src="https://ucarecdn.com/:uuid/-/resize/1000x/fallback.jpg"
+        srcset="https://ucarecdn.com/:uuid/-/resize/320x/320.jpg 320w,
+                https://ucarecdn.com/:uuid/-/resize/450x/450.jpg 450w,
+                https://ucarecdn.com/:uuid/-/resize/640x/640.jpg 640w,
+                https://ucarecdn.com/:uuid/-/resize/750x/750.jpg 750w,
+                https://ucarecdn.com/:uuid/-/resize/800x/800.jpg 800w,
+                https://ucarecdn.com/:uuid/-/resize/900x/900.jpg 900w,
+                https://ucarecdn.com/:uuid/-/resize/1000x/-/quality/lighter/1000.jpg 1000w,
+                https://ucarecdn.com/:uuid/-/resize/1200x/-/quality/lighter/1200.jpg 1200w,
+                https://ucarecdn.com/:uuid/-/resize/1500x/-/quality/lighter/1500.jpg 1500w,
+                https://ucarecdn.com/:uuid/-/resize/1600x/-/quality/lighter/1600.jpg 16000w,
+                https://ucarecdn.com/:uuid/-/resize/2000x/-/quality/lightest/2000.jpg 2000w"
+        sizes="(min-width: 1000px) 50vw, 100vw">
+</picture>
+```
+
+This `<source>` element says in the `media` attribute that if screen has a width
+of less than 450px and the orientation is a portrait, the browser must select
+the image from the `srcset` attribute of `<source>`.
+
+> **Tip**: Use the [`scale_crop` operator][transformations-image-scale-crop] or
+> the [`crop` operator][transformations-image-crop] from Uploadcare Image CDN to
+> get a custom part of an image.
+
+#### Art Direction
+{id="ri-html-picture-art"}
+
+[Art direction][ext-art-direction] is the focus of the main subject of the
+image. It is important for smaller screens. On the large screen we can show the
+full image, but on a smaller screen we want to show just the main part of the
+image.
+
+In our example, we want show just the head of a chameleon on smartphones.
+
+<!-- TODO: replace with component -->
+<img
+    src="https://ucarecdn.com/fedadedc-5d9f-4484-b88a-3f7ebeee8a4b/-/crop/1300x547/100,143/-/resize/650x/"
+    srcSet="https://ucarecdn.com/fedadedc-5d9f-4484-b88a-3f7ebeee8a4b/-/crop/1300x547/100,143/-/quality/lightest/ 2x"
+    alt="Horizontal image resized on a smartphone screen" />
+
+Take the previous example and just change the `scale_crop` operator to the
+`crop` operator with the `resize` operator.
+
+[Live example #5][ext-live-example-5]
+
+```html{noAutoLinker}
+<picture>
+    <source
+        srcset="https://ucarecdn.com/:uuid/-/crop/2048x1365/1345,670/-/resize/320x/320.jpg 320w,
+                https://ucarecdn.com/:uuid/-/crop/2048x1365/1345,670/-/resize/640x/640.jpg 640w,
+                https://ucarecdn.com/:uuid/-/crop/2048x1365/1345,670/-/resize/450x/450.jpg 450w,
+                https://ucarecdn.com/:uuid/-/crop/2048x1365/1345,670/-/resize/900x/900.jpg 900w"
+        sizes="100vw"
+        media="(max-width: 450px) and (orientation: portrait)">
+
+    <img src="https://ucarecdn.com/:uuid/-/resize/1000x/fallback.jpg"
+        srcset="https://ucarecdn.com/:uuid/-/resize/320x/-/quality/lighter/320.jpg 320w,
+                https://ucarecdn.com/:uuid/-/resize/450x/-/quality/lighter/450.jpg 450w,
+                https://ucarecdn.com/:uuid/-/resize/640x/-/quality/lighter/640.jpg 640w,
+                https://ucarecdn.com/:uuid/-/resize/750x/-/quality/lighter/750.jpg 750w,
+                https://ucarecdn.com/:uuid/-/resize/800x/-/quality/lighter/800.jpg 800w,
+                https://ucarecdn.com/:uuid/-/resize/900x/-/quality/lighter/900.jpg 900w,
+                https://ucarecdn.com/:uuid/-/resize/1000x/-/quality/lighter/1000.jpg 1000w,
+                https://ucarecdn.com/:uuid/-/resize/1200x/-/quality/lighter/1200.jpg 1200w,
+                https://ucarecdn.com/:uuid/-/resize/1500x/-/quality/lighter/1500.jpg 1500w,
+                https://ucarecdn.com/:uuid/-/resize/1600x/-/quality/lighter/1600.jpg 16000w,
+                https://ucarecdn.com/:uuid/-/resize/2000x/-/quality/lightest/2000.jpg 2000w"
+        sizes="(min-width: 1000px) 50vw, 100vw">
+</picture>
+```
+
+> **Tip**: Use the [`crop` operator][transformations-image-crop] from Uploadcare
+> Image CDN to get the main part of an image and use the [`resize`
+> operator][transformations-image-resize] after.
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/-/crop/1800x1200/1090,1220/-/resize/900x/
+```
+
+#### Breakpoints
+{id="ri-html-picture-bp"}
+
+The `w` descriptor in `srcset` and the `sizes` attribute is handy; the browser
+will select the suitable image. But if we have few breakpoints in our responsive
+design and want to set images that suitable for them? We can use few `<source>`
+elements with `media` attributes.
+
+[Live example #6][ext-live-example-6]
+
+```html{noAutoLinker}
+<picture>
+    <source
+        srcset="https://ucarecdn.com/:uuid/-/resize/1000x/1000.jpg 1000w,
+                https://ucarecdn.com/:uuid/-/resize/2000x/-/quality/lightest/2000.jpg 2000w"
+        sizes="(min-width: 1000px) 60vw, 100vw"
+        media="(min-width: 750px)">
+
+    <source
+        srcset="https://ucarecdn.com/:uuid/-/resize/750x/750.jpg 1x,
+                https://ucarecdn.com/:uuid/-/resize/1500x/-/quality/lightest/1500.jpg 2x"
+        media="(min-width: 450px)">
+
+    <source
+        srcset="https://ucarecdn.com/:uuid/-/resize/450x/450.jpg 1x,
+                https://ucarecdn.com/:uuid/-/resize/900x/-/quality/lightest/900.jpg 2x"
+        media="(orientation: landscape)">
+
+    <source
+        srcset="https://ucarecdn.com/:uuid/-/scale_crop/450x800/center/450-800.jpg 1x,
+                https://ucarecdn.com/:uuid/-/scale_crop/900x1600/center/-/quality/lightest/900-1600.jpg 2x"
+        media="(orientation: portrait)">
+
+    <img src="https://ucarecdn.com/:uuid/-/resize/1000x/fallback.jpg">
+</picture>
+```
+
+## Responsive Images via CSS
+{id="ri-css"}
+
+### `background-image`
+{id="ri-css-bg-img"}
+
+Responsive images may not be a part of HTML content. It can be just a decoration
+or background view for content. In this case, developers use the
+`background-image` property in CSS.
+
+We can set different versions of an image with breakpoints using CSS [media queries][ext-media-queries].
+
+<!-- https://codepen.io/uploadcare/pen/LNBYLd -->
+<CodePen defaultTab="result" id="LNBYLd" title="Responsive Images Example #7: CSS background image" />
+
+We set versions for HiDPI screens with the [`image-set()` CSS function][ext-image-set-css-function].
+By using this function, we can insert multiple images that will be set for
+normal and HiDPI screens.
+
+```{noAutoLinker}
+background-image: image-set(
+    url("https://ucarecdn.com/:uuid/-/scale_crop/450x800/center/1.jpg") 1x,
+    url("https://ucarecdn.com/:uuid/-/scale_crop/900x1600/center/-/quality/lightest/2.jpg") 2x
+);
+```
+
+### `background-image` , Sass version
+{id="ri-css-bg-img-sass"}
+
+We wrote a Sass function for getting a URL of an image, uploaded to Uploadcare.
+
+<!-- https://codepen.io/uploadcare/pen/NNBWvW -->
+<CodePen defaultTab="result" id="NNBWvW" title="Responsive Images Example #8: CSS background image, Sass version" />
+
+## Conclusion
+{id="ri-conclusion"}
+
+Modern HTML and CSS standards offer ready-made solutions in order to tell a
+browser which image to load for the current screen. A browser can load a large
+version of an image for large screens and a smaller version of image for
+smartphones to save internet traffic by using `srcset` and `<picture>`.
+
+You must prepare a few versions of an image. This can be difficult and
+time-consuming, but Uploadcare Image CDN will help. You can just upload an image
+file and use [CDN operators][transformations-image] for on-the-fly image
+processing.
+
+There is one other problem: a lot of code. In [our example][ext-our-example],
+for `<picture>`, we have nine versions of an image and 4 `<source>` elements. 17
+lines of code (without comments) to load one image! In a real project, you can
+have even more code.

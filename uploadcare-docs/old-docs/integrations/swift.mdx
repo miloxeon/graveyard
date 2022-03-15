@@ -1,0 +1,220 @@
+---
+  layoutPreset: integrations
+  title: Swift API Client for Upload & Management, and Uploader UI
+  description:
+    Swift Uploadcare API client for Fast & Reliable File Uploads; File, Group,
+    Project Operations; Video + Document Conversion; File Uploader integration.
+---
+
+# Swift API Client and File Uploader
+
+Swift integration handles uploads and file operations by wrapping Uploadcare
+[Upload API][api-reference-upload] and [REST API][api-reference-rest]. This
+comprehensive API client lets you use most of the Uploadcare features from within
+your Android app. It also includes a native File Uploader widget. Builds are
+available for iOS, iPadOS, tvOS, macOS, and Linux.
+
+[GitHub &rarr;][swift-github]
+
+Check out a [demo app](swift-github-demo) that we created as a showcase for
+various usage scenarios and tasks that you can resolve.
+
+## Features
+
+Upload features:
+* Upload files from a file, URL, and cloud sources (up to 5 TB)
+* Multipart uploading for large files
+* Track, pause and continue multipart uploading
+* Background uploading
+* Bulk file uploading
+* Uploading network to speed uploading jobs (like CDN)
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+* Convert documents
+* Encode and transform videos
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+* Secure delivery (authenticated URLs)
+
+## Installation
+
+### Swift Package Manager
+
+To use a stable version, add a dependency to your Package.swift file:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/uploadcare/uploadcare-swift.git", .branch("master"))
+]
+```
+
+If you want to try the current dev version, change dependency to:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/uploadcare/uploadcare-swift.git", branch("develop"))
+]
+```
+
+To add from Xcode select File -> Swift Packages -> Add Package Dependency and
+enter repository URL:
+
+```
+https://github.com/uploadcare/uploadcare-swift
+```
+
+Or you can add it in Xcode: https://github.com/uploadcare/uploadcare-swift
+(select master branch).
+
+### Carthage
+
+To use a stable version, add a dependency to your Cartfile:
+
+```
+github "uploadcare/uploadcare-swift"
+```
+
+To use the current dev version:
+
+```
+github "uploadcare/uploadcare-swift" "develop"
+```
+
+### Cocoapods
+
+To use a stable version, add a dependency to your Podfile:
+
+```
+pod 'Uploadcare', git: 'https://github.com/uploadcare/uploadcare-swift'
+```
+
+To use current dev version:
+
+```
+pod 'Uploadcare', git: 'https://github.com/uploadcare/uploadcare-swift', :branch => 'develop'
+```
+
+## Initialization
+
+Create your project in [Uploadcare dashboard][dashboard] and copy its API keys
+from there.
+
+Upload API requires only a public key, while REST API requires both public and
+secret keys:
+
+```swift
+let uploadcare = Uploadcare(withPublicKey: "YOUR_PUBLIC_KEY")
+// Secret key is optional. Initialization with secret key:
+let uploadcare = Uploadcare(withPublicKey: "YOUR_PUBLIC_KEY", secretKey: "YOUR_SECRET_KEY")
+```
+
+## Using Upload API
+
+Check the [Upload API documentation][swift-github-docs-upload] to see all available
+methods.
+
+Example of direct uploads:
+
+```swift
+guard let url = URL(string: "https://source.unsplash.com/random") else { return }
+guard let data = try? Data(contentsOf: url) else { return }
+
+// You can create UploadedFile object to operate with it
+let fileForUploading1 = uploadcare.uploadAPI.file(fromData: data)
+let fileForUploading2 = uploadcare.uploadAPI.file(withContentsOf: url)
+
+// Handle error or result
+fileForUploading1.upload(withName: "random_file_name.jpg", store: .store) { (result, error) in
+}
+
+// Completion block is optional
+fileForUploading2?.upload(withName: "my_file.jpg", store: .store)
+
+// Or you can just upload data and provide a filename
+let task = uploadcare.uploadAPI.upload(files: ["random_file_name.jpg": data], store: .store, expire: nil, { (progress) in
+    print("upload progress: \(progress * 100)%")
+}) { (resultDictionary, error) in
+    if let error = error {
+        print(error)
+        return
+    }
+
+    guard let files = result else { return }			
+    for file in files {
+        print("uploaded file name: \(file.key) | file id: \(file.value)")
+    }
+}
+
+// You can cancel uploading if needed
+task.cancel()
+```
+
+## Using REST API
+
+Refer to the [REST API documentation][swift-github-docs-rest] for all methods.
+
+Example of getting list of files:
+
+```swift
+// Make a query object
+let query = PaginationQuery()
+    .stored(true)
+    .ordering(.sizeDESC)
+    .limit(5)
+// Make a list of files object
+let filesList = uploadcare.list()
+
+// Get file list
+filesList.get(withQuery: query) { (list, error) in
+    if let error = error {
+        print(error)
+        return
+    }
+			
+    print(list ?? "")
+}
+```
+
+Get next page:
+
+```swift
+// Check if the next page is available
+guard filesList.next != nil else { return }
+// Get the next page
+filesList.nextPage { (list, error) in
+    if let error = error {
+        print(error)
+        return
+    }	
+    print(list ?? "")
+}
+```
+
+Get previous page:
+
+```swift
+// Check if the previous page is available
+guard filesList.previous != nil else { return }
+// Get the previous page
+filesList.previousPage { (list, error) in
+    if let error = error {
+        print(error)
+        return
+    }	
+    print(list ?? "")
+}
+```
+
+## Full documentation
+
+Read the full documentation on [GitHub][swift-github-docs].
+
+## Related guides
+
+* [Integration with Android][guide-android]

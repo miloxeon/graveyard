@@ -1,0 +1,193 @@
+---
+layoutPreset: integrations
+title: How to Set Up File Upload for Meteor Apps Using a CDN
+description:
+  In this 8-minute guide, you’ll learn how to build file upload right into your
+  Meteor app and manage storage and delivery of the uploaded files, images &
+  docs.
+---
+
+# How to Set Up File Upload for Meteor Apps
+
+[Meteor][ext-meteor-home] is an open-source platform for developing web and
+mobile apps in JavaScript. By [integrating Uploadcare][meteor-integration],
+you’ll get a responsive UI to receive image and file uploads right in your
+Meteor app with no hassle about file storage or delivery.
+
+- [How Does Uploading Files, Images, and Docs to Meteor with Uploadcare Work?](#intro)
+- [Step 1. Get Uploadcare Account](#get-uploadcare)
+- [Step 2. Install File Uploader](#install-uploader)
+- [Step 3. Add Uploader to Client HTML](#add-uploader)
+- [Step 4. Handling Events With JavaScript API](#js-api)
+- [Step 5. File Uploader Options](#file-uploader-configure)
+- [Conclusion](#conclusion)
+
+## How Does Uploading Files, Images, and Docs to Meteor with Uploadcare Work?
+{id="intro"}
+
+Uploadcare is a complete File API that is used to build file handling on the
+web. In this guide, we’ll be using the following components of the platform:
+
+- [File Uploader][feature-file-uploader] for image and file uploading.
+- [Storage][storage]. Every uploaded file goes to Uploadcare storage.
+- [Uploadcare CDN][delivery-cdn]. Once uploaded, every file gets cached by our CDN layers.
+
+We’ll show the basic Uploadcare file handling mechanics, integrate the File
+Uploader in your Meteor application, and provide you with hints on where
+to go from there. (It should take you only about _8 minutes_.)
+
+Below are a couple of screen captures of a demo app. You’ll have something
+similar by the end of this guide:
+
+<Image
+  uuid='b5c3f1ed-0f40-478e-8a87-dd233c048b81'
+  desc='A file upload form that allows you to upload images to Meteor'
+/>
+
+<Image
+  uuid='c78dbd4c-7718-42f2-a2ef-3426ffb446bc'
+  desc='A JPEG image uploaded to Meteor'
+/>
+
+## Step 1. Get an Uploadcare Account
+{id="get-uploadcare"}
+
+You’ll need an account to continue and integrate the File Uploader to
+your Meteor app. So, [Sign Up][account-signup] if you haven’t done so yet.
+
+Head over to your [dashboard][account] and create a new project or go to an
+existing one. Then, navigate to the “API Keys” section and find the [Public API
+Key][settings-keys].
+
+Note that if you want to go beyond the “image uploader” use case and add
+non-image files to your project, you will have to provide your [billing
+info][community-billing-info].
+
+## Step 2. Install File Uploader to Meteor
+{id="install-uploader"}
+
+Run the following to install the File Uploader as our official Meteor
+package:
+
+```bash
+meteor add uploadcare:uploadcare-widget
+```
+
+Specify the Public API Key you obtained in the previous step in `settings.json`:
+
+```json
+{
+  "public": {
+    "uploadcare": {
+      "publicKey": "YOUR_PUBLIC_KEY"
+    }
+  }
+}
+```
+
+That’s it. Let’s get straight to the code now.
+
+## Step 3. Add Uploader to Client HTML
+{id="add-uploader"}
+
+Once the uploader is installed, you add an `<input>` element with the specified
+`uploadcare-uploader` role to `client/main.html` where you want the file
+uploader to appear:
+
+```html
+<input type="hidden" id="file-show" role="uploadcare-uploader" />
+```
+
+Our Meteor library looks for such inputs and puts file uploaders there.
+
+You can now navigate to `localhost:3000` via your browser and check out the live
+uploader. Just run `meteor` in your CLI to get the server running.
+
+When you upload a file, it goes to our storage and CDN layers.
+Then, its `<input>` receives a CDN URL possessing a unique file identifier
+(UUID).
+
+Let’s take this a step further and add the cdnUrl template variable to render
+that CDN URL:
+
+```html
+<template name="show">
+  <h2>Show UUID after upload</h2>
+  <fieldset>
+    <div>
+      <label for="file-show">File:</label>
+      <input type="hidden" id="file-show" role="uploadcare-uploader" />
+    </div>
+    <p>
+      {{#if uuid}}
+      <a href="{{cdnUrl}}">{{uuid}}</a>
+      {{else}} No UUID found, upload a file. {{/if}}
+    </p>
+  </fieldset>
+</template>
+```
+
+## Step 4. Handling Events With JavaScript API
+{id="js-api"}
+
+Our File Uploader comes with a [JavaScript API][api-reference-javascript] to
+further enhance the user experience of your web app.
+
+Events would be a great example of something to add to your app’s design. Here’s
+how you handle the `onUploadComplete` event with the JavaScript API of our
+uploader (a snippet from our demo app on [GitHub][meteor-github-demo]):
+
+```javascript
+import uploadcare from 'meteor/uploadcare:uploadcare-widget'
+
+...
+
+let widget = uploadcare.Widget('[role=uploadcare-uploader]')
+
+widget.onUploadComplete(info => {
+    // Handle the uploaded file info.
+    this.uuid.set(info.uuid)
+    this.cdnUrl.set(info.cdnUrl)
+})
+```
+
+Please refer to the uploader’s JavaScript [API
+reference][api-reference-js-widget-events] to learn more about supported events.
+
+## Step 5. File Uploader Options
+{id="file-uploader-configure"}
+
+The File Uploader is highly customizable. Playing with our live file uploader
+[configurator][file-uploader-configure] would be a great starting point. You can
+always share configurations with your team: every option gets added to the
+configurator’s URL query string. Here’s an
+[example][file-uploader-configure-preset]:
+
+```
+https://uploadcare.com/widget/configure/?effects=crop+enhance&imagesOnly=true&multiple=true
+```
+
+From there, you can check out the Uploadcare documentation where we cover [the
+ways of setting the options][file-uploader-config] as well as the complete [file
+uploader options summary][file-uploader-options].
+
+For example, this is how you locally (for a single file uploader instance) set
+the option allowing [image-only][file-uploader-option-images-only] uploads:
+
+```html
+<input type="hidden" role="uploadcare-uploader" ... data-images-only />
+```
+
+Note that changing any options when the File Uploader is running won’t affect
+its behavior.
+
+## Conclusion
+{id="conclusion"}
+
+Yay! We just covered the basics of enabling your Meteor web app with serverless
+file uploads and delivering the uploaded assets via CDN. Consider checking out
+our [uploader’s docs][feature-file-uploader] for further reading.
+
+Visit the `meteor-uploadcare-widget-demo` repository on
+[GitHub][meteor-github-demo] to look through the source code. If you have any
+questions, feel free to post them in our [community area][community].

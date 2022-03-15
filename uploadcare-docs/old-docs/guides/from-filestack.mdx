@@ -1,0 +1,1321 @@
+---
+  layoutPreset: guides
+  title: Migrating Images from Filestack;
+  description:
+    Learn how to migrate your images and image transformations to Uploadcare,
+    a smart Filestack alternative
+---
+
+# Migrating Images from Filestack
+
+Even though our [Migro][migro-guide] utility does a good
+job migrating your files from Filestack to Uploadcare, image transformations are
+a bit more complicated to transfer.
+This article holds a mapping of Filestack image transformation operations to the
+Uploadcare ones. We also provide some migration practices and visual examples.
+The following list is based on the names of Filestack operations:
+
+* [Resize](#migrate-img-resize)
+* [Crop](#migrate-img-crop)
+* [Rotate](#migrate-img-rotate)
+* [Flip, Flop](#migrate-img-flipflop)
+* [Watermark](#migrate-img-watermark)
+* [Detect_faces, face detection](#migrate-img-faces)
+* [Filters — Blur](#migrate-img-blur)
+* [Monochrome, desaturating](#migrate-img-gscale)
+* [Sharpen](#migrate-img-sharpen)
+* [Enhance](#migrate-img-enhance)
+* [Filetype conversion — images, format conversions](#migrate-img-format)
+* [Quality, changing image quality](#migrate-img-quality)
+* [Zip, handling archives](#migrate-img-archive)
+
+## Resize
+{id="migrate-img-resize"}
+
+Filestack image resizing operation has several input parameters that map to
+the three Image Transformations: [`resize`][transformations-image-resize],
+[`preview`][transformations-image-preview], and
+[`scale_crop`][transformations-image-scale-crop].
+Here’s what those three do:
+
+* `resize` — resizes an image to fit into the specified dimensions.
+* `preview` — scales an input image to fit into the specified dimensions while
+  preserving its original aspect ratio.
+* `scale_crop` — scales an image until one of the dimensions gets equal to the
+  specified size, the rest of image is cropped.
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+* `width`         -> `width`
+* `height`        -> `height`
+* `fit` , `align` -> `preview` , `scale_crop`, and `resize`.
+  See below for more info.
+
+When migrating images with the `clip` and `max` values for `fit`: use `preview`.
+A `crop` value for `fit` can be migrated by using `scale_crop`. When looking to
+migrate `scale`, `resize` can be used. The two supported `align` values are:
+`center` and no value, which defaults to `left`.
+
+### Examples
+
+Scale image to fit 750 px in width,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b8c35701-63f8-4def-a956-132e93e31b35/" target="_blank">
+        <img src="https://ucarecdn.com/b8c35701-63f8-4def-a956-132e93e31b35/" alt="Scale Filestack image"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/resize/750x/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/resize/750x/" alt="Scale Uploadcare image"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:750/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/resize/750x/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:750/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/resize/750x/
+```
+
+Scale image to fit 500x500 px container,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/ef35042d-039d-4d66-bfbb-4ce39ca880f9/" target="_blank">
+        <img src="https://ucarecdn.com/ef35042d-039d-4d66-bfbb-4ce39ca880f9/" alt="Scale and resize Filestack image"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/" alt="Scale and resize Uploadcare image"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:500,height:500/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/500x500/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:500,height:500/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/
+```
+
+Crop image using 500x500 px box, use image center as anchor point,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/c2ab76ba-1d3f-40cc-9741-4240e4001d58/" target="_blank">
+        <img src="https://ucarecdn.com/c2ab76ba-1d3f-40cc-9741-4240e4001d58/" alt="Scale and crop Filestack image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/500x500/center/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/500x500/center/" alt="Scale and crop Uploadcare image"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:500,height:500,fit:crop/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/scale_crop/500x500/center/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:500,height:500,fit:crop/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/500x500/center/
+```
+
+Migrating `clip` `fit` value, fit image into 500x500 px container,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/6e0b7ea1-b3c7-48a7-a757-9df7d3dddb95/" target="_blank">
+        <img src="https://ucarecdn.com/6e0b7ea1-b3c7-48a7-a757-9df7d3dddb95/" alt="Fit Filestack image into a container"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/" alt="Fit Uploadcare image into a container"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:500,height:500,fit:clip/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/500x500/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:500,height:500,fit:clip/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/500x500/
+```
+
+Migrating `scale` `fit` value, fit image into 1500x300 px container,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/7b8847c6-4449-4777-b79b-8bea61eab5af/" target="_blank">
+        <img src="https://ucarecdn.com/7b8847c6-4449-4777-b79b-8bea61eab5af/" alt="Fit Filestack image into a container"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/resize/1500x300/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/resize/1500x300/" alt="Fit Uploadcare image into a container"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:1500,height:300,fit:scale/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/resize/1500x300/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:1500,height:300,fit:scale/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/resize/1500x300/
+```
+
+Migrating `max` `fit` value, resize image to fit maximum allowed dimensions.
+Note, Filestack and Uploadcare allow different maximum image dimensions.
+For instance, the example below deals with the maximum of 3000x3000 pixels for Uploadcare,
+that can be increased to 5000x5000 by using `cdn›/format/jpeg/`,
+[learn more][transformations-image-limits].
+
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/6bdb3b78-a209-4837-aabd-9e4429074565/" target="_blank">
+        <img src="https://ucarecdn.com/6bdb3b78-a209-4837-aabd-9e4429074565/" alt="Fit maximized Filestack image into a container"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/3000x3000/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/3000x3000/" alt="Fit maximized Uploadcare image into a container"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:4000,height:3000,fit:max/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/3000x3000/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:4000,height:3000,fit:max/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/3000x3000/
+```
+
+Migrating `align:left` and `crop` `fit` values, crop image using 200x400 px box,
+top-left as anchor point,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/200x200/"  />
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/ff0a9386-6bcd-448e-a58c-c7350cb6fac2/" target="_blank">
+        <img src="https://ucarecdn.com/ff0a9386-6bcd-448e-a58c-c7350cb6fac2/"  />
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/200x400/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/200x400/"  />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:200,height:400,fit:crop,align:left/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/scale_crop/200x400/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:200,height:400,fit:crop,align:left/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/200x400/
+```
+
+Migrating `align:center` and `crop` `fit` values, crop image using 200x400 px
+box, center as anchor point,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/preview/200x200/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/c14ca84f-d0d3-4c53-9311-d7772633a517/" target="_blank">
+        <img src="https://ucarecdn.com/c14ca84f-d0d3-4c53-9311-d7772633a517/" alt="Resize and crop Filestack image at center"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/200x400/center/" target="_blank">
+        <img src="https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/200x400/center/" alt="Resize and crop Uploadcare image at center"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/resize=width:200,height:400,fit:crop,align:center/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/scale_crop/200x400/center/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/resize=width:200,height:400,fit:crop,align:center/2h25ZGRHTfmQ2DBEt3yR
+https://ucarecdn.com/b85bbf3a-393d-4217-b23e-02f0329a017d/-/scale_crop/200x400/center/
+```
+
+_Note, the following Filestack `align` values are not supported by `scale_crop`:_
+
+```cdn
+https://process.filestackapi.com/resize=width:200,height:400,fit:crop,align:[bottom,right]/2h25ZGRHTfmQ2DBEt3yR
+https://process.filestackapi.com/resize=width:100,height:763,fit:crop,align:faces/bF4XG4SCzzTckCY3xtwA
+```
+
+## Crop
+{id="migrate-img-crop"}
+
+Filestack image cropping maps to the Uploadcare
+[crop][transformations-image-crop] operation. There’s a difference,
+though. When setting the crop coordinates that create an area that extends
+outside the original image dimensions, Filestack will give you the part of an
+input image that fits into the original dimensions. With Uploadcare, you can
+choose whichever coordinates, but an area beyond the original image dimensions
+will be filled with white.
+
+Here’s the difference,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/31708726-0887-450f-b5ef-200a1303b271/" target="_blank">
+        <img src="https://ucarecdn.com/31708726-0887-450f-b5ef-200a1303b271/" alt="Filestack crop to coordinates"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/crop/3800x1165/1500,2000/" target="_blank">
+        <img src="https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/crop/3800x1165/1500,2000/" alt="Uploadcare crop to coordinates"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/crop=dim:[1500,2000,3800,1600]/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/crop/3800x1165/1500,2000/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/crop=dim:[1500,2000,3800,1600]/nfMpfd2KT1e7BjGz8LWJ
+https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/crop/3800x1165/1500,2000/
+```
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+* `x`, `y`          -> `two_coords`
+* `width`, `height` -> `two_dimensions`
+
+### Examples
+
+A couple of crop examples,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/e4f4f028-33d6-4b36-85d8-2e5a19d2de74/" target="_blank">
+        <img src="https://ucarecdn.com/e4f4f028-33d6-4b36-85d8-2e5a19d2de74/-/preview/1800x1800/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/22975ce0-9c36-4399-9fa3-36300e6325d3/" target="_blank">
+        <img src="https://ucarecdn.com/22975ce0-9c36-4399-9fa3-36300e6325d3/" alt="Filestack crop to dimensions"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/e4f4f028-33d6-4b36-85d8-2e5a19d2de74/-/crop/1800x1300/2000,900/" target="_blank">
+        <img src="https://ucarecdn.com/e4f4f028-33d6-4b36-85d8-2e5a19d2de74/-/crop/1800x1300/2000,900/" alt="Uploadccare crop to dimensions"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/crop=dim:[2000,900,1800,1300]/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/crop/1800x1300/2000,900/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/crop=dim:[2000,900,1800,1300]/bXa8m7oYQdmyWpmo2I2B
+https://ucarecdn.com/e4f4f028-33d6-4b36-85d8-2e5a19d2de74/-/crop/1800x1300/2000,900/
+```
+
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/" target="_blank">
+        <img src="https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/preview/1600x1600/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/f1c5a803-b6ff-4904-9935-45812ce968c9/" target="_blank">
+        <img src="https://ucarecdn.com/f1c5a803-b6ff-4904-9935-45812ce968c9/" alt="Filestack crop to dimensions"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/crop/3200x1165/1500,2000/" target="_blank">
+        <img src="https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/crop/3200x1165/1500,2000/" alt="Uploadccare crop to dimensions"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/crop=dim:[1500,2000,3800,1600]/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/crop/3200x1165/1500,2000/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/crop=dim:[1500,2000,3800,1600]/nfMpfd2KT1e7BjGz8LWJ
+https://ucarecdn.com/e5d9d2f3-6d7c-49c1-8774-413eaba35419/-/crop/3200x1165/1500,2000/
+```
+
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/fa6734b9-8194-4b92-b18c-29c78986cc57/" target="_blank">
+        <img src="https://ucarecdn.com/fa6734b9-8194-4b92-b18c-29c78986cc57/-/preview/1000x1000/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/04614b29-9781-488e-90ec-700c37ff6e43/" target="_blank">
+        <img src="https://ucarecdn.com/04614b29-9781-488e-90ec-700c37ff6e43/" alt="Filestack crop to dimensions"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/fa6734b9-8194-4b92-b18c-29c78986cc57/-/crop/1000x1000/0,0/" target="_blank">
+        <img src="https://ucarecdn.com/fa6734b9-8194-4b92-b18c-29c78986cc57/-/crop/1000x1000/0,0/" alt="Uploadccare crop to dimensions"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/crop=dim:[0,0,1000,1300]/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/crop/1000x1000/0,0/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/crop=dim:[0,0,1000,1300]/pFT3mHzROCSennsG7bmB
+https://ucarecdn.com/fa6734b9-8194-4b92-b18c-29c78986cc57/-/crop/1000x1000/0,0/
+```
+
+## Rotate
+{id="migrate-img-rotate"}
+
+Filestack image rotation well maps to the Uploadcare
+[rotate][transformations-image-rotation] operation. It’s for right-angle
+counterclockwise image rotation. In order to map the `exif` Filestack parameter,
+you can use the [autorotate][transformations-image-rotation]
+operation that deals with the EXIF `Orientation` tag.
+Note, with Uploadcare, when you’re applying any transformations to your images,
+they’re automatically aligned according to their EXIF. However, you can choose to
+use `cdn›/-/autorotate/no/` to change this behavior.
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+`deg` or `exif` -> `angle`
+
+### Examples (Filestack vs Uploadcare)
+
+Rotate image 180 degrees counterclockwise,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/6edd4c93-ddc4-4c2a-8f8d-e1c91dc1449d/" target="_blank">
+        <img src="https://ucarecdn.com/6edd4c93-ddc4-4c2a-8f8d-e1c91dc1449d/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/d9339f4b-58c0-4a63-b1cd-d932021c5bbe/" target="_blank">
+        <img src="https://ucarecdn.com/d9339f4b-58c0-4a63-b1cd-d932021c5bbe/" alt="Filestack image rotate"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/rotate/180/" target="_blank">
+        <img src="https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/rotate/180/" alt="Uploadcare image rotate"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/rotate=deg:180/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/rotate=deg:exif/rotate=deg:180/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/rotate/180/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/rotate=deg:180/nfXozo2yRbuDU4NNFd0a
+https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/rotate/180/
+```
+
+Rotate image according to EXIF,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/bfb82bbd-6303-4ccb-9c38-7b587d22966d/" target="_blank">
+        <img src="https://ucarecdn.com/bfb82bbd-6303-4ccb-9c38-7b587d22966d/" alt="Filestack image EXIF rotate"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/autorotate/yes/" target="_blank">
+        <img src="https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/autorotate/yes/" alt="Uploadcare image EXIF rotate"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/rotate=deg:exif/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/autorotate/yes/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/rotate=deg:exif/nfXozo2yRbuDU4NNFd0a
+https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/autorotate/yes/
+```
+
+Rotate image, discard EXIF info,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/f1002b73-79b9-49da-b6c5-18a8441fbfcd/" target="_blank">
+        <img src="https://ucarecdn.com/f1002b73-79b9-49da-b6c5-18a8441fbfcd/" alt="Filestack image rotate, discard EXIF"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/autorotate/no/" target="_blank">
+        <img src="https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/autorotate/no/" alt="Uploadcare image rotate, discard EXIF"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/rotate=exif:false/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/autorotate/no/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/rotate=exif:false/nfXozo2yRbuDU4NNFd0a
+https://ucarecdn.com/b86014ba-342e-49b0-a908-f540a65a8231/-/autorotate/no/
+```
+
+## Flip, Flop
+{id="migrate-img-flipflop"}
+
+The Filestack `Flip` and `Flop` operations map to the
+[flip][transformations-image-flip] and
+[mirror][transformations-image-mirror] Image Processing operations respectively.
+
+The operations require no parameters.
+
+### Examples (Filestack vs Uploadcare)
+
+Flipping image,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/" target="_blank">
+        <img src="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/preview/" alt="Original file"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/14381579-33db-4560-a52d-70bc761b8ee0/" target="_blank">
+        <img src="https://ucarecdn.com/14381579-33db-4560-a52d-70bc761b8ee0/" alt="Filestack image flip"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/flip/" target="_blank">
+        <img src="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/flip/" alt="Uploadcare image flip"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/flip/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/flip/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/flip/0DBXIJvvRtqSzsUtalHY
+https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/flip/
+```
+
+Mirroring image,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/" target="_blank">
+        <img src="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/preview/" alt="Original file"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/2011149c-99a5-42af-9c35-d5d149928f9c/" target="_blank">
+        <img src="https://ucarecdn.com/2011149c-99a5-42af-9c35-d5d149928f9c/" alt="Filestack image mirror (horizontal filp)"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/mirror/" target="_blank">
+        <img src="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/mirror/" alt="Uploadcare image mirror (horizontal filp)"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/flop/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/mirror/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/flop/0DBXIJvvRtqSzsUtalHY
+https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/mirror/
+```
+
+Piping the two operations,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/" target="_blank">
+        <img src="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/preview/" alt="Original file"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/9714fe87-d13d-4152-92ae-9bb9bddc7522/" target="_blank">
+        <img src="https://ucarecdn.com/9714fe87-d13d-4152-92ae-9bb9bddc7522/" alt="Filestack flop"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/flip/-/mirror/" target="_blank">
+        <img src="https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/flip/-/mirror/" alt="Uploadcare filp and mirror"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/flip/flop/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/flip/-/mirror/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/flip/flop/0DBXIJvvRtqSzsUtalHY
+https://ucarecdn.com/761112e8-5786-42a9-8c60-dafa09bfaa3c/-/flip/-/mirror/
+```
+
+## Watermark
+{id="migrate-img-watermark"}
+
+Filestack watermarks map to the Image Processing
+[overlay][transformations-image-overlays] operation. Watermarks, in this
+regard, are any images layered over your image content.
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+
+* `file`     -> `uuid`
+* `size`     -> `relative_dimensions`
+* `position` -> `relative_coordinates`
+
+### Examples (Filestack vs Uploadcare)
+
+Add overlay, align: center,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/4cec110d-1fe4-493a-99f1-cd9692818af8/" target="_blank">
+        <img src="https://ucarecdn.com/4cec110d-1fe4-493a-99f1-cd9692818af8/" alt="Filestack watermark"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/center/" target="_blank">
+        <img src="https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/center//" alt="Uploadcare watermark"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/watermark=file:ZoVdwbe6Qcu9uIxIZSuU/h2T4Jl9RBSSXOGtl0gv8</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/center/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/watermark=file:ZoVdwbe6Qcu9uIxIZSuU/h2T4Jl9RBSSXOGtl0gv8
+https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/center/
+```
+
+Add overlay, define dimensions,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/d3483ef2-2920-4981-86d9-002a67432fa6/" target="_blank">
+        <img src="https://ucarecdn.com/d3483ef2-2920-4981-86d9-002a67432fa6/" alt="Filestack watermark resized"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/90%25x90%25/center/" target="_blank">
+        <img src="https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/90%25x90%25/center/" alt="Uploadcare watermark resized"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/watermark=file:ZoVdwbe6Qcu9uIxIZSuU,size:300/h2T4Jl9RBSSXOGtl0gv8</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/90%x90%/center/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/watermark=file:ZoVdwbe6Qcu9uIxIZSuU,size:300/h2T4Jl9RBSSXOGtl0gv8
+https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/90%25x90%25/center/
+```
+
+Add overlay, define dimensions and position,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/bfd61b6b-171c-4485-b220-4d57355c4279/" target="_blank">
+        <img src="https://ucarecdn.com/bfd61b6b-171c-4485-b220-4d57355c4279/" alt="Filestack watermark positioned"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/60%25x60%25/100p,0p/" target="_blank">
+        <img src="https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/60%25x60%25/100p,0p/" alt="Filestack watermark positioned"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/watermark=file:ZoVdwbe6Qcu9uIxIZSuU,position:[top,right],size:200/h2T4Jl9RBSSXOGtl0gv8</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/60%x60%/100p,0p/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/watermark=file:ZoVdwbe6Qcu9uIxIZSuU,position:[top,right],size:200/h2T4Jl9RBSSXOGtl0gv8
+https://ucarecdn.com/213351af-c519-4409-8995-e04409fe71b4/-/overlay/923a68d0-8e04-407e-a39c-64b7eaf2c4a6/60%25x60%25/100p,0p/
+```
+
+## Face detection
+{id="migrate-img-faces"}
+
+With Uploadcare, the [detect_faces][intelligence-face-detection] operation
+is used to get a JSON holding coordinates of faces found in an image. Filestack
+face detection well maps to the operation with the `export` parameter set to
+`true`.
+The Uploadcare version outputs data similar to the
+[json][delivery-file-info] operation and requires no input
+parameters.
+
+### Examples (Filestack vs Uploadcare)
+
+Detect faces and return their coordinates as JSON,
+
+Acquire JSON from Filestack
+
+```cdn
+https://process.filestackapi.com/detect_faces=export:true/GOBMuoEKRS6iW8oNSlcN
+```
+
+Acquire JSON from Uploadcare
+
+```cdn
+https://ucarecdn.com/8df8efa5-7d23-4f2a-8006-d3c1178295ac/detect_faces/
+```
+
+## Filters — blur
+{id="migrate-img-blur"}
+
+The `blur` Filestack operation under the `Filters` section maps to the
+[blur][transformations-image-blur] Image Processing operation.
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+`amount` -> `strength`
+
+### Examples
+
+Some blur,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3836fa8e-9b69-4e16-8dfa-5f10cd48af29/" target="_blank">
+        <img src="https://ucarecdn.com/3836fa8e-9b69-4e16-8dfa-5f10cd48af29/" alt="Filestack blur"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/blur/20/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/blur/20/" alt="Uploadcare blur"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/blur/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/-/blur/20/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/blur/7m1aL2WEQg2Dkh1Cxgpi
+https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/blur/20/
+```
+
+More blur,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/5154500b-9da4-49b3-8a30-870df816934d/" target="_blank">
+        <img src="https://ucarecdn.com/5154500b-9da4-49b3-8a30-870df816934d/" alt="Filestack blur"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/blur/70/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/blur/70/" alt="Uploadcare blur"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/blur=amount:7/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/-/blur/70/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/blur=amount:7/7m1aL2WEQg2Dkh1Cxgpi
+https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/blur/70/
+```
+
+## Monochrome
+{id="migrate-img-gscale"}
+
+Desaturating images with Uploadcare is done via the
+[grayscale][transformations-image-grayscale] operation. The Filestack
+analog is called `monochrome`. Both operations require no input parameters.
+
+### Examples
+
+Getting grayscale image,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/70cfd79c-344b-4a4a-9600-39dbde5b635c/" target="_blank">
+        <img src="https://ucarecdn.com/70cfd79c-344b-4a4a-9600-39dbde5b635c/" alt="Filestack monochrome"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/grayscale/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/grayscale/" alt="Uploadcare grayscale"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/monochrome/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/-/grayscale/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/monochrome/7m1aL2WEQg2Dkh1Cxgpi
+https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/grayscale/
+```
+
+## Sharpen
+{id="migrate-img-sharpen"}
+
+The Filestack image sharpening well maps to the
+[sharp][transformations-image-filter] Image Processing operation.
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+`amount` -> `strength`
+
+### Examples
+
+Sharpen image,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/1a3cc4cd-3e7e-4b07-a1cf-3410e0c56125/" target="_blank">
+        <img src="https://ucarecdn.com/1a3cc4cd-3e7e-4b07-a1cf-3410e0c56125/" alt="Filestack sharpen"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/sharp/15/" target="_blank">
+        <img src="https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/sharp/15/" alt="Uploadcare sharpen"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/sharpen/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/-/sharp/15/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/sharpen/7m1aL2WEQg2Dkh1Cxgpi
+https://ucarecdn.com/3109c49f-9c56-4210-a229-a325aae9e2b5/-/preview/-/sharp/15/
+```
+
+## Enhance
+{id="migrate-img-enhance"}
+
+While the Filestack and Uploadcare image enhancement operations share the same
+title: [enhance][transformations-image-enhance], the latter also
+takes the `strength` parameters allowing you to adjust the degree of applied
+enhancements.
+
+### Examples
+
+Enhance image,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/1cc80272-3adb-4266-9043-57fb6ee4a826/" target="_blank">
+        <img src="https://ucarecdn.com/1cc80272-3adb-4266-9043-57fb6ee4a826/-/preview/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/224ace9b-b259-43d6-8671-1cd78edddf9f/" target="_blank">
+        <img src="https://ucarecdn.com/224ace9b-b259-43d6-8671-1cd78edddf9f/" alt="Filestack enhance"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/1cc80272-3adb-4266-9043-57fb6ee4a826/-/preview/-/enhance/100/" target="_blank">
+        <img src="https://ucarecdn.com/1cc80272-3adb-4266-9043-57fb6ee4a826/-/preview/-/enhance/100/" alt="Uploadcare enhance"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/enhance/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/-/enhance/100/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/enhance/GuRNrlnARMyyDahg141e
+https://ucarecdn.com/1cc80272-3adb-4266-9043-57fb6ee4a826/-/preview/-/enhance/100/
+```
+
+## Format conversions
+{id="migrate-img-format"}
+
+Image conversions under the Filestack `Filetype conversion` section map to the
+[format][transformations-image-format] Image Processing operation.
+In addition, the Uploadcare version supports the `auto` setting that adjusts the
+output image format according to the client preferences.
+
+### Examples
+
+Set output format to PNG,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/a4a4fc03-3488-4126-8730-3e740ae9c113/" target="_blank">
+        <img src="https://ucarecdn.com/a4a4fc03-3488-4126-8730-3e740ae9c113/" alt="Filestack output format conversion to PNG"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/png/" target="_blank">
+        <img src="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/png/" alt="Uploadcare output format conversion to PNG"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/output=format:png/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/format/png/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/output=format:png/oaOFJufxQWmyEZTVbciV
+https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/png/
+```
+
+Set output format to JPG,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/2f2ea33c-0f62-4942-be9b-1b70349e5e9e/" target="_blank">
+        <img src="https://ucarecdn.com/2f2ea33c-0f62-4942-be9b-1b70349e5e9e/" alt="Filestack output format conversion to JPEG"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/jpg/" target="_blank">
+        <img src="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/jpg/" alt="Uploadcare output format conversion to JPEG"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/output=format:jpg/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/format/jpg/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/output=format:jpg/oaOFJufxQWmyEZTVbciV
+https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/jpeg/
+```
+
+Set output format to WebP,
+<table className="fixed-table">
+  <tr>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/cee9a5ff-08b7-470a-9cb1-d587fc0ca036/" target="_blank">
+        <img src="https://ucarecdn.com/cee9a5ff-08b7-470a-9cb1-d587fc0ca036/" alt="Filestack output format conversion to WEBP"/>
+      </a>
+    </td>
+    <td style={{width: "50%"}}>
+      <a href="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/webp/" target="_blank">
+        <img src="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/webp/" alt="Uploadcare output format conversion to WEBP"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width: "50%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/output=format:webp/</code>
+    </td>
+    <td style={{width: "50%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/format/webp/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/output=format:webp/oaOFJufxQWmyEZTVbciV
+https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/format/webp/
+```
+
+## Image quality
+{id="migrate-img-quality"}
+
+Both Filestack and Uploadcare allow you to change image quality. Filestack
+allows to change the parameter value explicitly, while Uploadcare has a set of
+five quality presets. See [quality][transformations-image-quality] for
+details.
+
+### Migrating operation parameters
+
+```
+<filestack-parameter-name> -> <uploadcare-parameter-name>
+```
+
+`value` -> `quality`
+
+### Examples
+
+Reducing image size via quality,
+<table className="fixed-table">
+  <tr>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/" target="_blank">
+        <img src="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/preview/" alt="Original image"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/36d9f29d-cbce-4d87-b7ce-c8a7e1fd2a3d/" target="_blank">
+        <img src="https://ucarecdn.com/36d9f29d-cbce-4d87-b7ce-c8a7e1fd2a3d/" alt="Filestack image compression by quality reduction"/>
+      </a>
+    </td>
+    <td style={{width:"33.33%"}}>
+      <a href="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/preview/-/quality/lighter/" target="_blank">
+        <img src="https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/preview/-/quality/lighter/" alt="Uploadcare image compression by quality reduction"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style={{width:"33.33%"}}>
+      Original image<br/>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Filestack<br/>
+      <code className="scroll-auto">/quality=value:50/</code>
+    </td>
+    <td style={{width:"33.33%"}}>
+      Uploadcare<br/>
+      <code className="scroll-auto">/-/preview/-/quality/lighter/</code>
+    </td>
+  </tr>
+</table>
+
+```cdn
+https://process.filestackapi.com/quality=value:50/oaOFJufxQWmyEZTVbciV
+https://ucarecdn.com/4240c773-3cd2-4952-b379-70e5a72bed3a/-/preview/-/quality/lighter/
+```
+
+## Archives
+{id="migrate-img-archive"}
+
+The Filestack `Zip` operation maps to the [archive][delivery-group-api-archive]
+processing operation. However, the latter only works with Group API.

@@ -1,0 +1,215 @@
+---
+  layoutPreset: guides
+  title: Serverless Video and Audio
+  description:
+    Learn how to accelerate video and audio content delivery in your web
+    or mobile app. With Uploadcare your content gets seamlessly cached
+    on CDN nodes globally.
+---
+
+import { Badge, BadgesBox, Video } from "@uploadcare/docs-components"
+
+# Serverless Video and Audio
+
+<BadgesBox>
+  <Badge>15 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Uploadcare optimizes your content delivery. The main thing here is [delivering][delivery-cdn]
+your media assets via our <abbr title="Content Delivery Network">CDN</abbr>.
+Another thing is optimizing your content. We support [video transcoding][transformations-video],
+[GIF to video][transformations-image-gif-to-video] conversions, and
+[image processing][feature-image-processing]; audio transcoding is on our
+roadmap.
+
+There is an [article][blog-accelerate-images] on our blog about accelerating image
+content by 9x: that is a rough estimate of a load time improvement rate you can
+achieve with Uploadcare. With images, you can even do it in an upload-free way:
+by using [UC Optimize][proxy-usage].
+
+* [The elements, breifly](#video-and-audio)
+* [Getting your content to UC](#upload-content)
+* [Usage examples](#usage)
+  * [`<video>`](#usage-video)
+  * [`<audio>`](#usage-audio)
+
+## The elements, briefly
+{id="video-and-audio"}
+
+This article covers using UC as a source for your `<video>` and `<audio>`
+elements.
+
+* `<video>` stands for the the HTML Video element. It allows embedding a media
+  player which supports playback into the document. The element can also be used
+  for embedding audio content, but it is [stated][ext-mdn-video] that `<audio>`
+  provides a better user experience in the case.
+* `<audio>` is used to embed sound content in documents. It can also serve as the
+  destination for streamed media using MediaStream. You can learn more
+  [here][ext-mdn-audio].
+
+Both `<video>` and `<audio>` provide support for multiple `<source>` elements.
+That would be the preferred use case: your client browsers will then decide
+which source choice is optimal.
+
+## Getting your content to UC
+{id="upload-content"}
+
+To start with, upload some video or audio content to Uploadcare. That can be done
+in three simple steps:
+
+* Make an [account][account-signup]; it’s free.
+* Navigate to your [dashboard][dashboard] and choose a project your files will go to.
+* Navigate to “Files” and hit “Upload new files.”
+
+Hitting “Upload new files” fires an [Uploadcare File Uploader][feature-file-uploader]
+dialog. Choose files from a preferred source; your upload will start in the
+background. Hit “Add” and your files will appear on the list in the “Files”
+section.
+
+Your files are now on UC and delivered via our CDN. You can notice their URLs
+changed, and now look like that; we call those “CDN URLs:”
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/:uuid/:filename
+```
+
+Where:
+
+* `:uuid` is a unique file identifier on UC.
+* `:filename` holds an original filename.
+
+You are now free to use those CDN URLs in your `<source>` elements within
+`<video>` or `<audio>`. The following section covers some examples.
+
+## Usage examples
+{id="usage"}
+
+### `<video>`
+{id="usage-video"}
+
+The following example provides client browsers with two sources to choose from.
+It also includes the fallback message, which is used when the HTML5 video element
+is not supported by a client browser:
+
+<Video fullWidth withControls>
+  <source src="https://ucarecdn.com/31edfb56-35a7-4d54-9b76-d925cbf6c9f3/video.webm" type="video/webm" />
+  <source src="https://ucarecdn.com/98430942-70db-4230-b1a4-4d428281e127/video.mp4" type="video/mp4" />
+</Video>
+
+```html
+<video width="340" controls>
+    <source src="https://ucarecdn.com/31edfb56-35a7-4d54-9b76-d925cbf6c9f3/video.webm" type="video/webm" />
+    <source src="https://ucarecdn.com/98430942-70db-4230-b1a4-4d428281e127/video.mp4" type="video/mp4" />
+    You browser does not support the <code>video</code> element.
+    However, you can
+    <a href="https://ucarecdn.com/98430942-70db-4230-b1a4-4d428281e127/video.mp4">
+      download
+    </a>
+    the MP4 version of the video.
+</video>
+```
+
+The simpler example using `src` instead of `<source>` along with the list of
+attributes supported by `<video>` can be found [here][ext-mdn-video].
+
+The above example covers the case where you have to manually create and upload
+different versions of your video to use with the `<source>` element.
+You could instead use our [Video Processing][transformations-video] to generate those
+versions based on a single uploaded file. This is how that could look like:
+
+```html
+<video width="340" controls>
+    <source src="https://ucarecdn.com/f35cdbe1-e77b-4b48-aab6-97f869775b4a/video/-/format/webm/example.webm" type="video/webm" />
+    <source src="https://ucarecdn.com/f35cdbe1-e77b-4b48-aab6-97f869775b4a/video/-/format/mp4/example.mp4" type="video/mp4" />
+    You browser does not support the <code>video</code> element.
+    However, you can
+    <a href="https://ucarecdn.com/f35cdbe1-e77b-4b48-aab6-97f869775b4a/video/-/format/mp4/example.mp4">
+      download
+    </a>
+    the MP4 version of the video.
+</video>
+```
+
+Another `<video>` use case would be about [converting][transformations-image-gif-to-video] your
+animated GIF files to save bandwidth and optimize load times. Those can be
+clickable; here is an example:
+
+<a href="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/source.gif">
+  <Video fullWidth>
+    <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/webm/road.gif" type="video/webm" />
+    <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/mp4/road.gif" type="video/mp4" />
+  </Video>
+</a>
+
+```html
+<a href="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/source.gif">
+  <video width="340" autoplay loop muted webkit-playsinline playsinline>
+    <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/webm/road.gif" type="video/webm" />
+    <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/mp4/road.gif" type="video/mp4" />
+  </video>
+</a>
+```
+
+### `<audio>`
+{id="usage-audio"}
+
+While we are not currently supporting audio transcoding, you can largely
+optimize sound content load times by using our CDN.
+
+Let’s implement the `<audio>` element holding three versions of the sound sample
+provided by [wavy.audio][ext-wavy], [Skydiver][ext-skydiver]. All three of those
+are delivered via our CDN.
+
+The following example provides client browsers with three sources to choose from.
+It also includes the fallback message, which is used when the `<audio>` element
+is not supported by a client browser:
+
+<p>
+  <audio controls>
+    <source src="https://ucarecdn.com/784e2d2b-ffe4-46e1-a5a3-15799f1388c5/detroitkeys.ogg" type="audio/ogg; codecs=vorbis" />
+    <source src="https://ucarecdn.com/92025d67-677b-4148-8284-2d7e03306d4c/detroitkeys.mp3" type="audio/mpeg" />
+    <source src="https://ucarecdn.com/01e51905-bed7-411c-bb4f-feca0d944dee/detroitkeys.wav" type="audio/wav" />
+    Your browser does not support the <code>audio</code> element.
+    However, you can
+    <a href="https://ucarecdn.com/92025d67-677b-4148-8284-2d7e03306d4c/detroitkeys.mp3">
+      download
+    </a>
+    the MP3 version of the audio.
+  </audio>
+</p>
+
+```html
+<audio controls>
+  <source src="https://ucarecdn.com/784e2d2b-ffe4-46e1-a5a3-15799f1388c5/detroitkeys.ogg" type="audio/ogg; codecs=vorbis" />
+  <source src="https://ucarecdn.com/92025d67-677b-4148-8284-2d7e03306d4c/detroitkeys.mp3" type="audio/mpeg" />
+  <source src="https://ucarecdn.com/01e51905-bed7-411c-bb4f-feca0d944dee/detroitkeys.wav" type="audio/wav" />
+  Your browser does not support the <code>audio</code> element.
+  However, you can
+  <a href="https://ucarecdn.com/92025d67-677b-4148-8284-2d7e03306d4c/detroitkeys.mp3">
+    download
+  </a>
+  the MP3 version of the audio.
+</audio>
+```
+
+## Summing up
+{id="summing-up"}
+
+Uploadcare helps you deliver media content across 220k servers in 130 countries.
+You are free to use CDN URLs when embedding content via `<video>` and `<audio>`.
+When it comes to video content, we offer many transcoding options.
+
+Transcoding audio is on our roadmap, but we would love to get your feedback.
+How often do you need audio transcoding as a service and would you like it
+RESTful? Just [drop us a line][contact-email].
+
+[delivery]: /docs/delivery/
+[proxy-usage]: /docs/delivery/proxy/#usage
+[ext-mdn-video]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+[ext-mdn-audio]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+[account-signup]: /accounts/signup/
+[dashboard]: /dashboard/
+[feature-file-uploader]: /features/widget/
+[ext-wavy]: https://wavy.audio
+[ext-skydiver]: https://soundcloud.com/skydiver
+[contact-email]: mailto:hello@uploadcare.com

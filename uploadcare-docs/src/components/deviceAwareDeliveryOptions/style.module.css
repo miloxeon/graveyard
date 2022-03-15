@@ -1,0 +1,20 @@
+.root th {
+	text-align: left;
+}
+
+/* name */
+.root td:nth-child(1) {
+	white-space: nowrap;
+	font-weight: 500;
+	font-family: monospace;
+}
+
+/* type*/
+/* .root td:nth-child(3) {
+	font-family: monospace;
+} */
+
+/* description */
+.root td:nth-child(3) {
+	min-width: 30rem;
+}

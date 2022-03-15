@@ -1,0 +1,151 @@
+---
+  layoutPreset: integrations
+  title: JS Upload Client
+  description:
+    JS Uploadcare Client for Fast & Reliable File Uploads
+---
+
+# JS Upload Client
+
+Upload Client handles uploading operations by wrapping Uploadcare
+[Upload API][api-reference-upload]. You can use it from withing your Node.js
+app and in a browser.
+
+[GitHub &rarr;][ext-uploadcare-upload-client]
+
+## Features
+
+Upload features:
+* Upload files from local storage and URLs (up to 5 TB)
+* Multipart uploading for large files
+* Track uploading progress
+* Bulk file uploading
+* Uploading network to speed uploading jobs (like CDN)
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+
+## Install
+
+```bash
+npm install @uploadcare/upload-client
+```
+
+## Integration
+
+To access the High-Level API, you need to create an instance of `UploadClient`
+providing the necessary settings. Specifying `YOUR_PUBLIC_KEY` is mandatory: it
+points to the specific Uploadcare project:
+
+```javascript
+import UploadClient from '@uploadcare/upload-client'
+
+const client = new UploadClient({ publicKey: 'YOUR_PUBLIC_KEY' })
+```
+
+## Usage example
+
+Once the UploadClient instance is created, you can start using the wrapper to
+upload files from binary data:
+
+```javascript
+client
+  .uploadFile(fileData)
+  .then(file => console.log(file.uuid))
+```
+
+Another option is uploading files from URL, via the `uploadFile` method:
+
+```javascript
+const fileURL = 'https://example.com/file.jpg'
+
+client
+  .uploadFile(fileURL)
+  .then(file => console.log(file.uuid))
+```
+
+You can also use the `uploadFile` method to get previously uploaded files via
+their UUIDs:
+
+```javascript
+const fileUUID = 'edfdf045-34c0-4087-bbdd-e3834921f890'
+
+client
+  .uploadFile(fileUUID)
+  .then(file => console.log(file.uuid))
+```
+
+You can track uploading progress:
+
+```javascript
+const fileUUID = 'edfdf045-34c0-4087-bbdd-e3834921f890'
+const onProgress = ({ value }) => {
+  console.log(value)
+}
+
+client
+  .uploadFile(fileUUID, { onProgress })
+  .then(file => console.log(file.uuid))
+```
+
+You can cancel file uploading and track this event:
+
+```javascript
+const fileUUID = 'edfdf045-34c0-4087-bbdd-e3834921f890'
+const controller = new CancelController()
+
+client
+  .uploadFile(fileUUID, { cancel: controller })
+  .then(file => console.log(file.uuid))
+  .catch(error => {
+    if (error.isCancel) {
+      console.log(`File uploading was canceled.`)
+    }
+  })
+
+// Cancel uploading
+controller.cancel()
+```
+
+## Testing
+
+```
+npm run test
+```
+
+By default, tests will run with a mock server. You can run tests within
+production environment too.
+
+Run test on production servers: 
+
+```bash
+npm run test:production
+```
+
+Run test with a mock server (mock server starts automaticaly):
+
+```bash
+npm run test
+```
+
+Run a mock server:
+
+```
+npm run mock:start
+```
+
+And then you can run your test:
+
+```
+npm run test:jest
+```
+
+## Full documentation
+
+Read the full documentation on [GitHub][ext-uploadcare-upload-client].
+
+## Related guides
+
+* [File Uploader][file-uploader]
+<!-- Or a link to javascript.mdx -->

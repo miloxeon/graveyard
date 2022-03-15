@@ -1,0 +1,100 @@
+---
+  title: 'Uploadcare Image Transformations — overlay'
+  description:
+    'Uploadcare allows applying Image Transformations on the fly with a set of CDN operations that can change image size, compression, colors, as various image modifications.'
+---
+
+# Overlay
+{id="overlay"}
+
+The `overlay` operation allows to layer images one over another.
+
+`cdn›-/overlay/:uuid/`<br/>
+`cdn›-/overlay/:uuid/:relative_dimensions/:relative_coordinates/:opacity/`
+
+One of the most common use cases here are watermarks: semi-transparent images
+layered over opaque ones to complicate their unauthorized usage, etc.
+
+* `:uuid` — UUID of an image to be layered over input. To be recognized
+  by `:uuid`, that image should be related to any project of your account.
+* `:relative_dimensions` — linear dimensions of the overlay image. The aspect
+  ratio of an overlay is preserved. What you set is a maximum linear size along
+  one of the axes: `cdn›-/overlay/:uuid/50%x50%/` means any linear dimension of the
+  overlay can not exceed 50% in size. Default size setting is 100%.
+* `:relative_coordinates` — position of the overlay over your input. By default,
+  an overlay is positioned in the top-left corner of an input. Coordinates
+  represent an offset along each of the axes in either pixel or percent format.
+  In general, the coordinate system is similar to the
+  [CSS background-position][ext-css-background-position].
+* `:opacity` — controls the opacity of the overlay in percent format. Your overlay
+  may either be initially semi-transparent or made to be so by tuning `:opacity`.
+
+Since `%` is an escape char in URLs, it can’t be used as-is and should be
+replaced with either `%25` escape sequence or the `p` char, which is a more
+readable and concise option.
+
+Every `overlay` parameter is optional and can be omitted. However, the order of
+parameter URL directives should be preserved.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/50%25x50%25/20%25/-/preview/pineapple.jpg" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/50%25x50%25/20%25/-/preview/440x440/-/quality/lighter/pineapple.jpg" alt="Watermark with transparency"/></a><br/>
+      <code>/overlay/:uuid/50px50p/20p/</code><br/>
+      Specifying size and opacity, positioning is omitted.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/50%25x50%25/center/-/preview/pineapple.jpg" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/50%25x50%25/center/-/preview/440x440/-/quality/lighter/pineapple.jpg" alt="Overlay, centered, good for logo"/></a><br/>
+      <code>/overlay/:uuid/50%x50%/center/</code><br/>
+      Specifying size and position, opacity is omitted.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/overlay/efd02791-7511-42e9-850d-3b3d07f110ae/35px35p/10p,10p/40p/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/35px35p/70p,5p/35p/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/35px35p/15p,70p/55p/-/overlay/efd02791-7511-42e9-850d-3b3d07f110ae/35px35p/80p,90p/50p/-/preview/pineapple.jpg" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/overlay/efd02791-7511-42e9-850d-3b3d07f110ae/35px35p/10p,10p/40p/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/35px35p/70p,5p/35p/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/35px35p/15p,70p/55p/-/overlay/efd02791-7511-42e9-850d-3b3d07f110ae/35px35p/80p,90p/50p/-/preview/440x440/-/quality/lighter/pineapple.jpg" alt="Overlays with various positions"/></a><br/>
+      Adding multiple overlays with varied positions.
+    </td>
+  </tr>
+</table>
+
+## Overlay the source image 
+{id="overlay-self"}
+
+`cdn›-/overlay/self/`<br/>
+`cdn›-/overlay/self/:relative_dimensions/:relative_coordinates/:opacity/`
+
+To fit an image into a specified placeholder, you can add a stylized background
+from the same image. It visually extends the image appearance vertically or
+horizontally.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/quality/smart_retina/Promenade.jpg" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/quality/smart_retina/Promenade.jpg" alt="Scale and crop landscape image to center with a square aspect ratio"/></a><br/>
+      <code>/scale_crop/440x440/center/</code><br/>
+      Step 1. Scale and crop<br/> background to size.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/blur/60/-/gamma/50/Promenade.jpg" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/quality/smart_retina/Promenade.jpg" alt="Blur cropped image and set gamma to dull colors"/></a><br/>
+      <code>/blur/60/-/gamma/50/</code><br/>
+      Step 2. Blur and wash out colors.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/overlay/self/100px100p/center/Promenade.jpg" target="_blank">
+        <img src="https://ucarecdn.com/c4b32a69-f817-48be-b918-7eb6718f7aca/-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/overlay/self/100px100p/center/-/quality/smart_retina/Promenade.jpg" alt="Overlay the original landscape image over its square blurred version to extend the image appearance vertically"/></a><br/>
+      <code>/overlay/self/100px100p/center/</code><br/>
+      Step 3. Place the original image.<br/>
+    </td>
+  </tr>
+</table>
+
+With all steps combined, this operation will look like:
+
+`cdn›-/scale_crop/440x440/center/-/blur/60/-/gamma/50/-/overlay/self/100px100p/center/`
+
+Unlike the standard [overlay](#overlay), `cdn›-/overlay/self/` doesn't require
+an image UUID. It helps when you don't have access to UUIDs when using
+[Proxy][delivery-proxy], and when you do batch image processing.

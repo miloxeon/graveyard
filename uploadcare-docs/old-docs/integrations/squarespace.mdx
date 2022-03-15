@@ -1,0 +1,143 @@
+---
+  layoutPreset: integrations
+  title: Serverless File Uploads for Squarespace
+  description:
+    Integrate file uploading into your Squarespace website with Uploadcare
+    File Uploader. Start receiving files and user generated content in minutes
+    and seamlessly serve assets from CDN. No backend or storage required.
+---
+
+# Serverless File Uploads for Squarespace
+
+[Squarespace][ext-squarespace-home] is a platform for building beautiful
+websites. With Uploadcare, you can implement powerful serverless file uploads in
+any Squarespace project in _6 minutes_.
+
+* [Before We Begin](#before-we-begin)
+* [Step 1. Add the Code Block](#add-code-block)
+* [Step 2. Add Uploadcare File Uploader](#add-widget)
+* [Step 3. Publish Changes](#publish)
+* [Conclusion](#conclusion)
+
+## Before We Begin
+{id="before-we-begin"}
+
+Before we proceed with integrating file uploading into your Squarespace project,
+let’s make sure everything is in place.
+
+The first thing you need is an Uploadcare account. So [Sign Up][account-signup] if
+you haven’t done so before. On the [dashboard][dashboard] create a new
+project or go to an existing one. Navigate to the “API Keys” section and obtain
+your [Public API Key][settings-keys-public].
+
+Sure thing, you need a Squarespace account. Learn about the Squarespace sign-up
+flow [here][ext-squarespace-getting-started] or skip this step if you’re already
+signed up.
+
+If your Squarespace project implies uploading non-image content, you will have
+to provide [billing info][account-billing] in your Uploadcare account.
+
+## Step 1. Add the Code Block
+{id="add-code-block"}
+
+In Squarespace, you lay your page out with _blocks_ which stand for various
+types of content. You embed our File Uploader as a third-party file uploader using a
+_Code Block_. Now, add a code block to your page:
+
+* Hit “Insert Point” or “Add Block.”
+* Scroll down to the “MORE” section of the menu.
+* Choose the “Code Block” element from the menu.
+
+That’s where you find the “Code Block” element:
+
+<img src="https://ucarecdn.com/074bd660-bc0d-4efb-961f-c9b40480c1c1/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/squarespace-add-block.jpg"
+    srcSet="https://ucarecdn.com/074bd660-bc0d-4efb-961f-c9b40480c1c1/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/squarespace-add-block@2x.jpg 2x"
+    alt="Add Code Block" />
+
+In case you want to learn more about adding blocks, check out the Squarespace
+[tutorial][ext-adding-blocks].
+
+## Step 2. Add Uploadcare File Uploader
+{id="add-widget"}
+
+First, select _HTML_ in the _Code_ dialog drop-down (this ensures proper HTML
+rendering). Then, replace the placeholder with the code snippet:
+
+```html
+<!-- Set your Uploadcare Public API Key and get file uploader from CDN. -->
+
+<script>UPLOADCARE_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" data-integration="Wix"></script>
+
+<!-- Build a simple uploads-enabled form. -->
+
+<fieldset>
+  <legend>Submit Your Question</legend>
+  <form>
+    <p>
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email"/>
+    </p>
+    <p>
+      <label for="question">Your question</label>
+      <textarea id="question" name="question"></textarea>
+    </p>
+    <p>
+      <label for="images">Your files</label>
+      <!--
+        The file uploader button appears when you add an input with the specified
+        "uploadcare-uploader" role. The additional data-attributes control the
+        file uploader behavior. Learn more here:
+        https://uploadcare.com/docs/uploads/file-uploader/#configure
+      -->
+      <input type="hidden" id="files" name="files"
+             role="uploadcare-uploader" data-clearable data-images-only data-crop="free,2:3,4:3,16:9" />
+    </p>
+    <p>
+      <button type="submit">Submit</button>
+    </p>
+  </form>
+</fieldset>
+```
+
+Don’t forget to replace `YOUR_PUBLIC_KEY` with the Public API Key mentioned in
+the [Before We Begin](#before-we-begin) section.
+
+Here’s what you get after pasting the snippet:
+
+<img src="https://ucarecdn.com/ac5dcf58-9a4e-4168-9ad3-1fd4f3ad8427/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/squarespace-add-widget.jpg"
+    srcSet="https://ucarecdn.com/ac5dcf58-9a4e-4168-9ad3-1fd4f3ad8427/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/squarespace-add-widget@2x.jpg 2x"
+    alt="Add Uploadcare File Uploader" />
+
+The `data-images-only` attribute in the file uploader input element is an
+[option][file-uploader-option-images-only] that allows uploading images only. It’s
+there to provide a fail-safe experience for Free Uploadcare accounts with no
+billing info added. If you added billing info to your account, remove the data
+attribute to handle any file types.
+
+## Step 3. Publish Changes
+{id="publish"}
+
+Hit “Apply” to publish your changes. The form you built would then appear on
+your page:
+
+<img src="https://ucarecdn.com/17c2140d-7c19-4210-8638-2fcf033a65e7/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/squarespace-publish.jpg"
+    srcSet="https://ucarecdn.com/17c2140d-7c19-4210-8638-2fcf033a65e7/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/squarespace-publish@2x.jpg 2x"
+    alt="Publish Changes" />
+
+That’s it. If you want to tailor the file uploader UI to your page layout, check out
+[styling options][file-uploader-styling].
+
+## Conclusion
+{id="conclusion"}
+
+Congratulations! You have just powered your Squarespace project with file
+uploading.
+
+There’s more to what File Uploader can do: showing image previews, applying
+interactive crop or editing images in any browser. Check out the live file uploader
+[configurator][file-uploader-configure] to discover available options and get
+ready-made code snippets.
+
+In case you have any questions feel free to post those around our
+[community area][community].

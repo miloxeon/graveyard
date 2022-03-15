@@ -1,0 +1,131 @@
+---
+  layoutPreset: guides
+  title: Image Crop for Web and Mobile
+  description:
+    Enable your users to crop images right in their browser, no matter the device
+    or screen size they use. To use the feature, learn more information
+    in Uploadcare docs.
+---
+
+import { Widget } from "@uploadcare/widget"
+import { Badge, BadgesBox } from "@uploadcare/docs-components"
+
+# Image Crop for Web and Mobile
+
+<BadgesBox>
+  <Badge>9 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Cropping images is a common task and an everyday routine for producing content.
+We believe image crop should happen right in your browser and be intuitive and
+simple. Firing a dedicated image editor to do the cropping is an overkill.
+
+This tutorial is about enabling your users to crop images in any browser with
+Uploadcare, no matter the device or browser they use.
+
+You can get this up and running in _10 minutes_ with our
+[file uploader][file-uploader]. The uploader is a file uploader written in
+JavaScript; you can customize it to fit your app look and user experience.
+
+<img src="https://ucarecdn.com/490a46d4-7728-42cf-bfd0-9a1abb48a61b/-/preview/-/resize/680x/-/format/auto/-/progressive/yes/crop_presets.png"
+    srcSet="https://ucarecdn.com/490a46d4-7728-42cf-bfd0-9a1abb48a61b/-/preview/-/resize/1360x/-/quality/lightest/-/format/auto/-/progressive/yes/crop_presets.png 2x"
+    alt="Image Crop Preview" /><br/>
+
+There are three simple steps to take:
+
+* [Step 1. Set Up Your Uploadcare Account and Project](#signup)
+* [Step 2. Pick Where You Want the Crop](#pick)
+* [Step 3. Integrate the File Uploader](#integrate)
+
+## Step 1. Set Up Your Uploadcare Account and Project
+{id="signup"}
+
+In case you don’t have an Uploadcare account, [Sign Up][account-signup] for one.
+Once you get it, navigate to your [dashboard][dashboard] to create a new
+[project][settings-projects] or discover [API keys][settings-keys] for an existing
+one.
+
+You will only need the [Public API Key][settings-keys-public] that points to
+a target project where the images will go to.
+
+## Step 2. Pick Where You Want the Crop
+{id="pick"}
+
+Pick a form in your web app where you want users to crop images. It could be a
+profile editing form, image upload form, etc.
+
+Note, our file uploader enables your users to upload images from their camera, social
+media, cloud storage, and more. We call those “Upload Sources,” and you can
+learn more about them in our [docs][file-uploader-upload-sources].
+
+## Step 3. Integrate the File Uploader
+{id="integrate"}
+
+You install the file uploader by adding a couple of `<script>` elements to your page
+`<head>`. It comes in a variety of [bundles][file-uploader-install-bundles] and is
+usually served from our <abbr title="Content Delivery Network">CDN</abbr>.
+
+Here’s how it goes. First, add this to your page `<head>`:
+
+```html
+<script>UPLOADCARE_PUBLIC_KEY = 'your_public_key';</script>
+<script src="https://ucarecdn.com/libs/widget/3.7.3/uploadcare.full.min.js" charset="utf-8"></script>
+```
+
+Next, place this `<input>` where you want our widgfile uploaderet to appear on your page:
+
+```html
+<input
+  name="your_form_field_name"
+  value=""
+  type="hidden"
+  role="uploadcare-uploader"
+  data-images-only
+  data-crop
+  />
+```
+
+The file uploader looks for inputs with `role="uploadcare-uploader"` and places its
+button there.
+
+Note, the `value` attribute may either be empty or contain a CDN URL or UUID of
+an image on Uploadcare. The non-empty `value` will preload a file into your
+file uploader dialog. Otherwise, your users will be prompted to load a file from one
+of the enabled Upload Sources. You can learn more about default files in the
+file uploader dialog in our [docs][file-uploader-predefined-files].
+
+That’s what you should get by now:
+
+<Widget
+  imagesOnly
+  crop
+  urlBase="https://upload.uploadcare.com/"
+  publicKey="232d896709883f79bfaf"
+  value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+/>
+
+Once you’re done cropping, your image CDN URL gets updated with the
+`crop` [Image Transformation][transformations-image-crop]. The file uploader then passes
+the updated CDN URL to the input `value`, and from there you can use it for
+other routines.
+
+That’s how the updated CDN URL may look like:
+
+```md
+http://ucarecdn.com/9dd2f080-cc52-442d-aa06-1d9eec7f40d1/-/crop/400x400/500,500/cropout.jpg
+```
+
+You can define the file uploader crop presets by specifying the
+[`data-crop`][file-uploader-option-crop] attribute. This is useful when you want
+specific aspect ratios, image dimensions, etc.
+
+## Yoohoo, That’s it 🚀
+
+You’ve just enabled image crop in your app via Uploadcare without breaking a
+sweat. Great job!
+
+If you’d like to customize the file uploader to your app’s look, check out the docs
+section on [file uploader styling][file-uploader-styling].
+
+Our file uploader is open source, here's its [GitHub repo][file-uploader-github-repo]. Issues
+and PRs are welcome.

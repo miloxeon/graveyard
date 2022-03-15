@@ -1,0 +1,61 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: Handling Сustom Tabs'
+  description:
+    This section covers controlling file uploader custom tabs behavior via
+    JavaScript API. This is a relatively complex yet powerful way
+    to customize the dialog by Uploadcare.
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — Handling Custom Tabs
+
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#custom-tabs' />
+  <Migration />
+</Messages>
+
+Beside the built-in file uploader tabs like `file`, `url`, `dropbox`, etc. there is an
+option of implementing a tab with a custom behavior. This is a relatively
+complex yet powerful way to customize the dialog.
+
+## Registering a new tab
+{id="register"}
+
+When you want to add a custom tab, you should first register it with a given
+`name`, which can then be used in your [tabs][file-uploader-option-tabs] list.
+
+```js
+uploadcare.registerTab(name, constructor);
+```
+
+`constructor` is a function that is called to create a new tab.
+
+## Custom Tabs constructor
+{id="constructor"}
+
+A constructor is called every time a new dialog is opened. Here is how you
+declare it:
+
+```js
+function myTab(container, button, dialogApi, settings, name) {
+  ...
+}
+```
+
+Where,
+
+* `container` is a jQuery object holding your main tab element.
+* `button` is a jQuery object with your tab button.
+* `dialogApi` is an [object][api-reference-js-dialog-panel](#dialog-api) holding
+  methods to control your dialog.
+* `settings` is a [settings object][file-uploader-config-object].
+* `name` is a name used when registering a tab and in the
+  [tabs][file-uploader-option-tabs] list.
+
+Note, a single constructor can be registered under several names. You can find
+more examples in our [file uploader customization][file-uploader-custom-tabs]
+tutorial.

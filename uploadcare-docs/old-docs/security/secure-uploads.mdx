@@ -1,0 +1,167 @@
+---
+  title: 'Secure Uploading (Signed Uploads)'
+  description:
+    'Implement access management in your file uploading flow. Control who and when can upload files to your Uploadcare project by generating signatures and expiration time.'
+---
+
+# Secure Uploading (Signed Uploads)
+
+With Secure Uploading you can control who and when can upload files to one of
+your Uploadcare [project][settings-projects]. You need to generate a token on
+your backend, and a trusted user should use this token to upload a new file. It
+works with both [Uploadcare File Uploader][file-uploader] and [Upload
+API][api-reference-upload].
+
+## Turning Secure Uploading on
+{id="enable"}
+
+Secure Uploading can be turned on and off to an Uploadcare project, because it
+has a dedicated storage, Public and Private keys, and security settings.
+
+1. Go to your [Dashboard][dashboard] and select an existing project or create a
+   new one. Open the project.
+1. Click **Enable** next to **Secure Uploading.**
+
+From now on, every request to Upload API should include a `signature` part
+(token). However, you'll still be able to upload files to your project on the
+website via the Dashboard.
+
+## Token generation
+{id="make-signature"}
+
+The token is called `signature`. Technically, it's a string sent along with your
+upload request. It requires your Uploadcare project's Secret Key and should be
+created on your back end.
+
+The `signature` is an [HMAC/SHA256][ext-wiki-hmac] with two parameters:
+
+* `secret_key` — a generated key
+* `expire` — an expiration time message (string)
+
+Here's how to make a `signature` on your backend in Python:
+
+```python
+import time
+import hashlib
+import hmac
+
+def generate_secure_signature(secret, expire):
+    k, m = secret, str(expire).encode('utf-8')
+    if not isinstance(k, (bytes, bytearray)):
+        k = k.encode('utf-8')
+
+    return hmac.new(k, m, hashlib.sha256).hexdigest()
+
+# Expire in 30 min, e.g., 1454903856
+expire = int(time.time()) + 60 * 30
+
+# Secret key of your project
+secret = 'project_secret_key'
+
+# Example result: '9890adc8886d27c93befed595abfbca514b7592a88e2f64dbddbea2d369a68dc'
+signature = generate_secure_signature(secret, expire)
+```
+
+Making `signature` in Node.js:
+
+```javascript
+const crypto = require('crypto');
+
+function generateSignature(secret, expire) {
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(expire);
+  return hmac.digest('hex');
+}
+
+// secret key
+const secret = 'project_secret_key';
+
+// define expiry (e.g. 120 seconds)
+const expire = (Math.round(Date.now() / 1000) + 120).toString();
+const signature = generateSignature(secret, expire);
+```
+
+Making `signature` in Ruby:
+
+```ruby
+require "openssl" # if necessary
+
+def generate_signature(secret, expire_at)
+OpenSSL::HMAC.hexdigest("SHA256", secret, expire_at.to_i.to_s)
+end
+
+secret = 'secret'
+expire_at = Time.now + 60 * 2 # 2 minutes from now
+generate_signature(secret, expire_at)
+```
+
+## `expire` explained
+
+The `expire` string sets the expiration date and time or duration for a
+`signature`. It has a [Unix time][ext-wikipedia-unix-time] format.
+
+The `expire` function in the Python example above adds a certain duration after
+the generation time. In this case, 30 minutes:
+
+```python
+# Expire in 30 min, e.g., 1454903856
+expire = int(time.time()) + 60 * 30
+
+```
+
+## Secure Uploading example
+{id="example"}
+
+Request:
+
+```bash{noAutoLinker}
+curl -F "UPLOADCARE_PUB_KEY=caa9d29da887ee88ffe6" \
+     -F "signature=46f70d2b4fb6196daeb2c16bf44a7f1e" \
+     -F "expire=1454903856" \
+     -F "file=@image.jpg" \
+     "https://upload.uploadcare.com/base/"
+```
+
+Response:
+
+```json
+{
+  "file": "c0d776d4-8c8e-47df-9e92-03b68b99c2ba"
+}
+```
+
+To work with File Uploader, [install and configure][file-uploader-configure]
+it first. Then specify the [Secure signature][file-uploader-option-secure-signature]
+and [Secure expire][file-uploader-option-secure-expire] options.
+
+## Possible errors
+{id="possible-errors"}
+
+Both `signature` and an active `expire` are required for every upload request
+and should be valid. The list of possible errors:
+
+```json
+[HTTP 400] 'signature' is required.
+```
+
+```json
+[HTTP 400] 'expire' is required.
+```
+
+If `expire` is not a valid Unix timestamp:
+
+```json
+[HTTP 400] 'expire' must be a UNIX timestamp.
+```
+
+If your `signature` has expired, i.e., `expire < now`:
+
+```json
+[HTTP 403] Expired signature.
+```
+
+If `signature` is incorrect:
+
+```json
+[HTTP 403] Invalid signature.
+```

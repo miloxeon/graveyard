@@ -1,0 +1,104 @@
+---
+  title: File validation
+  noindex: true
+  description:
+    Validation is useful when implementing guidelines for user-submitted files.
+    Learn how to impose restrictions on file size, file type, image dimensions,
+    and more
+---
+
+import { CodePen } from "@uploadcare/docs-components";
+
+# File validation
+
+Validator is just a function that receives `fileInfo` object for each
+uploaded file and should throw exception if file does not meet requirements.
+The simplest validatior can look like this:
+
+```js
+widget.validators.push(function(fileInfo) {
+  if (fileInfo.size !== null && fileInfo.size > 1024 * 1024) {
+    throw new Error("fileMaximumSize");
+  }
+});
+```
+
+It is better to wrap validators in function which receives all constants.
+Such validators can be reused with different file uploaders.
+
+```js
+function maxFileSize(size) {
+  return function(fileInfo) {
+    if (fileInfo.size !== null && fileInfo.size > size) {
+      throw new Error("fileMaximumSize");
+    }
+  };
+}
+// limit file size to 1 MB
+widget1.validators.push(maxFileSize(1024 * 1024));
+// limit file size to 2 MB
+widget2.validators.push(maxFileSize(2 * 1024 * 1024));
+```
+
+Another step that can be taken is automatic validation based on data attributes
+of input element. For example if widget has `data-max-size`, `maxFileSize`
+validatior can be added.
+
+```js
+$(function() {
+  $('[role=uploadcare-uploader][data-max-size]').each(function() {
+    var widget = uploadcare.Widget(this);
+    widget.validators.push(maxFileSize($(this).data('maxSize')));
+  });
+});
+```
+
+There are some common validation cases which you may want.
+
+* [Limit File Size](#file-size)
+* [Restrict File Type](#file-type)
+* [Image Dimensions](#image-dimensions)
+* [Image Orientation](#image-orientation)
+
+
+## Limit File Size
+{id="file-size"}
+
+This example shows how to add validation for both minimal and maximal file size.
+Validator will be automatically added to each widget with custom attributes
+`data-min-size` and `data-max-size`.
+
+<!-- https://codepen.io/uploadcare/pen/OYmepr -->
+<CodePen id="OYmepr" title="Limit file size example" />
+
+## Restrict File Type
+{id="file-type"}
+
+`fileTypeLimit` is another validator which is added to file uploaders with
+`data-file-types` attribute.
+Value is space-separated list of allowed files extensions.
+
+<!-- https://codepen.io/uploadcare/pen/VObJWQ -->
+<CodePen id="VObJWQ" title="Restrict file type example" />
+
+## Image Dimensions
+{id="image-dimensions"}
+
+For images you can define `maxDimensions` validator which will be added
+to file uploaders with `data-max-width` or `data-max-height` attributes.
+Please note that `maxDimensions` checks dimensions only for images and
+accepts files that are not images. It can be combined with `data-images-only`
+attribute to change this.
+
+<!-- https://codepen.io/uploadcare/pen/PvmrJX -->
+<CodePen id="PvmrJX" title="Image dimensions example" />
+
+## Image Orientation
+{id="image-orientation"}
+
+This validator will deny landscape images with `data-portrait-only="true"`
+attribute and portrait images with `data-landscape-only="true"` attribute.
+There is no sense in setting both attributes on same widget.
+
+<!-- https://codepen.io/uploadcare/pen/VObJrX -->
+<CodePen id="VObJrX" title="Image orientation example" />

@@ -1,0 +1,211 @@
+---
+  title: 'Uploadcare File Storage'
+  description:
+    'Uploadcare provides a reliable and SLA-covered file storage ready to accept your uploads and keep your files.'
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# File Storage
+
+There are two storage workflows available with Uploadcare. You can use Uploadcare storage, or connect custom storage.
+
+<!-- Roma: Custom storage limitations? -->
+
+<!-- Note, at the moment you can only choose an [Amazon S3][ext-aws-s3] bucket as Custom Storage. -->
+<!-- You can find cases in which you might prefer Custom Storage over Uploadcare Storage [here](#storage-custom). -->
+
+## Uploadcare Storage
+{id="storage-uc"}
+
+By default, you start your Uploadcare experience with Uploadcare Storage.
+The traffic and storage costs are then included in your plan, and you can
+monitor your limits in the [dashboard][dashboard]. Uploadcare Storage
+requires no configuration and works out of the box.
+
+Every file uploaded to your account goes to our storage, and all the Uploadcare
+media processing and delivery capabilities are based on it.
+
+### Uploadcare Storage Workflow
+{id="storage-uc-workflow"}
+
+The workflow with Uploadcare Storage is as follows:
+
+* A file gets to one of your Uploadcare [projects][settings-projects] identified
+  by its [API key][settings-keys] by the means of our [file uploader][file-uploader],
+  [Upload API][api-reference-upload] or [API clients][integrations-clients].
+* The file goes to our storage and gets cached by [CDN layers][delivery-cdn].
+* Then, depending on the “Automatic file storing” setting of your project, the
+  file is either kept in our storage forever or deleted after a 24-hour period.
+* If you use our [Upload API][api-reference-upload] to get files to your
+  Uploadcare [project][settings-projects], you can implement the `store`
+  [flag][api-reference-upload-direct] to manually store the file.
+* During the 24-hour expiry period, you can make an
+  [API call][api-reference-rest-store] to manually store the file.
+* In any case, your files are then delivered to your users via our CDN.
+* If the file is an image, it can be further processed on the fly via our
+  [Image Processing][transformations-image].
+* [Video Processing][transformations-video] and
+  [Document Conversion][transformations-docs] will work via our
+  [REST API][api-reference-rest].
+
+## Storing uploaded files
+{id="storing-uploaded-files"}
+
+<Messages>
+  <WidgetV3Warning link='/docs/uploads/v2/#autostore' />
+  <Migration />
+</Messages>
+
+### Storage Workflow
+{id="storage-workflow"}
+
+There are two basic workflows when uploading files to Uploadcare:
+
+* Uploaded files will sit in your project permanently; this is called
+  “Auto file storing.”
+* Uploaded files will be kept in your account for 24 hours and then get
+  deleted.
+
+On Uploadcare, every permanent file is called “stored,” hence making a file
+permanent is called “storing.” The second workflow allows storing individual
+files by making an [API Request][api-reference-rest-store].
+
+### Automatic File Storing, Default
+{id="store-auto"}
+
+By default, every project on your [dashboard][dashboard] comes with the
+“Auto file storing” option enabled. This way you can seamlessly use our File
+Uploader without having to make store requests: every file uploaded via the
+file uploader gets stored in your Uploadcare project defined by the
+[set public key][file-uploader-option-pubkey].
+
+### Manual File Storing
+{id="store-manual"}
+
+When you disable “Auto file storing” for a project, every file that goes there
+gets deleted after a 24-hour period. This could be useful when there is no need
+for your app to keep every uploaded file that takes up your account storage.
+
+To store a file, you will need to make a separate server-side
+[API call][api-reference-rest-store]. Such requests should be made after a form
+a file uploading form gets submitted.
+
+You can also have the master “Auto file storing” setting enabled in a project
+and still not store files sent by a specific file uploader instance. This behavior is
+carried out via implementing the `data-do-not-store` file uploader
+[option][file-uploader-option-dont-store].
+
+## Custom Storage
+{id="storage-custom"}
+
+The Custom Storage option is about connecting an [Amazon S3][ext-aws-s3] bucket
+to one or more of your Uploadcare [projects][settings-projects].
+
+You can connect a custom bucket in the
+[Custom storage][settings-advanced-custom-storage] settings of your Uploadcare
+[project][settings-projects]. You can learn more about setting up custom storage
+[here](#setup).
+
+You may want to choose this option over [Uploadcare Storage](#storage-uc) when
+you:
+
+* Implement custom file workflows.
+* Follow company storage policies pointing at specific buckets.
+* Want to manage traffic and storage on your end without having to use our
+  [dashboard][dashboard].
+
+### Custom Storage Workflow
+{id="storage-custom-workflow"}
+
+Here is the custom storage workflow:
+
+* A file gets to one of your Uploadcare [projects][settings-projects] identified
+  by its [API key][settings-keys] by the means of our [File Uploader][file-uploader],
+  [Upload API][api-reference-upload] or [API clients][integrations-clients].
+* We provide your app with a temporary link that expires in 24 hours.
+* Your app requests Uploadcare to save files to your Custom Storage.
+* When handling images, your app can request Uploadcare to save their
+  [processed][transformations-image] versions to your Custom Storage.
+* Files can then be served directly from your storage or from a third-party
+  content delivery network you prefer.
+
+Another option would be enabling automatic file copying by checking the
+respective checkbox in the [Custom storage options][community-autocopy]
+section of your project settings. This will ensure every file uploaded to that
+project also goes to your custom storage.
+
+Note, in this case, storage and traffic costs are **not** included in your
+Uploadcare plan and depend on third-party services.
+
+### Setting Up Custom Storage
+{id="setup"}
+
+First, you need an [Amazon Web Services][ext-aws-home] account. Second, you need to
+create a new or select an existing bucket in [S3 bucket management][ext-aws-s3-mgmt].
+
+Then, select a project in your [dashboard][dashboard], go to `Custom storage`
+and click `Connect S3 bucket` to connect your new storage to Uploadcare.
+
+Technically, storage is a named set of settings. It includes a name that
+identifies your custom storage in our APIs, S3 bucket name, and prefix. You can
+use prefixes to organize files in your bucket. A prefix is added to each file
+saved to the specified storage. Hence, with various prefixes, you can have
+multiple storage names associated with a single S3 bucket.
+
+### Moving Files to Custom Storage
+{id="move"}
+
+With a temporary link provided by Uploadcare, you can copy a file to your
+storage by making a `post` [API request][api-reference-rest-copy]. In your
+request, `source` should hold the temporary link, and `target` should represent
+a name of the storage your files are saved to.
+
+Note, the maximum file size that applies when
+[copying files via REST API][api-reference-rest-copy] is 5 GB.
+
+Files are copied to the following path in your bucket:
+
+```
+/<prefix>/<file_uuid>/<filename>
+```
+
+Where `<prefix>` is taken from your storage settings, `<file_uuid>` holds a
+temporary UUID, and `<filename>` contains the original filename, which is
+represented by all symbols after the last slash in the original URL; more on
+filenames can be found [here][delivery-filename].
+
+When handling image files, you can provide a temporary Uploadcare URL with
+processing operations included. In the case, the maximum file size should not
+exceed 100 MB.
+The name of a processed file is constructed of its original filename and a set
+of applied operations. For instance, the following `source`:
+
+```
+http://www.ucarecdn.com/<file_uuid>/-/preview/200x200/roof.jpg
+```
+
+Will result in the filename:
+
+```
+/<prefix>/<file_uuid>/roof.preview_200x200.jpg
+```
+
+Hence, all versions of your processed file are stored in the same virtual
+folder.
+
+Our copy method returns a link to your file with ad-hoc scheme `s3` in the
+`result` member of the response object. For example:
+
+```
+s3://my-bucket/<prefix>/<file_uuid>/roof.preview_200x200.jpg
+```
+
+In this scheme, the host is represented by an S3 bucket name, and path stands
+for a path to your file in the bucket. If you want to serve files directly from
+S3, you can get the proper http link to your file by replacing `s3://` with
+`http://s3.amazonaws.com/`.
+
+The example above deals with the default naming pattern. You can also customize
+how filenames are constructed. Learn more about naming patterns
+[here][api-reference-rest-copy-pattern].

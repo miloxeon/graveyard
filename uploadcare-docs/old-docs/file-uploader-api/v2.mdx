@@ -1,0 +1,926 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: JavaScript API Documentation
+  description:
+    Uploadcare JavaScript API provides you with the extensive
+    set of tools to redesign the user experience. Use it with
+    the widget or as a set of standalone components. Find more
+    info in Uploadcare Docs.
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV2Warning } from '@uploadcare/docs-components'
+
+# JavaScript API Documentation
+
+<Messages>
+  <WidgetV2Warning link='/docs/file-uploader-api/' />
+  <Migration />
+</Messages>
+
+You may not need all of the features
+that [our file uploader][file-uploader] exhibits.
+Or, perhaps, you want to redesign the user experience, but don’t want to
+reinvent the wheel. Or the task is simply to build some UI on top of the widget.
+For all these use cases we provide a JavaScript API. Use it to control
+the default widget, or do stuff without it via standalone components
+that can be combined with your own solutions.
+
+* [File Uploader](#widget)
+* [Files and Uploads](#file)
+* [File Group](#file-group)
+* [Files Validation](#validation)
+* [Upload Dialog and Panel](#dialog)
+* [Custom Tabs](#custom-tabs)
+* [Drag and drop](#drag-and-drop)
+* [Source tabs styling](#sources-style)
+
+## Widget
+{id="widget"}
+
+File uploader can handle one file ([single-upload](#file-widget))
+or multiple files at once ([multi-upload](#file-multiple-widget)).
+
+**Initializes widget** instances once (either [single-upload](#file-widget),
+or [multi-upload](#file-multiple-widget))
+on every element with `role="uploadcare-uploader"` attribute
+in a container, specified by selector or DOM element.
+If container is absent the document is used.
+Returns array of new initialized widgets, or empty array
+if no new instances were initialized.
+
+```js
+var widgets = uploadcare.initialize('#my-form');
+widgets; // [widget1, widget2, multipleWidget1, ...]
+var widgets = uploadcare.initialize();
+```
+
+This method is called automatically unless
+[manual start][file-uploader-option-manual-start]
+is defined.
+
+
+---
+
+<a id="single-widget" /><a id="file-widget" />
+
+**Get the widget** instance for a given element.
+
+```js
+var singleWidget = uploadcare.SingleWidget('[role=uploadcare-uploader]');
+```
+
+Element argument can be a DOM element, a jQuery object,
+or a CSS selector. If element’s argument is a CSS selector,
+only the instance for the first matched element will be returned.
+To make sure you get the right instance when there are multiple widgets
+on the page, select by id or pass in a DOM element.
+
+All [options][file-uploader-options] will be loaded from
+element’s data-attributes on the first initialization.
+
+If passed element has `data-multiple` attribute, an error will be raised.
+[Multi-upload File Uploader](#file-multiple-widget) should be used in this case.
+
+
+---
+<a id="multiple-widget" /><a id="file-multiple-widget" />
+
+**Get the multiple widget** instance for a given element with the `data-multiple`
+[option][file-uploader-option-multiple] turned on.
+
+```js
+var multiWidget = uploadcare.MultipleWidget('[role=uploadcare-uploader][data-multiple]');
+```
+
+Works the same as the constructor for [single-upload file uploader](#file-widget).
+If an instance of the first element is **not** a
+multi-upload widget, error is raised.
+
+
+---
+<a id="any-widget" />
+
+**Get the single or multiple widget** instance depending on
+`data-multiple` attribute.
+The API for single and multiple widgets is slightly different.
+Use this constructor when the code can work with both of them.
+
+```js
+var widget = uploadcare.Widget('[role=uploadcare-uploader]');
+```
+
+
+---
+<a id="single-widget-value" />
+
+**Set a [file instance](#file)** as a value for the
+[single-upload file uploader](#file-widget).
+
+```js
+singleWidget.value(file);
+```
+
+Set a file UUID or a [CDN link][delivery-cdn] as a value.
+
+```js
+singleWidget.value('9dd2f080-cc52-442d-aa06-1d9eec7f40d1');
+```
+
+Set `null` as a value to clear the widget.
+
+```js
+singleWidget.value(null);
+```
+
+
+---
+<a id="multiple-widget-value" />
+
+**Set a [group instance](#file-group)** as a value for the
+[multi-upload file uploader](#file-multiple-widget).
+
+```js
+multiWidget.value(fileGroup);
+```
+
+Set an array of file instances or UUIDs as a value for the
+[multi-upload file uploader](#file-multiple-widget).
+
+```js
+multiWidget.value([file1, file2, '9dd2f080-cc52-442d-aa06-1d9eec7f40d1']);
+```
+
+Set a [file group](#file-group) identifier as a value for the
+[multi-upload file uploader](#file-multiple-widget).
+
+```js
+multiWidget.value('cdf2fe62-3d43-47d4-9288-c3951561f5c7~2');
+```
+
+
+---
+
+**Get current widget value**: file instance, group instance or `null`.
+
+```js
+var file = widget.value();
+```
+
+
+---
+<a id="widget-reload-info" />
+
+**Load new file or group** instance from `value` attribute of the `input`
+(by UUID or CDN link), and update information about the object
+from Uploadcare servers.
+
+```js
+widget.reloadInfo();
+```
+
+
+---
+<a id="widget-open-dialog" />
+
+**Open the dialog** of a specific widget and get its instance.
+Result is [dialog API](#dialog-api).
+
+```js
+var dialog = widget.openDialog(tab);
+```
+
+`tab` — name of a tab opened by default.
+
+
+---
+<a id="widget-on-change" />
+
+**Do something after a new file is selected.**
+An instance is passed to the callback:
+[file](#file) for [single-upload file uploader](#file-widget),
+or [file group](#file-group)
+for [multi-upload file uploader](#file-multiple-widget).
+
+It may or may not be uploaded.
+
+```js
+widget.onChange(function(file) {
+  // Handle new file.
+});
+```
+
+
+---
+<a id="widget-on-upload-complete" />
+Do something **after a file is uploaded and ready.**
+The callback is passed an info object:
+[file info](#file-info) for [single-upload file uploader](#file-widget),
+or [file group info](#file-group-info)
+for [multi-upload file uploader](#file-multiple-widget).
+
+```js
+widget.onUploadComplete(function(info) {
+  // Handle uploaded file info.
+});
+
+// Same as above:
+widget.onChange(function(file) {
+  if (file) {
+    file.done(function(info) {
+      // Handle uploaded file info.
+    });
+  };
+});
+```
+
+
+---
+<a id="widget-on-dialog-open" />
+
+Do something **when dialog is opened** (either by user’s click
+or from [widget.openDialog](#widget-open-dialog) call).
+Works only when [system dialog][file-uploader-option-system-dialog]
+is not enabled.
+
+```js
+widget.onDialogOpen(function(dialogApi) {
+  dialogApi.switchTab('dropbox');
+});
+```
+
+
+---
+
+**Unsubscribe any callback.**
+
+```js
+widget.onChange(fn); // Subscribe
+widget.onChange.remove(fn); // Unsubscribe
+
+widget.onUploadComplete(fn);
+widget.onUploadComplete.remove(fn);
+
+widget.onDialogOpen(fn);
+widget.onDialogOpen.remove(fn);
+```
+
+
+## Files and Uploads
+{id="file"}
+
+File Uploader and Javascript API works with the file instances, which implement
+jQuery [promise interface][ext-jquery-promise-interface].
+
+
+---
+<a id="file-wait-when-ready" href="#file-wait-when-ready" />
+
+**Wait when the file is ready.** Returns [fileInfo](#file-info) object.
+
+```js
+file.done(function(fileInfo) {
+  // Upload successfully completed and file is ready.
+}).fail(function(error, fileInfo) {
+  // Upload failed or something else went wrong.
+});
+```
+
+
+---
+<a id="file-uploading-progress" href="#file-uploading-progress" />
+
+Watch for the file **uploading progress.**
+Returns [uploadInfo](#upload-info) object.
+
+```js
+file.progress(function(uploadInfo) {
+  // State of upload is updated.
+  // This callback is invoked at least once with current state,
+  // immediately after assignment.
+});
+```
+
+Show file upload progress on a
+[jQuery UI progressbar][ext-jquery-ui-progressbar].
+
+```js
+file.progress(function(uploadInfo) {
+  $('#progress').progressbar('value', uploadInfo.progress);
+});
+```
+
+
+---
+<a id="file-new-instance" href="#file-new-instance" />
+
+**A new file instance** can be constructed by calling **`fileFrom` factory function.**
+First argument is one of the predefined identifiers, second is the file source.
+Depending on the identifier, the function can start file uploading
+or just return an instance of already uploaded file.
+
+
+---
+<a id="file-from-url" href="#file-from-url" />
+
+**Upload a new file from an arbitrary URL.**
+
+```js{noAutoLinker}
+var file = uploadcare.fileFrom('url', 'http://example.com/image.png');
+```
+
+
+---
+<a id="file-from-native" href="#file-from-native" />
+
+Upload a new file **from a
+[native file object][ext-native-file-object].**
+This method supports uploading large files (> 100MB) and upload progress,
+but it is not available on outdated browsers
+(see [browsers support][ext-caniuse-fileapi]).
+
+```js
+var file = uploadcare.fileFrom('object', input.files[0]);
+```
+
+
+---
+<a id="file-from-dom" href="#file-from-dom" />
+
+Upload new file **from input DOM element.**
+This method works in all browsers, but does not support large files
+and uploading progress.
+
+```js
+var file = uploadcare.fileFrom('input', input);
+```
+
+
+---
+<a id="file-from-cdn" href="#file-from-cdn" />
+
+Create a file instance **from an uploaded file UUID or a
+[CDN link][delivery-cdn]** and load info from Uploadcare server.
+
+```js
+var file = uploadcare.fileFrom('uploaded', '61783708-7090-4d6a-b82b-81f98e40a327');
+```
+
+
+---
+<a id="file-cancel-uploading" href="#file-cancel-uploading" />
+
+**Cancel any in-progress upload** immediately and stop all events.
+
+```js
+file.cancel();
+```
+
+
+### fileInfo
+{id="file-info"}
+
+Structure of the `fileInfo` object:
+
++-------------------+---------+-------------------------------------------------------------------+
+|     Property      |  Type   |                               Value                               |
++===================+=========+===================================================================+
+| uuid              | string  | File UUID.                                                        |
++-------------------+---------+-------------------------------------------------------------------+
+| name              | string  | Original name of the uploaded file.                               |
++-------------------+---------+-------------------------------------------------------------------+
+| size              | number  | File size in bytes.                                               |
++-------------------+---------+-------------------------------------------------------------------+
+| isStored          | boolean | `true`, if the file is stored in our storage, `false` otherwise.  |
++-------------------+---------+-------------------------------------------------------------------+
+| isImage           | boolean | `true`, if the file is an image, `false` otherwise.               |
++-------------------+---------+-------------------------------------------------------------------+
+| cdnUrl            | string  | Public file CDN URL, may contain [CDN operations][delivery-cdn].  |
++-------------------+---------+-------------------------------------------------------------------+
+| cdnUrlModifiers   | string  | URL part with applied [CDN operations][delivery-cdn] or null.     |
+|                   |         | Appear after user crops image, for example.                       |
++-------------------+---------+-------------------------------------------------------------------+
+| originalUrl       | string  | Public file CDN URL without any operations.                       |
++-------------------+---------+-------------------------------------------------------------------+
+| originalImageInfo | object  | Object with original image properties if file is image,           |
+|                   |         | null otherwise.                                                   |
+|                   |         |                                                                   |
+|                   |         | Properties:                                                       |
+|                   |         | * `width` and `height`                                            |
+|                   |         | * `format` — JPEG, PNG or other                                   |
+|                   |         | * `datetime_original`, `geo_location` and `orientation` from EXIF |
+|                   |         | * `dpi` — value from format properties or from EXIF, if available |
++-------------------+---------+-------------------------------------------------------------------+
+| sourceInfo        | object  | Object with information about file source. For example            |
+|                   |         | this can be name of social network, public link if any,           |
+|                   |         | owner’s user name etc. This information is not stored             |
+|                   |         | on our servers and available only on the page                     |
+|                   |         | where file was uploaded.                                          |
++-------------------+---------+-------------------------------------------------------------------+
+
+### uploadInfo
+{id="upload-info"}
+
+Structure of the `uploadInfo` object:
+
++----------------+--------+-------------------------------------------+
+|    Property    |  Type  |                   Value                   |
++================+========+===========================================+
+| state          | string | Current readiness state: `'uploading'`,   |
+|                |        | `'uploaded'`, or `'ready'`.               |
++----------------+--------+-------------------------------------------+
+| uploadProgress | number | Upload progress as a value from 0 to 1.   |
++----------------+--------+-------------------------------------------+
+| progress       | number | File readiness (sum of upload progress    |
+|                |        | and info preparation progress) as a value |
+|                |        | from 0 to 1.                              |
++----------------+--------+-------------------------------------------+
+
+The `error` argument in the `fail` callback is one of the following values,
+or a user-defined value, raised in the [validators](#validation).
+
+* `'baddata'` — invalid argument passed to file constructor
+* `'size'` — file size is too large
+* `'upload'` — error during upload
+* `'user'` — upload cancelled
+* `'info'` — error when fetching file information
+* `'deleted'` — file was deleted (possible in a group)
+
+
+## File Group
+{id="file-group"}
+
+Group is an ordered collection of [file instances](#file).
+Once it is created, it can’t be modified, but you always can create
+a new group with the same files.
+
+
+---
+<a id="file-group-create" href="#file-group-create" />
+
+**Create a group** from an array of files and/or other groups.
+
+```js
+var fileGroup = uploadcare.FileGroup([file1, fileGroup1, file2]);
+```
+
+After a group instance is created, it can be uploaded to Uploadcare server
+by calling `promise` method.
+
+
+---
+<a id="file-group-uploadinfo" href="#file-group-uploadinfo" />
+
+**Subscribe to the group upload events.**
+Wait until all files are uploaded and a group is created.
+
+```js
+var groupPromise = fileGroup.promise();
+groupPromise.done(function(fileGroupInfo) {
+  // Upload successfully completed and all files in the group are ready.
+});
+groupPromise.fail(function(error, fileGroupInfo) {
+  // Upload failed or something else went wrong.
+});
+```
+
+**Watch for total uploading progress.**
+
+```js
+groupPromise.progress(function(uploadInfo) {
+  // State of upload is updated.
+  // This callback is invoked at least once with current state,
+  // immediately after assignment.
+});
+```
+
+
+---
+<a id="file-group-as-array" href="#file-group-as-array" />
+
+**Get group files** as an array.
+
+```js
+var arrayOfFiles = fileGroup.files();
+```
+
+Get file infos in order of readiness.
+
+```js
+$.each(arrayOfFiles, function(i, file) {
+  // Wait for file uploading.
+  file.done(function(fileInfo) {
+    // i is file positon in group.
+    console.log(i, fileInfo);
+  });
+});
+```
+
+Get file infos in the order they are presented in the group.
+
+```js
+$.when.apply(null, arrayOfFiles).done(function() {
+  // Info for each file will be passed as an argument.
+  var fileInfos = arguments;
+  $.each(fileInfos, function(i, fileInfo) {
+    // i is file position in the group.
+    console.log(i, fileInfo);
+  });
+});
+```
+
+
+---
+<a id="file-group-from-cdn" href="#file-group-from-cdn" />
+
+**Load a group from CDN** via its [identifier][delivery-group-api]
+or CDN URL.
+
+```js
+uploadcare.loadFileGroup('cdf2fe62-3d43-47d4-9288-c3951561f5c7~2')
+  .done(function(fileGroup) {
+    // Group creation completed successfully.
+  })
+  .fail(function() {
+    // Something went wrong.
+  });
+```
+
+
+### fileGroupInfo
+{id="file-group-info"}
+
+Structure of the `fileGroupInfo` object:
+
+| Property |  Type   |                                Value                                |
+| -------- | ------- | ------------------------------------------------------------------- |
+| uuid     | string  | File group [identifier][delivery-group-api].                        |
+| name     | string  | Localized group size string, e.g. “5 files”.                        |
+| size     | number  | Cumulative files size in bytes.                                     |
+| isStored | boolean | `true` if **all** files in the group are stored, `false` otherwise. |
+| isImage  | boolean | `true` if **all** files in the group are images, `false` otherwise. |
+| cdnUrl   | string  | Public file group [CDN URL][delivery-group-api].                    |
+
+## Files Validation
+{id="validation"}
+
+Validators allow restricting user choice to certain kind of files. For example
+you may want to accept only files that are less than 2mb or only PDF documents.
+Validator is a function that receives `fileInfo` object for each uploaded file
+and should throw exception if the file does not meet requirements.
+
+```js
+function imagesOnly(fileInfo) {
+  if (fileInfo.isImage === false) {
+    throw new Error('image');
+  }
+}
+```
+
+Validators are called as soon as new information about the file
+becomes available. All fields unknown at the calling time are `null`.
+This means one validator can be called more than once for one file
+and should test if validated field is not `null`.
+
+```js
+function maxDimensions(width, height) {
+  return function(fileInfo) {
+    var imageInfo = fileInfo.originalImageInfo;
+    if (imageInfo !== null) {
+      if (imageInfo.width > width || imageInfo.height > height) {
+        throw new Error('dimensions');
+      }
+    }
+  };
+}
+```
+
+
+### Validation in widget
+{id="widget-valiation"}
+
+Validators for the widget can be added to the `validators` property of
+file uploader instances (both single or multiple).
+
+```js
+var widget = uploadcare.Widget('#uploadcare-file');
+widget.validators.push(imagesOnly);
+```
+
+`widget.validators` is regular javascript array.
+One widget can have several assigned validators.
+One validator can be ussigned to several widgets.
+
+```js
+firstWidget.validators.push(imagesOnly);
+secondWidget.validators.push(imagesOnly);
+firstWidget.validators.push(maxSize(1024 * 1024));
+firstWidget.validators.push(maxDimensions(800, 600));
+firstWidget.validators; // [function imagesOnly(){...}, function () {...}, function () {...}]
+```
+
+Note that you can’t rewrite it with another object.
+If you don’t need some validators, you need to remove
+them from original array.
+
+```js
+// Leave only first two validators:
+widget.validators = widget.validators.splice(0, 2); // WRONG!
+widget.validators.splice(2);  // Correct.
+
+// Remove all validators:
+widget.validators = [];       // WRONG!
+widget.validators.length = 0; // Correct.
+```
+
+
+### Validation in javascript API
+{id="javascript-valiation"}
+
+You can add `validators` array to settings objects for
+all API functions where this makes sense.
+
+```js
+uploadcare.openDialog(null, {
+  validators: [
+    imagesOnly,
+    maxSize(1024 * 1024),
+    minDimensions(800, 600)
+  ]
+});
+```
+
+The list of functions includes but is not limited to `openDialog`,
+`openPanel`, `fileFrom`, `filesFrom`, `dragdrop.uploadDrop`,
+`dragdrop.receiveDrop`.
+
+You should use validators instead of checking file properties
+in `widget.onChange` and `widget.onUploadComplete` callbacks,
+as validators work before dialog is closed thus improving user experience.
+
+Argument in Error’s constructor is a key in the localization file
+for a message shown to the user.
+The key can be one of the common errors, i.e. `size`, `image`
+(see [localization file][trans:errors]), or you can add a new message via
+[custom localization][file-uploader-locale-custom].
+
+You can find useful [examples in cookbook][api-reference-js-file-validation].
+
+
+## Upload Dialog and Panel
+{id="dialog"}
+
+Upload dialog is modal window on top of the page. It contains set of tabs
+with different files sources or file preview. Upload panel is the same thing
+but in non-modal form.
+
+* [Open dialog](#open-dialog)
+* [Open panel](#open-panel)
+* [Dialog API](#dialog-api)
+
+---
+<a id="open-dialog" />
+
+**Open** a standalone **upload dialog** over page.
+
+```js
+var dialog = uploadcare.openDialog(files, [tab,] settings);
+```
+
+`files` — a file, array of files or group of files
+which will be shown as already uploaded.
+
+`tab` — name of tab opened by default (if no files uploaded).
+
+`settings` — [settings object][file-uploader-config-object].
+
+
+---
+<a id="open-panel" />
+
+**Open a panel** in specified place.
+
+```js
+var panel = uploadcare.openPanel(placeholder, files, [tab,] settings);
+```
+
+`placeholder` — selector or DOM element which will be
+replaced with panel and will be placed back after panel resolving.
+
+`settings` — [settings object][file-uploader-config-object].
+
+
+### Dialog API
+{id="dialog-api"}
+
+Both panel and dialog instances implement extended jQuery
+[promise interface][ext-jquery-promise-interface]
+with progress on user switch tab.
+
+```js
+dialog.done(function(result) {
+  // Dialog closed and file or file group chosen.
+});
+
+dialog.fail(function(result) {
+  // Dialog closed and no file or file group was selected.
+  // The result argument is either null, or the last selected file.
+});
+
+dialog.always(function() {
+  // Handle dialog closing, regardless of file selection.
+});
+
+dialog.progress(function(tabName) {
+  // tabName is selected
+});
+```
+
+In addtition to jQuery
+[promise interface][ext-jquery-promise-interface],
+dialog and panel objects have following properties and methods:
+
++-------------------+------------+---------------------------------------------------+
+|     Property      |    Type    |                       Value                       |
++===================+============+===================================================+
+| resolve()         | method     | Resolve dialog with current selected files.       |
++-------------------+------------+---------------------------------------------------+
+| reject()          | method     | Close the dialog and discard file selection.      |
++-------------------+------------+---------------------------------------------------+
+| addFiles()        | method     | Add array of files to dialog result set.          |
++-------------------+------------+---------------------------------------------------+
+| switchTab()       | method     | Switch dialog to tab with given name. Name should |
+|                   |            | be present in `settings.tabs` array.              |
++-------------------+------------+---------------------------------------------------+
+| fileColl          | collection | Collection of selected files. Use it              |
+|                   |            | for subsribe to change events.                    |
++-------------------+------------+---------------------------------------------------+
+| hideTab()         | method     | Hide tab with given name.                         |
++-------------------+------------+---------------------------------------------------+
+| showTab()         | method     | Show tab with given name.                         |
++-------------------+------------+---------------------------------------------------+
+| isTabVisible()    | method     | Is tab with given name visible.                   |
++-------------------+------------+---------------------------------------------------+
+| onTabVisibility() | callback   | Register callback which will be called when a tab |
+|                   |            | visibility is changed. The first argument will be |
+|                   |            | tab name, the second is boolean: is tab visible.  |
++-------------------+------------+---------------------------------------------------+
+
+You can find more examples in [customization tutorial][customization tutorial].
+
+
+## Custom Tabs
+{id="custom-tabs"}
+
+Besides buit-in tabs (`file`, `url`, `dropbox`, etc.) you can implement
+and add tab with custom behavior to dialog. This is relatively complex,
+but powerful way to customize dialog.
+
+
+---
+<a id="custom-tabs-register" href="#custom-tabs-register" />
+
+**Register new tab** with given name.
+
+```js
+uploadcare.registerTab(name, constructor);
+```
+
+`name` — name which can be used in
+[tabs][file-uploader-upload-sources] list.
+
+`constructor` — function which will be called to create new tab.
+
+
+---
+<a id="custom-tabs-constructor" href="#custom-tabs-constructor" />
+Constructor is called each time when new dialog is opened.
+It should have the following declaration:
+
+```js
+function myTab(container, button, dialogApi, settings, name) {
+  ...
+}
+```
+
+`container` — jQuery object with main tab element.
+
+`button` — jQuery object with tab button.
+
+`dialogApi` — [object](#dialog-api) with useful methods to control dialog.
+
+`settings` — [settings object][file-uploader-config-object].
+
+`name` — name used for registering tab and in
+[tabs][file-uploader-upload-sources] list.
+One constructor can be registered under several names.
+
+
+You can find more examples in [customization tutorial][customization tutorial].
+
+
+## Drag and drop
+{id="drag-and-drop"}
+
+
+---
+
+This boolean parameter is set to `true` if browser
+supports drag and drop and file API.
+
+```js
+var browser_supports_dragdrop = uploadcare.dragdrop.support;
+```
+
+
+---
+<a id="upload-drop" />
+
+Get file objects after dropping them on `el` element.
+`el` can be DOM element, selector or jQuery object.
+
+```js
+uploadcare.dragdrop.uploadDrop(el, callback[, settings]);
+```
+
+For instance, one file will be uploaded
+(if you put more than one file, it will be the first of them)
+
+```js
+uploadcare.dragdrop.uploadDrop(el, function(file) {
+  file.done(...);
+});
+```
+
+or all files will be uploaded
+
+```js
+uploadcare.dragdrop.uploadDrop(el, function(files) {
+  files; // array
+}, {multiple: true});
+```
+
+`settings` is [settings object][file-uploader-config-object].
+
+
+---
+<a id="receive-drop" />
+
+Get raw data after dropping files on `el` element.
+`el` can be DOM element, selector or jQuery object.
+
+```js
+uploadcare.dragdrop.receiveDrop(el, callback);
+```
+
+For example:
+
+```js
+uploadcare.dragdrop.receiveDrop(el, function(type, data) {
+  type; // 'object' or 'url'
+  data; // Array of native File objecs or URLs.
+
+  // File retrieving (or the first file retrieving if there are some)
+  var file = uploadcare.fileFrom(type, data[0]);
+
+  // Retrieving of all files
+  var fileArray = uploadcare.filesFrom(type, data);
+});
+```
+
+
+## Source tabs styling
+{id="sources-style"}
+
+File Uploader and dialog appear on your pages and you can easily override their
+style [via CSS][file-uploader-styling].
+But some tabs (Facebook, Instagram, etc.) are open in iframe
+from our domain. You can use these methods to add custom styles to such tabs.
+
+
+---
+
+**Add plain css** code to tabs. Use classes to select specific tab.
+
+```js
+var style = ".source-facebook .main-content {background: #98AFD5;}";
+uploadcare.tabsCss.addStyle(style);
+```
+
+
+---
+
+**Add css file** to tabs. File url should be absolute.
+
+```js{noAutoLinker}
+uploadcare.tabsCss.addUrl("https://site.com/styles/uc.tabs.css");
+```
+
+Please note due to the fact that tabs are open via https,
+there is no way to add css file via http. If your site does not support https
+you can use third-party hosting with https support for such files.
+Amazon S3 is a good option.
+
+
+[trans:errors]: https://github.com/uploadcare/uploadcare-widget/blob/v0.14.0/app/assets/javascripts/uploadcare/locale/en.js.coffee#L8-L16
+[customization tutorial]: /docs/uploads/file-uploader/#styling

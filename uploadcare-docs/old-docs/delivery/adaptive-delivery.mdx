@@ -1,0 +1,1417 @@
+---
+  title: 'Uploadcare Adaptive Delivery'
+  description:
+    'Adaptive Delivery is a full-stack image optimization solution that combines Uploadcare CDN operations with a highly optimized client-side JavaScript Library.'
+---
+
+# Adaptive Delivery
+
+[Adaptive Delivery][adaptive-delivery-product-page] is an Uploadcare's
+full-stack image optimization solution. It adapts images to user context: screen
+size, browser, location, and other parameters. The optimization includes lazy
+loading, smart compression, WebP, responsive images, and retina display support.
+Altogether, it speeds up page loading and improves user experience without any
+coding.
+
+<div style="position: relative; padding-bottom: 56.25%;">
+<iframe width="100%" height="100%" src="https://www.youtube.com/embed/JXH5TZlu6Dc" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style="position: absolute;" /></div>
+<div style="position: relative; padding-bottom: 2vw;"/>
+
+It's a leap forward in a responsive image technology that traditionally uses
+`srcset` image attribute and viewport `sizes`. With Adaptive Delivery, all
+frontend tasks are automated, no image versions and additional code is required.
+Image optimization is performed on the fly at the time of user requests and the
+results get cached on CDN nodes. You can store images with Uploadcare or keep
+them on your hosting.
+
+## How to use
+
+After you [integrate](#adaptive-integrate) Adaptive Delivery JS Library, you can
+selected images you want to optimize automatically to a user's context on
+delivery.
+
+Simply replace `src` image attribute with `data-blink-src` in an HTML code of
+your webpage to serve this image via Adaptive Delivery. Uploadcare will
+automatically relay your original image to the CDN and serve it optimized.
+
+<img
+  data-blink-uuid='6493f2d1-a476-427f-bcd5-94330cc02837'
+  data-blink-ops='enhance: 60; sharp: 5'
+  alt='Adaptive delivery on various screens'
+/>
+
+On top of the Adaptive Delivery functions, you can apply Uploadcare's [filters and transformations](#adaptive-transformations).
+For example, [Auto Enhance][transformations-image-enhance], [Smart Crop][transformations-image-smart-crop],
+[watermarks][transformations-image-overlays], and more.
+
+## Integration
+{id="adaptive-integrate"}
+
+Follow these three simple steps to integrate Adaptive Delivery.
+
+### Step 1. Turn on Adaptive Delivery and its features
+
+Go to **Delivery** > **Adaptive Delivery** in your Project's Dashboard.
+
+Customize experience by turning on features that you need. You can control these
+features in a code snippet on [the Step 3](#adaptive-integrate-sdk) as well.
+
+* **Lazy Loading.** Render images as user scrolls the page. It helps render
+  webpages quicker and optimize traffic consumption.
+* **Smart Compression.** Smart AI techniques max out compression without visible
+  artifacts for each particular case.
+* **Responsiveness.** Adapt images for a screen size and orientation.
+* **Retina support.** Boost image resolution for high-density displays.
+* **WebP support.** Serve WebP images when supported by a client's browser.
+
+### Step 2. Connect the JS Library
+{id="adaptive-integrate-sdk"}
+<!-- Misha: removed Standard/SAP parts cuz they're the same. Left explanation
+below. Only difference <script> html tag but users'll get it. -->
+
+Use the following code to connect the Adaptive Delivery JS Library:
+
+```html
+<script>
+   (function(src, cb) {
+    var s = document.createElement('script'); s.setAttribute('src', src);
+    s.onload = cb; (document.head || document.body).appendChild(s);
+  })('https://ucarecdn.com/libs/blinkloader/3.x/blinkloader.min.js', function() {
+    window.Blinkloader.optimize({
+      pubkey:'YOUR_PUBLIC_KEY',
+      fadeIn:true,
+      lazyload:true,
+      smartCompression:true,
+      responsive:true,
+      retina:true,
+      webp:true
+    });
+  })
+</script>
+```
+
+Note: Replace `YOUR_PUBLIC_KEY` with your [Public API Key][settings-keys-public]
+to identify the target project for storing images.
+
+Note: Control `lazyload`, `retina`, and other options. `true` is set by default.
+
+There're two ways to integrate Adaptive Delivery:
+
+* Standard, for plain HTML websites (no Webpack and other JavaScript bundler).
+  Simply add the code above to the webpage's `<head>`.
+* SPA, for single-page applications built with React or another framework and
+  that use Webpack or a similar JavaScript bundler. Run the code snippet at your
+  app initialization. Put it into a component or helper function if you like.
+
+The JS Library is lightweight (3kb) and sturdy. It provides a
+[fallback][adaptive-advanced-fallback] to original images in case something
+goes wrong.
+
+### Step 3. Whitelist image sources (optional)
+{id="adaptive-integrate-whitelist"}
+
+Skip this step if you host images with Uploadcare.
+
+If you use other image sources, whitelist their domains (e.g.,
+`yourdomain.com`). It helps protect your account. For example, it prevents from
+uploading images to your project by third parties, eating up your storage and
+traffic.
+
+To whitelist an image origin, scroll to the Step 2 in your Dashboard and **Add**
+domains you are planning to use. Add multiple domains if you need.
+
+<Image uuid="25add8ba-c28c-4d0f-a9d3-707fe3fdd86a" desc="Whitelisting domains" alt="Whitelist image origins"/>
+
+### Step 4. Optimize your images
+{id="adaptive-integrate-optimize"}
+<!-- Misha: think of a better name for this feature and it's barely an
+integration step. Rather, it's usage -->
+
+Replace `src` attributes with `data-blink-src` within your `img` HTML elements.
+
+```html{noAutoLinker}
+<img data-blink-src='https://storage.example.com/logo.png'/>
+
+<!-- same goes for background images -->
+<div data-blink-src='https://storage.example.com/banner.png'>
+  There is a banner behind this text.
+</div>
+```
+
+If you use Uploadcare to host images, you can also use a file `UUID` instead
+of a URL. Like this:
+
+```html
+<img data-blink-uuid='6493f2d1-a476-427f-bcd5-94330cc02837'/>
+
+<!-- same goes for background images -->
+<div data-blink-uuid='6493f2d1-a476-427f-bcd5-94330cc02837'>
+  There is a banner behind this text.
+</div>
+```
+
+Once you’re done with the replacements, your images get instantly responsive,
+optimized, and lazy-loaded (depending on the set of the features seleted on the
+[Step 1](#adaptive-integrate) and [Step 3](#adaptive-integrate-sdk)).
+
+After Blinkloader is initialized, the library starts tracking node changes in
+DOM. Blinkloader listens to adding new elements to DOM with `[data-blink-uuid]`
+and `[data-blink-src]` attributes, and applies optimization functions to these
+elements.
+
+Read on to learn about adding additional filters and image transformations or
+implement our [Advanced Configuration](#adaptive-advanced) options.
+
+### Step 5. Add image filters and effects (Optional)
+{id="adaptive-integrate-image-filters"}
+<!-- Misha: It's not an integration step either. It's usage -->
+
+You can apply any of the [supported image filters and transformations](#adaptive-transformations)
+via the `data-blink-ops` attribute:
+
+```html
+<div
+  data-blink-ops='filter: pamaya; filter-amount: 30; mirror; enhance: 100'
+  data-blink-src='https://images.unsplash.com/photo-1501281668745-f7f57925c3b4'
+/>
+```
+
+Here’s a before-after example:
+
+<img
+  data-blink-src='https://images.unsplash.com/photo-1502877338535-766e1452684a'
+  style='width: 40%; display: inline; margin-right: 15px'
+  alt='Picture of a car before filters and effects'
+/>
+
+<img
+  data-blink-src='https://images.unsplash.com/photo-1502877338535-766e1452684a'
+  style='width: 40%; display: inline; padding-top: 0px'
+  data-blink-ops='filter: pamaya; filter-amount: 30; enhance: 100'
+  alt='Enhanced and filtered picture of the car'
+/>
+
+The main Adaptive Delivery advantage for a front end developer is that you don’t
+need to add `srcsets`, media queries, image resizing and other operations.
+When you apply Adaptive Delivery, Uploadcare will handle all that automatically.
+
+## Configuration
+{id="adaptive-advanced"}
+
+You can customize your Adaptive Delivery experience through our Advanced
+Configuration options.
+
+### Image fade-in
+{id="adaptive-advanced-fade-in"}
+
+We recommend using a fade-in effect to add a smooth visual transition once
+images are ready to load. Fade In is disabled by default since you might be
+using other transition effects on your end. Here’s how you enable the option:
+
+```js
+Blinkloader.optimize({
+  pubkey: 'YOUR_PUBLIC_KEY',
+  fadeIn: true
+})
+```
+
+### Lazy loading
+{id="adaptive-advanced-lazy-loading-images"}
+
+Lazy-loading is enabled by default. You can explicitly turn it off or customize
+the behavior.
+
+There are two configurable parameters: “batch interval” and “batch size.” When
+your page visitors engage in scrolling, our AD Library starts fetching images in
+batches. “Batch size” defines the number of images for a single fetch, while
+“batch interval” sets the interval between loading batches, in milliseconds.
+
+If you have many images laid out in a grid, we recommend setting `batchSize` to
+10. If there are one or two images per screen, `batchSize` should be kept
+smaller. For `batchInterval`, it’s vice-versa. You can tweak the parameters to
+find an optimal combination for your layout or stick with the defaults.
+
+If you’re implementing a different lazy-loading mechanic, you can switch off the
+option by setting `lazyload` to `false`:
+
+```js
+Blinkloader.optimize({
+  pubkey: 'YOUR_PUBLIC_KEY',
+  lazyload: true, // true by default
+  batchInterval: 250, // 250ms by default
+  batchSize: 10, // 5 by default
+})
+```
+
+### Before-render hook
+{id="adaptive-advanced-before-render-hook"}
+
+Implementing the before-render hook is an efficient way to add a custom UI logic
+for each image. The function is applied to every image and gets triggered right
+before it’s ready to render. You can add or remove CSS classes, configure
+overlays, etc.
+
+```js
+Blinkloader.optimize({
+  pubkey: 'YOUR_PUBLIC_KEY',
+  beforeRender: function(node) {
+    // node is a DOM element of the rendered image
+    console.log(node);
+
+    // add special effects or remove preloading overlays
+    node.classList.add('cool-transition')
+  }
+})
+```
+
+### Progressive loading
+{id="adaptive-advanced-progressive-loading-images"}
+
+We noticed that users prefer using a fade-in transition rather than progressive
+loading. Hence, progressive loading is disabled by default. You explicitly
+enable the behavior by stating `progressive: true`:
+
+```js
+Blinkloader.optimize({
+  pubkey: 'YOUR_PUBLIC_KEY',
+  progressive: true
+})
+```
+
+### Fallback
+{id="adaptive-advanced-fallback-options"}
+
+Fallback is enabled by default and supports reliable image loading regardless of
+any conditions. Initially, we serve optimized images from our CDN, and if
+something goes wrong (unexpected image source, for instance), we render your
+original image.
+
+Fallback is also automatically activated when you use `fadeIn` or `beforeRender`.
+
+Setting `fallback` to `false` disables the behavior:
+
+```js
+Blinkloader.optimize({
+  pubkey: 'YOUR_PUBLIC_KEY',
+  fallback: false // true by default
+})
+```
+
+### Custom CNAME
+{id="custom-cname"}
+
+#### `cdnBase`
+
+Specify your [custom CNAME][glossary-custom-cname] in the `cdnBase` option. When
+empty, it's set to `https://ucarecdn.com` by default.
+
+```js{noAutoLinker}
+Blinkloader.optimize({
+  pubkey: 'YOUR_PUBLIC_KEY',
+  cdnBase: 'https://cdn.mycompany.com'
+})
+```
+
+#### `host`
+
+Specify your custom [Endpoint][delivery-proxy-endpoint] for
+[Proxy][delivery-proxy] in the `host` option, which is
+`YOUR_PUBLIC_KEY.ucr.io` by default.
+
+When you use `host`, there's no need to specify `pubkey`.
+
+```js
+Blinkloader.optimize({
+  host: 'mydomain.ucr.io'
+})
+```
+
+### Extra-large images
+
+The output [image size limit][transformations-output-dimensions] delivered with
+CDN is 3000 px in either dimension. JPEG images can be resized up to 5000 px.
+For that, you need to set the image format explicitly.
+
+Adaptive Delivery will resize an image up to 5000 px automatically, when:
+
+1. `data-blink-src` has a file extension `jpeg` or `jpg` (case-insensitive). For
+   example, `https://yourdomain.com/image.jpg`
+2. `data-blink-format` is `auto` or `jpeg`. When you set `webp:true` (default),
+   `auto` is set implicitly.
+
+Workaround: to have `PNG` and `WEBP` image formats up to 5000 px on delivery,
+rename files so that they have a `jpeg` file extension (even though they're
+not). However, the alpha channel will be lost.
+
+## Transformations
+{id="adaptive-transformations"}
+
+You can add additional Image Transformations within Adaptive Delivery to serve
+both optimized and enhanced images. There are two ways to add Image
+Transformations:
+
+* Inline a set of transformations in a single `data-blink-ops` attribute.
+* Add individual transformations via corresponding data attributes.
+
+Here’s an example of using `data-blink-ops` with its syntax similar to inline
+CSS:
+
+```html{noAutoLinker}
+<img
+  data-blink-ops='filter: nerion; enhance: 15; mirror'
+  data-blink-src='https://storage.example.com/logo.png'
+/>
+```
+
+If you decide to go with individual data attributes, the above example can be
+rewritten in the following way:
+
+```html{noAutoLinker}
+<img
+  data-blink-filter='nerion'
+  data-blink-enhance='15'
+  data-blink-mirror
+  data-blink-src='https://storage.example.com/logo.png'
+/>
+```
+
+Note, Adaptive Delivery JS Library adds `resize`, `format` and `quality`
+automatically. We don’t recommend changing the behavior, since we calculate the
+transformation parameters based on the user context.
+
+Applying image transformations for adaptive delivery differs from our regular
+URL directives approach, but it supports almost the same [set of image
+transformations][transformations-image] with the same
+[limits][transformations-image-limits].
+
+### List of image transformations
+
+<!-- dm: List of image transformations читать не стал. Он вообще нужен тут, или ссылки на
+документацию будет достаточно? не будет ли разъезжаться и проч?
+Roma: Синтаксис другой (и есть отличие в авторотейте). Когда я попытался его убрать,
+Макс М. сказал, что убирать не надо. Поэтому оставили. -->
+
+* [Resize and Crop](#size)
+  * [Preview](#operation-preview)
+  * [Resize](#operation-resize)
+    * [Change resize behavior](#operation-stretch)
+  * [Crop](#operation-crop)
+  * [Scale crop](#operation-scale-crop)
+  * [Smart crop](#operation-smart-crop)
+  * [Set fill color](#operation-setfill)
+* [Compression](#compression)
+  * [Format](#operation-format)
+  * [Quality](#operation-quality)
+  * [Smart compression](#operation-quality)
+  * [Progressive JPEG](#operation-progressive)
+  <!-- * [GIF to Video](#operation-gif-to-video) -->
+* [Colors](#image-colors)
+  * [Color adjustment](#image-colors-operations)
+  * [Enhance](#operation-enhance)
+  * [Grayscale](#operation-grayscale)
+  * [Inverting](#operation-invert)
+  * [Filter](#operation-filter)
+  <!-- * [Color Profile Management](#image-color-profile-management)
+    * [Color Models and ICC Profiles](#color-model-profile)
+    * [Conversion to sRGB](#operation-srgb)
+    * [ICC Profile Size Threshold](#operation-max-icc-size) -->
+* [Blur & Sharpen](#blur-sharpen)
+  * [Blur](#operation-blur)
+    <!-- * [Unsharp Masking](#operation-blur-mask) -->
+  * [Sharpen](#operation-sharp)
+* [Overlay](#overlay)
+* [Rotate and flip](#rotate-flip)
+  * [Manual Right-Angle Rotation](#operation-rotate)
+  * [Flip](#operation-flip)
+  * [Mirror](#operation-mirror)
+<!-- * [Limitations](#limits) -->
+
+### Resize and Crop
+{id="size"}
+
+#### Preview
+{id="operation-preview"}
+
+`blink›preview: :two_dimensions`
+
+Reduces an image proportionally for it to fit into the given dimensions in
+pixels. If dimensions are not specified, we use the default value of `2048x2048`
+pixels.
+
+#### Resize
+{id="operation-resize"}
+
+`blink›resize: :one_or_two_dimensions`
+
+Resizes an image to fit into the specified dimensions. With just a single linear
+dimension specified, preserves your original aspect ratio and resizes an image
+along one of its axes.
+
+##### Change resize behavior
+{id="operation-stretch"}
+
+`blink›stretch: :mode`
+
+Sets the `resize` behavior when a source image is smaller than the resulting
+dimensions. The following modes can apply:
+
+* `on` — stretches an image up, the default option.
+* `off` — forbids stretching an image along any dimension that exceeds image
+  size along any of its axes.
+* `fill` — does not stretch an image, the color-filled frame is rendered around
+  instead, the default fill color is used.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="52da3bfc-7cd8-4861-8b05-126fef7a6994" data-blink-ops="quality: best; preview: 160x160; resize: 220x" alt="City skyline image"/><br/>
+      <code>preview: 160x160</code><br/>
+      <code>resize: 220x</code>
+    </td>
+    <td>
+      <img data-blink-uuid="52da3bfc-7cd8-4861-8b05-126fef7a6994" data-blink-ops="quality: best; preview: 160x160; stretch: off; resize: 220x" alt="City skyline image not stretched" style={{width: '160px'}}/><br/>
+      <code>preview: 160x160</code><br/>
+      <code>stretch: off</code><br/>
+      <code>resize: 220x</code>
+    </td>
+    <td>
+      <img data-blink-uuid="52da3bfc-7cd8-4861-8b05-126fef7a6994" data-blink-ops="quality: best; preview: 160x160; setfill: 8d8578; stretch: fill; resize: 220x" alt="City skyline image, tretched with a background fill"/><br/>
+      <code>preview: 160x160</code><br/>
+      <code>stretch: fill</code><br/>
+      <code>resize: 220x</code>
+      <code>setfill: 8d8578</code>
+    </td>
+  </tr>
+</table>
+
+#### Crop
+{id="operation-crop"}
+
+`blink›crop: :two_dimensions`<br/>
+`blink›crop-position: :two_coords`
+
+Crops an image using specified dimensions and offsets. If no offset values are
+passed into the operation, the top-left image corner is used by default.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="c4b32a69-f817-48be-b918-7eb6718f7aca" alt="Original image"/><br/>
+      Original image.
+    </td>
+    <td>
+      <img data-blink-uuid="c4b32a69-f817-48be-b918-7eb6718f7aca" data-blink-ops="crop: 200x130; crop-position: center" alt="Cropped image centered"/><br/>
+      <code>crop: 200x130; crop-position: center</code>
+    </td>
+    <td>
+      <img data-blink-uuid="c4b32a69-f817-48be-b918-7eb6718f7aca" data-blink-ops="crop: 200x130; crop-position: 200,70" alt="Cropped image area"/><br/>
+      <code>crop: 200x130; crop-position: 200,70</code>
+    </td>
+  </tr>
+</table>
+
+#### Scale crop
+{id="operation-scale-crop"}
+
+`blink›scale-crop: :two_dimensions`<br/>
+`blink›scale-crop-position: :type`
+
+When `blink›:type` is not specified.
+
+The transformation scales down an image until one of its dimensions gets equal
+to some of the specified ones; the rest is cropped. This proves useful when your
+want to fit as much of your image as possible into a box. Let us compare the two
+resizing methods:
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="22240276-2f06-41f8-9411-755c8ce926ed" data-blink-resize="1024x1024" alt="Resized and distorted image"/><br/>
+      <code>resize: 1024x1024</code><br/>
+      Requested size.<br/>
+      Distorted.
+    </td>
+    <td style={{verticalAlign: 'bottom'}}>
+      <img data-blink-uuid="22240276-2f06-41f8-9411-755c8ce926ed" data-blink-preview="1024x1024" alt="Resized image, no distortion"/><br/>
+      <code>preview: 1024x1024</code><br/>
+      Adjusted size.<br/>
+      No distortion.
+    </td>
+    <td>
+      <img data-blink-uuid="22240276-2f06-41f8-9411-755c8ce926ed" data-blink-ops="scale-crop: 1024x1024; scale-crop-position: center" alt="Scaled and cropped image"/><br/>
+      <code>scale-crop: 1024x1024</code><br/>
+      Requested size.<br/>
+      No distortion.
+    </td>
+  </tr>
+</table>
+
+#### Smart crop
+{id="operation-smart-crop"}
+
+When smart `blink›:type` is specified.
+
+Switching the crop type to one of the `smart` modes enables the content-aware
+mechanic. Uploadcare applies AI-based techniques to detect faces and other
+visually important objects or regions in images and crops the rest.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/scale_crop/1024x1024/smart/" target="_blank">
+        <img src="https://ucarecdn.com/22240276-2f06-41f8-9411-755c8ce926ed/-/scale_crop/1024x1024/smart/-/preview/440x440/-/quality/lighter/" alt="Image with smart crop"/></a><br/>
+      <code>/scale_crop/1024x1024/smart/</code><br/>
+      Smart cropping.<br/>
+    </td>
+  </tr>
+</table>
+
+Content-aware mechanics of Smart Crop are based on the following methods of
+image analysis:
+
+* Face Detection, `:type` is set to `smart_faces`. Face detection identifies and
+  locates human faces in digital images.
+* Object Detection, `:type` is set to `smart_object`. Object detection
+  identifies and locates the most visually important regions in the image.
+* Corner Points Detection, `:type` is set to `smart_points`. This method
+  analyses image pixels to find the high contrast corners in the image, useful
+  for abstract, landscape, and art images. The corner points have much less
+  semantic information than other methods and designed to be used as a fallback.
+
+
+The methods you include separating by underscore are applied sequentially. The
+algorithm switches to the next method only if no regions were found by the
+previous one. For example `smart_faces_objects_points` applies face detection
+initially as the first step. Only when no faces are found on an image, the
+object detection will be used. Finally, when no objects are found, the corner
+points will be detected.
+
+If specified methods were unable to find regions or points of interest, the
+`:offset` setting will be used to crop an image. When no `:offsets` are
+specified, images get center-cropped.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_faces_objects/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_faces_objects/-/preview/300x300/-/quality/lighter/" alt="Cropped image, auto centered on a face"/></a><br/>
+      <code>smart_faces_objects</code><br/>
+      Centering on faces or objects <br/> when no faces found.<br/>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_objects_faces_points/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_objects_faces_points/-/preview/300x300/-/quality/lighter/" alt="Cropped image, auto centered on objects and faces"/></a><br/>
+      <code>smart_objects_faces</code><br/>
+      Centering on objects or faces <br/> when no objects found.<br/>
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_points/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/900x900/smart_points/-/preview/300x300/-/quality/lighter/" alt="Image centering on hard edges"/></a><br/>
+      <code>smart_points</code><br/>
+      Centering on corner points.<br/>
+    </td>
+  </tr>
+</table>
+
+Possible `:type` values:
+
+`smart` (alias for `smart_faces_objects_points`), `smart_faces_objects`, `smart_faces_points`,
+`smart_objects_faces_points`, `smart_objects_faces`, `smart_objects_points`, `smart_points`,
+`smart_objects`, `smart_faces`.
+
+#### Set fill color
+{id="operation-setfill"}
+
+`blink›setfill: :color`
+
+Sets the fill color used with [`crop`](#operation-crop), [`stretch`](#operation-stretch)
+or when converting an alpha channel enabled image to JPEG. The operation uses
+hexadecimal notation to define colors.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="c4b32a69-f817-48be-b918-7eb6718f7aca" data-blink-ops="crop: 440x380; crop-position: center" alt="Image, cropped to center, resized on a white background"/><br/>
+      <code>crop: 440x380</code><br/>
+      <code>crop-position: center</code><br/>
+    </td>
+    <td>
+      <img data-blink-uuid="c4b32a69-f817-48be-b918-7eb6718f7aca" data-blink-ops="crop: 440x380; crop-position: center; setfill: ece3d2" alt="Image, cropped to center, resized with a color filled background"/><br/>
+      <code>crop: 440x380</code><br/>
+      <code>crop-position: center</code><br/>
+      <code>setfill: ece3d2</code>
+    </td>
+    <td>
+      <img data-blink-uuid="b18b5179-b9f6-4fdc-9920-5539f938fc44" data-blink-ops="crop: 440x380; crop-position: center; setfill: ece3d2; format: jpeg" alt="PNG image with alpha channel converted to JPEG with a background fill"/><br/>
+      <code>crop: 440x380</code><br/>
+      <code>crop-position: center</code><br/>
+      <code>setfill: ece3d2</code>
+      <code>format: jpeg</code>
+    </td>
+  </tr>
+</table>
+
+### Compression
+{id="compression"}
+
+#### Format
+{id="operation-format"}
+
+`blink›format: :format`
+
+Converts an image to one of the following formats:
+
+* `jpeg` — JPEG is a lossy image format (good compression, good for photos).
+  JPEG doesn’t support an alpha channel, hence you can use the `setfill`
+  operation that sets a background color. All browsers support JPEG.
+* `png` — PNG is a lossless format (good compression only for graphics) with
+  alpha channel support. Supported by all browsers.
+* `webp` — WebP is a modern image format that supports alpha channel and lossy
+  compression. The format is good for all kinds of images but supported by a
+  [limited number][ext-caniuse-webp] of browsers.
+* `auto` — the image format used for content delivery is set according to the
+  presence of an alpha channel in your input and capabilities of a client.
+
+Technically, the default behavior of `auto` is about always trying to deliver
+WebP images based on checking the `Accept` header.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="6ad747ff-dda6-4508-8864-5fc83f7fe645" data-blink-ops="setfill: ece3d2; format: png" alt="PNG image with transparency"/><br/>
+      <code>png</code> 135Kb<br/>
+      Transparent
+    </td>
+    <td>
+      <img data-blink-uuid="6ad747ff-dda6-4508-8864-5fc83f7fe645" data-blink-ops="setfill: ece3d2; format: jpeg" alt="JPEG image, opaque"/><br/>
+      <code>jpeg</code> 8.8Kb<br/>
+      Opaque
+    </td>
+    <td>
+      <img data-blink-uuid="6ad747ff-dda6-4508-8864-5fc83f7fe645" data-blink-ops="setfill: ece3d2; format: auto" alt="WEBP image with transparency, 10 times smaller file size than JPG"/>
+      <br/>
+      <code>webp</code> 11.5Kb<br/>
+      Transparent, size is equal<br/>
+      to the opaque one.
+    </td>
+  </tr>
+</table>
+
+#### Quality
+{id="operation-quality"}
+`blink›quality: :value`
+
+Sets the level of image quality that affects file sizes and hence loading speeds
+and volumes of generated traffic. `quality` works with JPEG and WebP images.
+
+The following options can apply:
+
+* `normal` — the default setting, suits most cases.
+* `better` — can be used to render relatively small and detailed previews. ≈125%
+  file size compared to `normal`.
+* `best` — useful for hi-res images, when you want to get perfect quality without
+  paying much attention to file sizes. ≈170% file size.
+* `lighter` — useful when applied to relatively large images to save traffic
+  without significant losses in quality. ≈80% file size.
+* `lightest` — highest compression ratio, useful for retina displays. ≈50% file size.
+* `smart` — automatically adjusts image compression and format settings to
+  preserve visual quality while minimizing the file size. The mode is
+  content-aware. Image formats will not be adjusted if you define
+  [`format`](#operation-format) explicitly.
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols">
+  <tr>
+    <td>
+      <img data-blink-uuid="c5b7dd84-c0e2-48ff-babc-d23939f2c6b4" data-blink-quality="best" alt="Best image quality"/><br/>
+      <code>best</code> 32Kb
+    </td>
+    <td>
+      <img data-blink-uuid="c5b7dd84-c0e2-48ff-babc-d23939f2c6b4" data-blink-quality="lighter" alt="Lighter image file size"/><br/>
+      <code>lighter</code> 18.6Kb
+    </td>
+    <td>
+      <img data-blink-uuid="c5b7dd84-c0e2-48ff-babc-d23939f2c6b4" data-blink-quality="lightest" alt="The lightest image file size"/><br/>
+      <code>lightest</code> 12.3Kb
+    </td>
+    <td>
+      <img data-blink-uuid="c5b7dd84-c0e2-48ff-babc-d23939f2c6b4" data-blink-quality="smart" alt="Smart resize produced best visual quality and minimum file size"/><br/>
+      <code>smart</code> 13.8Kb, WebP
+    </td>
+  </tr>
+</table>
+
+#### Progressive JPEG
+{id="operation-progressive"}
+
+`blink›progressive: yes`<br/>
+`blink›progressive: no`
+
+Returns a progressive image. The operation does not affect non-JPEG images, and
+won’t force the output image format to `JPEG`.
+
+### Colors
+{id="image-colors"}
+
+#### Color adjustments
+{id="image-colors-operations"}
+
+Adjust image color properties by controlling brightness, exposure, gamma,
+contrast, saturation, vibrance, and warmth.
+
+`blink›brightness: :value`<br/>
+`blink›exposure: :value`<br/>
+`blink›gamma: :value`<br/>
+`blink›contrast: :value`<br/>
+`blink›saturation: :value`<br/>
+`blink›vibrance: :value`<br/>
+`blink›warmth: :value`
+
+The `blink›:value` parameter controls the strength of any applied adjustment.
+Ranges of the `blink›:value` parameter differ across image transformations.
+Setting the `blink›:value` to “zero point” leaves images unchanged.
+
+| Operation          | `blink›:value` range | Zero point |
+| ------------------ | -------------------- | ---------- |
+| `blink›brightness` | from -100 to 100     | 0          |
+| `blink›exposure`   | from -500 to 500     | 0          |
+| `blink›gamma`      | from 0 to 1000       | 100        |
+| `blink›contrast`   | from -100 to 500     | 0          |
+| `blink›saturation` | from -100 to 500     | 0          |
+| `blink›vibrance`   | from -100 to 500     | 0          |
+| `blink›warmth`     | from -100 to 100     | 0          |
+
+The first three adjustments: `brightness`, `exposure`, and `gamma` produce
+similar results with the following differences:
+
+* `brightness` adds `blink›:value` to each color channel; out-of-range values
+  are cut.
+* `exposure` and `gamma` compress color values distribution thus preserving
+  the details.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-brightness="-20" alt="Image with reduced brightness"/><br/>
+    <code>brightness: -20</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-brightness="20" alt="Image with increased brightness"/><br/>
+    <code>brightness: 20</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-exposure="-100" alt="Image with reduced exposure"/><br/>
+    <code>exposure: -100</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-exposure="80" alt="Image with increased exposure"/><br/>
+    <code>exposure: 80</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-gamma="150" alt="Image with reduced gamma"/><br/>
+    <code>gamma: 150</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-gamma="70" alt="Image with increased gamma"/><br/>
+    <code>gamma: 70</code>
+  </td>
+</tr></table>
+
+The next three operations adjust color diversity and dynamic range in images:
+
+* `contrast` affects both colors and dynamic range; on increase, images lose
+  both bright and dark details.
+* `saturation` uniformly bumps up color intensity leaving the dynamic range
+  unchanged.
+* `vibrance` cleverly increases the intensity of muted colors and leaves the
+  well-saturated ones alone.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-contrast="-25" alt="Image with reduced contrast"/><br/>
+    <code>contrast: -25</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-contrast="25" alt="Image with increased contrast"/><br/>
+    <code>contrast: 25</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-saturation="-25" alt="Image with reduced saturation"/><br/>
+    <code>saturation: -25</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-saturation="25" alt="Image with increased saturation"/><br/>
+    <code>saturation: 25</code>
+  </td>
+</tr></table>
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-vibrance="-50" alt="Image with reduced vibrance"/><br/>
+    <code>vibrance: -50</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-vibrance="50" alt="Image with increased vibrance"/><br/>
+    <code>vibrance: 50</code>
+  </td>
+</tr></table>
+
+In turn, `warmth` adjusts color temperature in images.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-warmth="-50" alt="Image with reduced warmth"/><br/>
+    <code>warmth: -50</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-warmth="50" alt="Image with increased warmth"/><br/>
+    <code>warmth: 50</code>
+  </td>
+</tr></table>
+
+You can combine any adjustments, and piping the operations won’t get you any
+performance or precision losses: all adjustments are applied in one pass.
+
+<table className="cdn-operation-sample"><tr>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" alt="Original image"/><br/>
+    Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-ops="saturation: -80; contrast: 80; warmth: 50" alt="Image with combined adjustments, reduce saturation, increase contrast and warmth"/><br/>
+    Old photo effect.<br/>
+    <code>saturation: -80</code><br/>
+    <code>contrast: 80</code><br/>
+    <code>warmth: 50</code>
+  </td>
+  <td>
+    <img data-blink-uuid="34c53ede-194d-457c-ae68-9cf6da7f81af" data-blink-ops="exposure: 50; saturation: 50; warmth: 30" alt="Image with combined adjustments, increase exposure, saturation, and warmth"/><br/>
+    Fresh view.<br/>
+    <code>exposure: 50</code><br/>
+    <code>saturation: 50</code><br/>
+    <code>warmth: -30</code>
+  </td>
+</tr></table>
+
+#### Automatic image enhancement
+{id="operation-enhance"}
+
+`blink›enhance: :strength`
+
+Provides automatic image enhancement by combining the following transformations:
+auto levels, auto contrast, and saturation sharpening. The `blink›:strength`
+values should be set in the range from 0 to 100. The default value is 50.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="153d750a-049f-44dc-8372-853f49320bad" alt="Original image"/><br/>
+      Original image. 10.3Kb
+    </td>
+    <td>
+      <img data-blink-uuid="153d750a-049f-44dc-8372-853f49320bad" data-blink-enhance="50" alt="Enhanced image"/><br/>
+      <code>enhance: 50</code> 13.5Kb
+    </td>
+    <td>
+      <img data-blink-uuid="153d750a-049f-44dc-8372-853f49320bad" data-blink-enhance="100" alt="Max enhanced image"/><br/>
+      <code>enhance: 100</code> 17Kb
+    </td>
+  </tr>
+</table>
+
+
+#### Grayscale
+{id="operation-grayscale"}
+
+You can desaturates images with the `grayscale` transformation. It has no
+additional parameters and simply produces a grayscale image output when applied.
+
+`blink›grayscale`
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" alt="Original image"/><br/>
+      Original image.
+    </td>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" data-blink-grayscale="" alt="Black and white image"/><br/>
+      <code>grayscale</code>
+    </td>
+  </tr>
+</table>
+
+#### Inverting
+{id="operation-invert"}
+
+Invert images rendering a “negative” of your input,
+
+`blink›invert`
+
+An example of inverting an image follows,
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" alt="Original image"/><br/>
+      Original image.
+    </td>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" data-blink-invert="" alt="Image with inverted colors"/><br/>
+      <code>invert</code>
+    </td>
+  </tr>
+</table>
+
+#### Filter
+{id="operation-filter"}
+
+You can apply photo filters to your images while keeping them optimized and
+respnsove with Adaptive Delivery.
+
+`blink›filter: :name`<br/>
+`blink›filter-amount: :amount`
+
+The transformation applies one of predefined photo filters by its `blink›:name`.
+Photo filters help streamline your content production through serving consistent
+visuals across your site pages or content pieces.
+
+`blink›:name` should be set to one of the following:
+`adaris`, `briaril`, `calarel`, `carris`, `cynarel`, `cyren`, `elmet`,
+`elonni`, `enzana`, `erydark`, `fenralan`, `ferand`, `galen`, `gavin`,
+`gethriel`, `iorill`, `iothari`, `iselva`, `jadis`, `lavra`, `misiara`,
+`namala`, `nerion`, `nethari`, `pamaya`, `sarnar`, `sedis`, `sewen`,
+`sorahel`, `sorlen`, `tarian`, `thellassan`, `varriel`, `varven`,
+`vevera`, `virkas`, `yedis`, `yllara`, `zatvel`, `zevcen`.
+
+`blink›:amount` can be set in the range from -100 to 200 and defaults to 100.
+
+The `blink›:amount` of:
+
+* 0 stands for no changes in the image, the output is equal to the original.
+* Values in the range from 0 to 100 gradually increase filter strength; 100
+  makes filters work as designed.
+* Values over 100 emphasizes filter effect: the strength of applied changes.
+* Any negative number would mean subtracting the difference between the filtered
+  and original images from the original. That will produce a “negative filter”
+  effect.
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-ops="filter: vevera; filter-amount: -100" alt="Filtered image (cooler colors)"/><br/>
+    <code>filter: vevera;<br/>filter-amount: -100</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" alt="Original image (birds)"/><br/>Original image.
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-ops="filter: vevera; filter-amount: 100" alt="Filtered image (warmer)"/><br/>
+    <code>filter: vevera;<br/>filter-amount: 100</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-ops="filter: vevera; filter-amount: 200" alt="Super filtered image"/><br/>
+    <code>filter: vevera;<br/>filter-amount: 200</code>
+  </td>
+</tr></table>
+
+All filters provide predictable outputs with the `blink›:value` ranging from 0
+to 100. For some filter presets, setting the `blink›:amount` value outside those
+bounds may produce weird results. For example, all filters producing grayscale
+outputs will result in a negative image when set to the `blink›:amount` greater
+than 100. Set to negative values, those will saturate images.
+
+Here’s how all of our filters look like:
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="adaris" alt="Image with applied filter"/><br/>
+    <code>filter: adaris</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="briaril" alt="Image with applied filter"/><br/>
+    <code>filter: briaril</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="calarel" alt="Image with applied filter"/><br/>
+    <code>filter: calarel</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="carris" alt="Image with applied filter"/><br/>
+    <code>filter: carris</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="cynarel" alt="Image with applied filter"/><br/>
+    <code>filter: cynarel</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="cyren" alt="Image with applied filter"/><br/>
+    <code>filter: cyren</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="elmet" alt="Image with applied filter"/><br/>
+    <code>filter: elmet</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="elonni" alt="Image with applied filter"/><br/>
+    <code>filter: elonni</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="enzana" alt="Image with applied filter"/><br/>
+    <code>filter: enzana</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="erydark" alt="Image with applied filter"/><br/>
+    <code>filter: erydark</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="fenralan" alt="Image with applied filter"/><br/>
+    <code>filter: fenralan</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="ferand" alt="Image with applied filter"/><br/>
+    <code>filter: ferand</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="galen" alt="Image with applied filter"/><br/>
+    <code>filter: galen</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="gavin" alt="Image with applied filter"/><br/>
+    <code>filter: gavin</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="gethriel" alt="Image with applied filter"/><br/>
+    <code>filter: gethriel</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="iorill" alt="Image with applied filter"/><br/>
+    <code>filter: iorill</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="iothari" alt="Image with applied filter"/><br/>
+    <code>filter: iothari</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="iselva" alt="Image with applied filter"/><br/>
+    <code>filter: iselva</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="jadis" alt="Image with applied filter"/><br/>
+    <code>filter: jadis</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="lavra" alt="Image with applied filter"/><br/>
+    <code>filter: lavra</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="misiara" alt="Image with applied filter"/><br/>
+    <code>filter: misiara</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="namala" alt="Image with applied filter"/><br/>
+    <code>filter: namala</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="nerion" alt="Image with applied filter"/><br/>
+    <code>filter: nerion</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="nethari" alt="Image with applied filter"/><br/>
+    <code>filter: nethari</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="pamaya" alt="Image with applied filter"/><br/>
+    <code>filter: pamaya</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="sarnar" alt="Image with applied filter"/><br/>
+    <code>filter: sarnar</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="sedis" alt="Image with applied filter"/><br/>
+    <code>filter: sedis</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="sewen" alt="Image with applied filter"/><br/>
+    <code>filter: sewen</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="sorahel" alt="Image with applied filter"/><br/>
+    <code>filter: sorahel</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="sorlen" alt="Image with applied filter"/><br/>
+    <code>filter: sorlen</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="tarian" alt="Image with applied filter"/><br/>
+    <code>filter: tarian</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="thellassan" alt="Image with applied filter"/><br/>
+    <code>filter: thellassan</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="varriel" alt="Image with applied filter"/><br/>
+    <code>filter: varriel</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="varven" alt="Image with applied filter"/><br/>
+    <code>filter: varven</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="vevera" alt="Image with applied filter"/><br/>
+    <code>filter: vevera</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="virkas" alt="Image with applied filter"/><br/>
+    <code>filter: virkas</code>
+  </td>
+</tr></table>
+<table className="cdn-operation-sample cdn-operation-sample-4cols"><tr>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="yedis" alt="Image with applied filter"/><br/>
+    <code>filter: yedis</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="yllara" alt="Image with applied filter"/><br/>
+    <code>filter: yllara</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="zatvel" alt="Image with applied filter"/><br/>
+    <code>filter: zatvel</code>
+  </td>
+  <td>
+    <img data-blink-uuid="2f93a9ac-414b-4cbe-aef1-0462e3bc8cd8" data-blink-filter="zevcen" alt="Image with applied filter"/><br/>
+    <code>filter: zevcen</code>
+  </td>
+</tr></table>
+
+### Overlay
+{id="overlay"}
+
+The `overlay` transformation allows to layer images one over another.
+
+`blink›overlay-uuid: :uuid`<br/>
+`blink›overlay-dimensions: :relative_dimensions`<br/>
+`blink›overlay-coordinates: :relative_coordinates`<br/>
+`blink›overlay-opacity: :opacity`
+
+One of the most common use cases here are watermarks: semi-transparent images
+layered over opaque ones to complicate their unauthorized usage, etc.
+
+* `blink›:uuid` — UUID of an image to be layered over input. To be recognized by
+  `blink›:uuid`, that image should be related to any project of your account.
+* `blink›:relative_dimensions` — linear dimensions of the overlay image. The
+  aspect ratio of an overlay is preserved. What you set is a maximum linear size
+  along one of the axes: `cdn›-/overlay/:uuid/50%x50%/` means any linear
+  dimension of the overlay can not exceed 50% in size. Default size setting is
+  100%.
+* `blink›:relative_coordinates` — position of the overlay over your input. By
+  default, an overlay is positioned in the top-left corner of an input.
+  Coordinates represent an offset along each of the axes in either pixel or
+  percent format. In general, the coordinate system is similar to the
+  [CSS background-position][ext-css-background-position].
+* `blink›:opacity` — controls the opacity of the overlay in percent format. Your
+  overlay may either be initially semi-transparent or made to be so by tuning
+  `blink›:opacity`.
+
+Since `%` is an escape char in URLs, it can’t be used as-is and should be
+replaced with either `%25` escape sequence or the `p` char, which is a more
+readable and concise option.
+
+Every `overlay` parameter is optional and can be omitted. However, the order of
+the parameters should be preserved.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="22240276-2f06-41f8-9411-755c8ce926ed" data-blink-ops="overlay-uuid: b18b5179-b9f6-4fdc-9920-5539f938fc44; overlay-dimensions: 50%25x50%25; overlay-opacity: 20%25" alt="Image with a positioned watermark"/><br/>
+      <code>overlay-uuid: b18b5179-b9f6-4fdc-9920-5539f938fc44;<br/>overlay-dimensions: 50%25x50%25;<br/>overlay-opacity: 20%25</code><br/>
+      Specifying size and opacity, positioning is omitted.
+    </td>
+    <td>
+      <img data-blink-uuid="22240276-2f06-41f8-9411-755c8ce926ed" data-blink-ops="overlay-uuid: b18b5179-b9f6-4fdc-9920-5539f938fc44; overlay-dimensions: 50%25x50%25; overlay-coordinates: center" alt="Image with a logo overlay"/><br/>
+      <code>overlay-uuid: b18b5179-b9f6-4fdc-9920-5539f938fc44;<br/>overlay-dimensions: 50%25x50%25;<br/>overlay-coordinates: center</code><br/>
+      Specifying size and position, opacity is omitted.
+    </td>
+  </tr>
+</table>
+
+### Blur & Sharpen
+{id="blur-sharpen"}
+#### Blur
+{id="operation-blur"}
+
+`blink›blur: :strength`
+
+Applies image blur guided by the `blink›:strength` factor. Uploadcare implements
+Gaussian Blur with `blink›:strength` acting as effect intensity in the range
+from 0 to 5000. The default value is 10. The transformation provides uniform
+performance in the full range of intensities.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="9eaf4b7b-6688-43e9-a6e5-9690142d765a" alt="Original image"/><br/>
+      Original image. 14Kb
+    </td>
+    <td>
+      <img data-blink-uuid="9eaf4b7b-6688-43e9-a6e5-9690142d765a" data-blink-blur="10" alt="Blurred image"/><br/>
+      <code>blur: 10</code> 7.6Kb
+    </td>
+    <td>
+      <img data-blink-uuid="9eaf4b7b-6688-43e9-a6e5-9690142d765a" data-blink-blur="100" alt="Max blurred image"/><br/>
+      <code>blur: 100</code> 2.4Kb
+    </td>
+  </tr>
+</table>
+
+#### Sharpen
+{id="operation-sharp"}
+
+`blink›sharp: :strength`
+
+Applies image sharpening, which is specifically useful for downscaled images.
+While Adaptive Delivery provides automatic image resizing, you can further tune
+your visuals with sharpening. `blink›:strength` values can be in the range from
+0 to 20; the default is 5.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+        <img data-blink-uuid="a15a0473-5262-48c7-82e3-2fefcd14e293" alt="Original image (downscaled)"/><br/>
+      Downscaled image. 16.1Kb
+    </td>
+    <td>
+      <img data-blink-uuid="a15a0473-5262-48c7-82e3-2fefcd14e293" data-blink-sharp="10" alt="Image with sharp edges"/><br/>
+      <code>sharp: 10</code> 21.4Kb
+    </td>
+    <td>
+      <img data-blink-uuid="a15a0473-5262-48c7-82e3-2fefcd14e293" data-blink-sharp="20" alt="Image with ultra sharp"/><br/>
+      <code>sharp: 20</code> 25Kb
+    </td>
+  </tr>
+</table>
+
+### Rotate and flip
+{id="rotate-flip"}
+#### Manual Right-Angle Rotation
+{id="operation-rotate"}
+
+`blink›rotate: :angle`
+
+Right-angle image rotation, counterclockwise. The value of `blink›:angle` must
+be a multiple of 90.
+
+<table className="cdn-operation-sample cdn-operation-sample-4cols">
+  <tr>
+    <td>
+      <img data-blink-uuid="8a6b30ed-3b50-45b9-aabb-b53e1b05b25b" alt="Original image"/><br/>
+      Original image.
+    </td>
+    <td>
+      <img data-blink-uuid="8a6b30ed-3b50-45b9-aabb-b53e1b05b25b" data-blink-rotate="90" alt="Image rotate CCV 90 degrees"/><br/>
+      <code>rotate: 90</code>
+    </td>
+    <td>
+      <img data-blink-uuid="8a6b30ed-3b50-45b9-aabb-b53e1b05b25b" data-blink-rotate="180" alt="Image rotate 180 degrees"/><br/>
+      <code>rotate: 180</code>
+    </td>
+    <td>
+      <img data-blink-uuid="8a6b30ed-3b50-45b9-aabb-b53e1b05b25b" data-blink-rotate="270" alt="Image rotate CV 90 degrees"/><br/>
+      <code>rotate: 270</code>
+    </td>
+  </tr>
+</table>
+
+#### Flip
+{id="operation-flip"}
+
+`blink›flip`
+
+The transformation provides image flipping.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" alt="Original image"/><br/>
+      Original image.
+    </td>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" data-blink-flip="" alt="Vertical flip image"/><br/>
+      <code>flip</code>
+    </td>
+  </tr>
+</table>
+
+#### Mirror
+{id="operation-mirror"}
+
+`blink›mirror`
+
+The transformation allows mirroring images.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" alt="Original image"/><br/>
+      Original image.
+    </td>
+    <td>
+      <img data-blink-uuid="13448644-f240-4171-bad7-8e079eee491a" data-blink-mirror="" alt="Horizontal flip image (mirror)"/><br/>
+      <code>mirror</code>
+    </td>
+  </tr>
+</table>

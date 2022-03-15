@@ -1,0 +1,203 @@
+---
+  layoutPreset: guides
+  title: Watermarks, Build Cover for Your Images
+  description:
+    This tutorial will help you automate watermark routines for your
+    website or app by using Uploadcare on-the-fly image processing.
+    To use the feature, learn more information in Uploadcare docs.
+---
+
+import { Badge, BadgesBox } from "@uploadcare/docs-components"
+
+# Watermarks, Build Cover for Your Images
+
+<BadgesBox>
+  <Badge>5 Minutes to Integrate</Badge>
+</BadgesBox>
+
+Quite often we see that some image on the web is protected with watermarks
+(i.e. logos or symbols applied over an image).
+A watermark is created as a separate layer that is then merged
+with the original image.
+
+One way to watermark an image is to use an image processing software
+in manual or automatic mode. Another way is a near-real time on-demand image processing
+— a concept we cultivate within our CDN.
+
+In the latter case, a watermark is applied to an image through the
+[overlay][transformations-image-overlays] operation.
+In short, the operation allows users to layer images.
+
+## Now, to the hands-on examples
+{id="wmarks-intro"}
+
+If you’d like to experiment with your own examples, make sure that,
+
+* You’re already registered with Uploadcare. In case you aren’t, [signing up][account-signup].
+* You’ve already got some images you’d like to become watermark-added within an Uploadcare project.
+* You’ve prepared and uploaded to your Uploadcare project some images
+  that you’d like to become watermarks (the ones you’d like to layer over other images).
+
+Okay, the images are at hand — let’s go. Basically, in order to apply a watermark
+to an image, you only need to construct a proper URL. Since we’re only going
+to be working with URLs, this can be a truly fun and interactive tutorial.
+The image we will be applying a watermark to is this one (let’s refer to it as just 'pineapple'),
+
+`/22240276-2f06-41f8-9411-755c8ce926ed/-/preview/640x480/`
+
+![initial image][ucarecdn-initial-image]
+
+Full-sized images from the CDN can be accessed via a
+[direct link][ucarecdn-direct-link],
+while their processed versions contain operations in the
+[URLs][ucarecdn-url-operations-example].
+Please, refer to our [Image Transformations][transformations-image] reference for
+more.
+
+## Basic syntax
+{id="wmarks-syntax"}
+
+All the cool things with our CDN are made using operations,
+and `overlay` is an operation too. Its syntax goes like this,
+
+`cdn›-/overlay/:uuid/:relative_dimensions/:position/:opacity/`
+
+Look at the code string above and mind the two separators used within
+Uploadcare CDN operations: a forward slash `/` is used to divide parameters of operations,
+while a dash in between the two forward slashes `/-/` is used to split off image UUIDs and/or operations.
+We’re going to use the leading `cdn›-/` to tell operations from parameters.
+
+The parameters of the `overlay` operation are marked with a `:colon`.
+The sequence of the parameters is important, every parameter is optional and can be omitted.
+
+Now, let’s talk about what the parameters do.
+
+## `:uuid`
+{id="wmarks-identifier"}
+
+A UUID is used to specify an image within our CDN.
+Please note, that in order to be recognized by its `:uuid`,
+a watermark image should be related to the same account as the original image.
+Here, let’s unveil the overlay we’d like to be put over the pineapple,
+
+`cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/`
+
+![simple overlay usage][ucarecdn-simple-overlay-usage]
+
+As you see, the overlay image is presented in its original size,
+is opaque, and positioned in the top-left corner of the underlying image.
+We can change all of those using the following parameters.
+
+## `:relative_dimensions`
+{id="wmarks-dimensions"}
+
+As the name implies, this parameter enables users to scale an overlay.
+The two supported scaling modes can be defined as *static* and *dynamic*.
+The first stands for setting the overlay size in pixels
+(aspect ratio is always preserved, so you define the maximum size along one of its axes).
+It works like this,
+
+`cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/800x800/`
+
+![changing dimensions][ucarecdn-changing-dimensions]
+
+Yup, we see that the size is affected.
+Another option would be to use *dynamic* scaling,
+where the size of an overlay is derived from the dimensions of an underlying image.
+This mode is enabled simply by using percent format in the expression:
+
+`cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/80%x80%/`
+
+![changing dimensions, percent format][ucarecdn-changing-dimensions-percent-format]
+
+Ah, there’s a trick, though, since `%` is an escape char in URLs,
+it can’t be used as-is and should be replaced with
+either `%25` escape sequence or a more concise `p` char.
+
+## `:position`
+{id="wmarks-position"}
+
+This parameter controls the positioning of an overlay on top of the original image.
+Again, either pixel (as an offset from the top-left corner) or percent format can be used.
+The coordinates within the parameter are separated by a coma. See the examples,
+
+Pixel format: `cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/128,128/`
+
+![changing dimensions, pixel format][ucarecdn-changing-dimensions-pixel-format]
+
+Percent format: `cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/80p,80p/`
+
+![changing dimensions, percent format][ucarecdn-changing-dimensions-percent-format]
+
+Please note, that when using the percent format you define coordinates
+within the difference between maximum dimensions of an overlay and an underlying image.
+
+## `:opacity`
+{id="wmarks-opacity"}
+
+This parameter lets you adjust how transparent an overlay is.
+That’s especially useful for watermarks.
+
+What you control with the parameter is a percentage-based degree of image opacity.
+The syntax is straight-forward (the example shows a 30% watermark over our pineapple),
+
+`cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/30p/`
+
+![controlling opacity][ucarecdn-controlling-opacity]
+
+## Mixed use
+{id="wmarks-params-multiple"}
+
+Now that we’ve learned how to use the listed techniques effectively,
+it’s quite obvious that all of the `:overlay` parameters can be used together.
+This means a watermark of our preference can be moved, resized, and made transparent.
+Let’s make a great URL for that,
+
+`cdn›-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/60px60p/10p,50p/30p/`
+
+![mixed parameter usage][ucarecdn-mixed-parameter-usage]
+
+Withal, we aren’t placing any restrictions on the overall number of overlays per request
+— this means you can layer as many watermarks over an image as you like.
+In this example, we use different coordinates and opacity settings for each of the four overlays,
+
+`cdn›-/overlay/efd02791-7511-42e9-850d-3b3d07f110ae/35px35p/10p,10p/40p/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/35px35p/70p,5p/35p/-/overlay/b18b5179-b9f6-4fdc-9920-5539f938fc44/35px35p/15p,70p/55p/-/overlay/efd02791-7511-42e9-850d-3b3d07f110ae/35px35p/80p,90p/50p/-/preview/640x480/`
+
+![numerous overlays][ucarecdn-numerous-overlays]
+
+## Overlay magic
+{id="wmarks-magic"}
+
+Another ace-high point which you might find useful is
+that the `overlay` operation is always performed last. Here’s what we mean,
+
+`cdn›-/overlay/:uuid/60px60p/20p,80p/80p/-/blur/70/`
+
+![overlay over the blurred image][ucarecdn-overlay-over-the-blurred-image]
+
+Yes, even though the overlay operation comes first in the URL,
+it will be performed last. Swoopy — an overlay would still be placed over an image
+even if it got cropped or otherwise processed.
+
+## Conclusion and a bit of a benchmark
+{id="wmarks-benchmark"}
+
+Tests have shown that it only took about 20 ms to add an overlay to a small
+([0.2 MP][ucarecdn-0-2-mp])
+image and only about 90 ms to a mid-sized one
+([3 MP][ucarecdn-3-mp])
+— a swell result, but there will be a further boost in loading time once the images will be cached by our CDN.
+
+Actually, watermarks are one of the most obvious `overlay` usages.
+There’s more to it, and we’d like you to explore the technical
+and artistic capabilities of the feature. We hope you are enjoying your Uploadcare experience.
+If you happen to have any questions — feel free to contact [our support][mail-help].
+
+## Further reading
+{id="wmarks-further-reading"}
+
+Watermarks can help you safeguard image content.
+This also means watermarks should be properly handled.
+Please, check out
+[this][cummunity-article-watermarks-safe]
+knowledgebase article addressing watermarks security issues.

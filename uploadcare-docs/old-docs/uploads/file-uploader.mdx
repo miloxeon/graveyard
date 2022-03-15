@@ -1,0 +1,1362 @@
+---
+  title: 'Uploadcare File Uploader'
+  description:
+    'Your ultimate File Uploader. Installs with just two lines of code, it’s responsive and mobile-ready. The uploader is provided as a typical JavaScript library, and an intuitive UX flow based on tabbed navigation.'
+---
+
+import { Widget, Panel, WidgetLocalesCount, WidgetLocales } from '@uploadcare/widget'
+import { CodePen, Messages, Migration, WidgetV3Warning, Video, CustomTabStyles, CustomPanelStyles } from '@uploadcare/docs-components'
+
+# File Uploader
+
+<Messages>
+  <WidgetV3Warning link='/docs/uploads/v2/' />
+  <Migration />
+</Messages>
+
+Uploadcare [File Uploader][file-uploader-product-page] is a responsive and
+mobile-ready HTML5 website solution that allows users to select and upload
+multiple files from various sources. Also, it includes an in-browser image
+editor. You can customize the appearance and functionality to match your website
+and task.
+
+<Video fullWidth withShadow>
+  <source src="https://ucarecdn.com/4f3e93a7-8827-4a0b-bf7e-819ccb3e97fc/video/-/size/1200x/-/format/webm/widget-multi@640.webm"  type="video/webm" />
+  <source src="https://ucarecdn.com/4f3e93a7-8827-4a0b-bf7e-819ccb3e97fc/video/-/size/1200x/widget-multi@640.mp4" type="video/mp4" />
+</Video>
+
+File Uploader is supplied as a JavaScript library. It overrides an `<input type="file">`
+control on an HTML page with a button that opens up the File Uploader dialog.
+Like this:
+
+<Widget clearable />
+
+## File Uploader Features
+{id="features"}
+
+File Uploader helps you perform the following tasks:
+
+<!-- Anton:
+  The following list items can then become extensive how-tos.
+-->
+
+* Uploading
+  * [Add a file uploading][file-uploader-install] capability to your website or
+    app.
+  * Upload files of any type and up to 5 TB in size.
+  * Get files from various upload sources, including local storage, camera,
+    social media, and cloud storage services.
+  * Upload multiple files in one go.
+  * Track upload jobs with an individual progress bar for each file.
+  * Speed up the uploading with the uploading network (it works like CDN).
+* Image Handling
+  * Show image previews.
+  * Implement custom image [crop options][file-uploader-crop-options].
+  * [Edit, enhance, and filter images][feature-fxtab] in any browser.
+* Validation
+  * Validate files by their format or size.
+  * [Automatically resize large incoming images](#client-side-image-resize).
+* Security
+  * Make your uploading system compatible with SOC2, HIPAA, and more.
+  * Prevent remote code execution through File Uploading.
+  * Prevent code execution in uploaded files like `SVG`, `html` and `xml`.
+* Reliability
+  * All of your uploads go to the storage covered by SLA and with a 99.9%
+    uptime.
+
+### Supported browsers
+{id="browsers"}
+
+The current File Uploader (v3) works in all modern browsers, desktop and
+mobile. Here's a list of supported browsers:
+
++-------------+----------------------+
+| **Desktop** | **Mobile**           |
++=============+======================+
+| Chrome: 37+ | Android Browser: 4.4+|
++-------------+----------------------+
+| Firefox: 32+| Opera Mobile: 8+     |
++-------------+----------------------+
+| Safari: 9+  | iOS Safari: 9+       |
++-------------+----------------------+
+| Edge: 12+   | IE Mobile: 11+       |
++-------------+----------------------+
+| IE: 10+     | Opera Mini: Last     |
++-------------+----------------------+
+
+The File Uploader will most probably run in older browser versions as well. In
+case you need legacy browser support (IE8), try out [File Uploader v2][file-uploader-v2-ie8].
+
+More on [browser version support][file-uploader-supported-browsers].
+
+## Installation
+{id="install"}
+
+<!-- Anton:
+Rewrite:
+
+HTML
+React
+Plugins
+-->
+
+Select either option to install File Uploader:
+
+* [Install from CDN](#cdn)
+* [NPM](#npm)
+
+Refer to [no-code integrations][integrations] to use File Uploader with your
+website platform like Shopify, etc.
+
+Before proceeding with your install, check out the [dependencies](#dependencies)
+and File Uploader [bundles](#bundles) below.
+
+### Dependencies
+{id="dependencies"}
+
+Uploadcare File Uploader doesn't have any external dependencies except for
+jQuery. Generally, File Uploader comes in two versions: with and without jQuery.
+
+For example, you can use jQuery commands on the page if you included [a bundle](#bundles)
+with jQuery:
+
+```js
+var $ = uploadcare.jQuery;
+$('body').append('It works!');
+```
+
+### Bundles
+{id="bundles"}
+
+Depending on your project, you can select a specific File Uploader JS library
+bundle:
+
+* `uploadcare.full.js` — a full bundle with built-in jQuery
+* `uploadcare.js` — a default bundle without jQuery
+* `uploadcare.api.js` — a bundle without File Uploader UI and jQuery
+  [JavaScript API][api-reference-javascript] only
+* `uploadcare.ie8.js` — a full bundle with built-in jQuery 1.x for IE 8 support
+  (widget v.2.x and earlier)
+* `uploadcare.lang.en.js` — a bundle without jQuery, `en` locale only
+
+Include a minified bundle version by adding `.min` before `.js`.
+
+By default, minified (and without jQuery) `uploadcare.min.js` is exported to NPM
+and other package managers.
+
+### Install from CDN
+{id="cdn"}
+
+Get your [Public Key][settings-keys-public] in the [Dashboard][account] and
+insert it in your HTML page's `<head>` as a `<script>` so that Uploadcare
+services can identify your website. It'll link File Uploader on your page with a
+project storage where files will be uploaded.
+
+Include the source link to the File Uploader bundle (e.g., full, with jQuery):
+
+```html
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'demopublickey';
+</script>
+
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+```
+
+If you already use jQuery on your page, load the bundle without it:
+
+```html
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" charset="utf-8"></script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.min.js" charset="utf-8"></script>
+```
+
+### Using on page
+
+In the page's `<body>`, insert the `<input>` element with the following
+attributes:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" />
+```
+
+When rendering the webpage, it'll replace a typical button with a File Uploader
+button that'll open an uploading dialog. File Uploader will work on this page
+only. Include it into other pages the same way.
+
+### Install from NPM
+{id="npm"}
+
+```bash
+npm install uploadcare-widget
+```
+
+```javascript
+import uploadcare from 'uploadcare-widget'
+```
+
+## Configure
+
+<!--
+Rewrite:
+Globally / Locally / Via settings object - switch
+  Common params examples (key, clear, multi)
+Configurator link
+API Ref link
+-->
+
+Set of features, such as upload sources, image editing tools, can be customized
+via [File Uploader options][file-uploader-options]. You can have mixed settings
+for different File Uploader instances. Global variables will affect all File
+Uploader instances, and local attributes will override global settings.
+
+Here's how you can configure File Uploader:
+
+* [Web configurator][file-uploader-configure] with a web UI. It generates code
+  that you can use on your page or share a link to a colleague with your config.
+* [Global variables](#global-variables), initialized on page load.
+* [Local attributes](#local-attributes), initialized when a new File Uploader
+  instance is created.
+* [The `settings` object](#settings-object).
+* [Boolean options](#boolean-options).
+
+### Global variables
+{id="global-variables"}
+
+Globals are specified as global JavaScript variables in your `<script>` tag.
+For example:
+
+```html
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'demopublickey';
+  UPLOADCARE_LOCALE = 'ru';
+</script>
+```
+
+### Local attributes
+{id="local-attributes"}
+
+Local options are specified in the target `<input>` tag as `data-*` attributes.
+For example:
+
+```html
+<input type="hidden" role="uploadcare-uploader"
+  data-public-key="demopublickey"
+  data-images-only
+/>
+```
+
+### Settings object
+{id="settings-object"}
+
+Most of the File Uploader options can also be set within the `settings` object.
+See the [JavaScript API reference][api-reference-javascript] for more details.
+For example:
+
+```js
+uploadcare.openDialog(null, {
+  publicKey: 'demopublickey',
+  imagesOnly: true,
+  crop: '300x200'
+});
+```
+
+### Setting boolean options
+{id="boolean-options"}
+
+All `boolean` options are set globally with their JavaScript boolean values.
+
+```js
+UPLOADCARE_CLEARABLE = true;
+UPLOADCARE_PREVIEW_STEP = false;
+```
+
+When setting boolean options locally in HTML tag attributes, any value or no
+value is considered as `true`:
+
+```html
+<input data-option="true" />
+<input data-option="any-value" />
+<input data-option="" />
+<input data-option />
+```
+
+To disable a local option, use either:
+
+```html
+<input data-option="false" />
+<input data-option="disabled" />
+```
+
+## Upload Sources
+
+File Uploader supports 14 upload sources, including local file storage, web
+camera; external URL; cloud services, and social networks. In UI, the sources
+are shown as tabs.
+
+* [Supported Upload Sources](#upload-source-list)
+* [File Uploader configurator][file-uploader-configure]
+* [Manual Configuration](#configure)
+
+The set of enabled upload sources is controlled via the `data-tabs`
+[option][file-uploader-option-tabs].
+
+Start with [the File Uploader configurator][file-uploader-configure] and select
+the sources you'd like to leave. Copy the generated code snippet.
+
+### List of supported Upload Sources
+{id="upload-source-list"}
+
++-------------+------------------------------------+---------+
+|    Code     |          File Source               | Default |
++=============+====================================+=========+
+| `file`      | Local disk                         | **On**  |
++-------------+------------------------------------+---------+
+| `camera`    | Local webcam                       | **On**  |
++-------------+------------------------------------+---------+
+| `url`       | Any URL                            | **On**  |
++-------------+------------------------------------+---------+
+| `facebook`  | [Facebook][ext-facebook]           | **On**  |
++-------------+------------------------------------+---------+
+| `gdrive`    | [Google Drive][ext-google-drive]   | **On**  |
++-------------+------------------------------------+---------+
+| `gphotos`   | [Google Photos][ext-google-photos] | **On**  |
++-------------+------------------------------------+---------+
+| `dropbox`   | [Dropbox][ext-dropbox]             | **On**  |
++-------------+------------------------------------+---------+
+| `instagram` | [Instagram][ext-instagram]         | **On**  |
++-------------+------------------------------------+---------+
+| `evernote`  | [Evernote][ext-evernote]           | **On**  |
++-------------+------------------------------------+---------+
+| `flickr`    | [Flickr][ext-flickr]               | **On**  |
++-------------+------------------------------------+---------+
+| `onedrive`  | [OneDrive][ext-onedrive]           | **On**  |
++-------------+------------------------------------+---------+
+| `box`       | [Box][ext-box]                     | **Off** |
++-------------+------------------------------------+---------+
+| `vk`        | [VK][ext-vkontakte]                | **Off** |
++-------------+------------------------------------+---------+
+| `huddle`    | [Huddle][ext-huddle]               | **Off** |
++-------------+------------------------------------+---------+
+
+### Configuring Upload Sources
+{id="configure"}
+
+You can configure the set of upload sources globally or per File Uploader
+instance. The global parameter is called `UPLOADCARE_TABS`. Locally you can
+utilize the `data-tabs` attribute.
+
+In both cases, you'll pass a space-separated string with tab names.
+
+Configuring the set of sources globally:
+
+```html
+<script>
+  UPLOADCARE_TABS = 'url file facebook';
+</script>
+```
+
+Configuring the list of sources locally:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-tabs="url file facebook"
+/>
+```
+
+### Custom tabs
+
+<!-- Anton:
+Rewrite
+
+Intro
+Example with link to guide
+-->
+
+<svg width="0" height="0" style={{position:'absolute'}}>
+  <symbol id="uploadcare--icon-favorites" viewBox="0 0 32 32">
+    <path d="M 16 22.928 L 23.416 27.4 L 21.454 18.965 L 28 13.292 L 19.37 12.552 L 16 4.6 L 12.629 12.552 L 4 13.292 L 10.546 18.965 L 8.584 27.4 Z"/>
+  </symbol>
+</svg>
+
+You can add custom tabs into your File Uploader. These tabs can be additional
+upload sources or whatever you design them to be. For example, display all
+uploaded files.
+
+* [Registering a new tab](#register)
+* [Making the custom tab work](#code)
+* [Adjusting the look](#tab-look)
+* [Example](#example)
+
+#### Registering a new tab
+{id="register"}
+
+Register a new tab via the `registerTab` method.
+
+```html
+<div id="uploader-placeholder">Uploading. Please wait...</div>
+<script>
+function favoriteFiles(container, button, dialogApi, settings) {
+  ...
+}
+uploadcare.registerTab('favorites', favoriteFiles);
+uploadcare.openPanel('#uploader-placeholder', null, {
+  tabs: 'favorites file facebook dropbox gdrive instagram vk',
+  favoriteFiles: [...]
+});
+</script>
+```
+
+#### Coding tab's actions
+{id="code"}
+
+Once the tab is registered, write a custom code. The following code will display
+uploaded images made with this File Uploader instance. It'll pass a list of file
+UUIDs with the `settings` [object][file-uploader-config-object]. When a user
+selects a file for uploading, the file info can be passed to the dialog using
+`dialogApi`.
+
+```js
+function favoriteFiles(container, button, dialogApi, settings) {
+  $.each(settings.favoriteFiles, function(i, uuid) {
+    container.append($('<img>', {
+        'class': 'favorite-files-image',
+        'src': settings.cdnBase + '/' + uuid + '/-/scale_crop/280x280/center/',
+      })
+      .on('click', function(e) {
+        dialogApi.addFiles([uploadcare.fileFrom('uploaded', uuid, settings)])
+      })
+    );
+  });
+}
+```
+
+#### Adjusting the look
+{id="tab-look"}
+
+Customize your custom tab's look via CSS. Use `<svg>` and `<symbol>` elements:
+
+```html
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="uploadcare--icon-favorites" viewBox="0 0 32 32">
+    <path d="M 16 22.928 L 23.416 27.4 L 21.454 18.965 L 28 13.292 L 19.37 12.552 L 16 4.6 L 12.629 12.552 L 4 13.292 L 10.546 18.965 L 8.584 27.4 Z"/>
+  </symbol>
+</svg>
+```
+
+```css
+.uploadcare--menu__item_tab_favorites.uploadcare--menu__item_current {
+  color: #f0cb3c;
+}
+```
+
+#### Custom tab in action
+{id="example"}
+
+Here’s a live example of the File Uploader with the custom tab we've just created.
+It displays images uploaded with this File Uploader instance:
+
+<CustomTabStyles mdxFor='custom-tab' />
+<Panel
+  id='custom-tab'
+  publicKey="232d896709883f79bfaf"
+  urlBase='https://upload.uploadcare.com/'
+  cdnBase='https://ucarecdn.com/'
+  socialBase='https://social.uploadcare.com/'
+  tabs='favorites file facebook dropbox box gdrive instagram'
+  customTabs={{favorites: function(container, button, dialogApi, settings, _, uploadcare) {
+    const appendImage = (uuid) => {
+      const img = document.createElement('img')
+      img.src = settings.cdnBase + '/' + uuid + '/-/scale_crop/280x280/center/'
+      img.classList.add('favorite-files-image');
+      img.addEventListener('click', () => {
+        dialogApi.addFiles([uploadcare.fileFrom('uploaded', uuid, settings)])
+      })
+      container.append(img)
+    }
+    settings.favoriteFiles.forEach(appendImage)
+  }}}
+  favoriteFiles={[
+    '78ba53d2-b746-4f4f-a80f-6ca260c08cfe',
+    '80b55b77-6548-4799-808d-6e49415a5422',
+    'e804e9da-4bb8-4595-88b0-d0ef7fb02b23',
+    '58b38d86-e06f-4188-97d3-b3f530e2dbe7',
+    '172c21c8-15df-44a5-b2e0-a6e48e04bf39',
+    '737740ca-fee9-428c-9f9c-dbd627ce99f4',
+    '3ae6f944-e62f-4b5a-84a9-bafb1ae1eb84',
+    '8164017b-471c-438b-a21c-f5b994a174f6',
+    '6bae4195-e922-47fe-ac6e-01f7c55759db',
+    '6403b2ab-5d43-4e11-9057-941bfd389e57',
+    '0afd6014-0edc-409e-8d70-dbbe19b4e51c',
+  ]}
+/>
+
+## Multiple File Uploading
+{id="multiple-files"}
+
+Uploadcare File Uploader allows you to upload multiple files in one go. Each
+file will have its tiny progress bar and a preview when it's uploaded.
+
+<img src="https://ucarecdn.com/93ddea11-3e73-4a49-9f78-b56f0dad63b9/multiplefilesuploadingcrop.png" alt="Uploading multiple files with individual progress bars" />
+
+File Uploader will display individual errors if some files couldn't be uploaded
+(e.g., due to size or format validation failure) and it won't affect the rest of
+the upload.
+
+### Enable batch uploading
+
+Enable batch file uploading with [the `data-multiple` attribute][file-uploader-option-multiple]
+in the File Uploader `<input>` element.
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_files"
+  data-multiple="true"
+/>
+```
+
+Check out multiple file uploading:
+
+<Widget multiple />
+
+Multiple file uploads are stored as [file groups][delivery-group-api] with
+respective `group_id` as opposed to single file UUIDs.
+
+## Automatically resize uploaded images
+{id="client-side-image-resize"}
+
+Uploadcare File Uploader lets you accept hi-res images and
+shrink them in size to a reasonable resolution, keeping the original aspect
+ratio.
+
+Benefits of automatic image resize on upload:
+
+* Users don't need to downscale images on their devices to meet the uploading
+  requirements
+* Optimized storage
+* Faster uploading
+
+Use the `data-image-shrink` [option][file-uploader-option-shrink] to apply
+client-side image resize with values like:
+
+* `800x600`, shrinks images to 0.48 megapixels with the default JPEG quality of
+  80% (default, when not set).
+* `1600x1600 95%`, shrinks images to 2.5 megapixels with the JPEG quality set to
+  95%.
+
+### Specs and limits
+
+The output resolution limit for `data-image-shrink` is 268 MP (e.g., `16384x16384`).
+It conforms to the maximum resolution that WebKit desktop browsers support.
+We recommend not to use values greater than 16.7 MP (`4096x4096`),
+because it's a current limit for iOS devices.
+
+Uploaded images won't be shrunk in the following cases:
+
+* When a client browser doesn't support a specified output resolution.
+* For images uploaded from [social media and URLs][file-uploader-upload-sources].
+* If the `original resolution` is less than 2x larger than the `target resolution`.
+    For example, it won't shrink a 2560x1560px (4 MP) image to 1600x1600px (2.5
+  MP). It will work if you had a 2448x3264px (8 MP) input image. This
+  limitation preserves an optimal image quality and file size balance.
+
+The output format will be JPEG by default unless your input image has an alpha
+channel (transparency). In this case, PNG will be used instead.
+
+EXIF info is copied as-is and includes an original image orientation, camera
+model, geolocation, and other settings of an original image.
+
+### Resize to 1 MP on a client side:
+{id="examples"}
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-preview-step=""
+  data-image-shrink="1024x1024"
+/>
+```
+
+<Widget
+  imageShrink="1024x1024"
+  previewStep
+/>
+
+### Resize multiple files to 0.4 MP on a client side:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_files"
+  data-multiple=""
+  data-image-shrink="640x480"
+/>
+```
+
+<Widget
+  multiple
+  imageShrink="640x480"
+/>
+
+## Localization
+
+<!-- Roma: Cover social sources localization. -->
+
+[Uploadcare File Uploader][feature-file-uploader] is highly customizable and
+implements UI localization and custom pluralization rules. With
+<WidgetLocalesCount /> locales, you can make your app instantly adapt to user
+languages.
+
+There currently are: <WidgetLocales />
+
+You can either [set an existing locale][file-uploader-option-locale] or add a
+custom one along with its pluralization rules.
+
+### Adding a locale
+{id="add-locale"}
+
+You can add your localization, if there's no one yet, by forking the main
+[File Uploader repo][file-uploader-github-repo] and adding a new localization file to
+[this list][file-uploader-locale-github-list].
+
+Another option is overriding specific locale items in your global File Uploader
+configuration:
+
+```js
+UPLOADCARE_LOCALE = 'en';
+UPLOADCARE_LOCALE_TRANSLATIONS = {
+  buttons: {
+    cancel: 'Cancel',
+    remove: 'Remove',
+    choose: {
+      files: {
+        one: 'Choose a file',
+        other: 'Pick files'
+      },
+      images: {
+        one: 'Choose an image',
+        other: 'Load images'
+      }
+    }
+  }
+};
+```
+
+The default is [an English locale][file-uploader-locale-github-en]. If a string
+item is missing in a locale you created or customized, English will be a
+fallback.
+
+### Pluralization rules
+{id="pluralization"}
+
+Pluralization rules may vary in different languages. In the English locale,
+there'll be `"1 file"`, but `"3 files"`. This rule is described under the
+`file:` key in the locale file.
+
+Strings with quantitative values are based on what a pluralization function
+returns. You'll pass a number into a function, and it'll output a subkey
+related to your input.
+
+```js
+function pluralize(number) {
+  // do something
+  return 'some_subkey';
+}
+```
+
+There are two subkeys for the English localization: `one` and the `other`.
+However, it can get more complex with other languages. For example, take a look
+at the `file:` subkeys for the [Russian][file-uploader-locale-github-ru] locale.
+The `%1` sequence is used to format numbers into pluralized strings.
+
+Each locale we provide with the File Uploader is supplied with its Unicode-based
+[pluralization rules][ext-unicode-pluralization]. If you wish to override those,
+you can define a custom pluralization function and assign it to the
+[`UPLOADCARE_LOCALE_PLURALIZE`][file-uploader-option-pluralize] variable.
+
+The following setting makes the File Uploader use the message under the `some`
+subkey for input numbers from 2 to 10:
+
+```js
+UPLOADCARE_LOCALE_TRANSLATIONS = {
+  file: {
+    one: 'Only one file! :(',
+    some: 'Only %1 files. Upload more.',
+    many: '%1 files!! That\'s a lot.'
+  }
+};
+UPLOADCARE_LOCALE_PLURALIZE = function(n) {
+  if (n === 1) return 'one';
+  if (n > 1 && n <= 10) return 'some';
+  return 'many';
+};
+```
+
+## Styling
+{id="styling"}
+
+Uploadcare [File Uploader][file-uploader] can be easily integrated into your
+product and match your website look or a web app's UI.
+
+### Scaling File Uploader Elements
+{id="widget-ui-scaling"}
+
+The File Uploader is designed to inherit styles from your page organically:
+dialog elements get scaled in line with your font size:
+
+<p style={{fontFamily: "Times New Roman", fontSize: "12px", lineHeight: "1.4"}}>
+  Times New Roman, 12px:
+  <Widget
+    clearable
+    publicKey="232d896709883f79bfaf"
+    value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+  />
+</p>
+
+<p style={{fontFamily: "Courier New", fontSize: "18px", lineHeight: "1.4"}}>
+  Courier New, 18px:
+  <Widget
+    clearable
+    publicKey="232d896709883f79bfaf"
+    value="9dd2f080-cc52-442d-aa06-1d9eec7f40d1"
+  />
+</p>
+
+### Styling With CSS
+{id="widget-styles"}
+
+The [File Uploader][file-uploader] is thoroughly annotated with CSS classes.
+It's your starting point into deeper customization. You can find a class for
+every File Uploader item by inspecting its elements or sifting through the File
+Uploader [source code][file-uploader-styles-github].
+
+The File Uploader dialog window look can be customized via the
+`uploadcare--dialog` class.
+
+### Changing Uploader Button Color
+{id="color-buttons"}
+
+Changing the button color is one of the most common cases:
+
+<!-- https://codepen.io/uploadcare/pen/GamRqw -->
+<CodePen defaultTab="html,result" id="GamRqw" title="Changing uploader button color example" />
+
+### Button Shadow
+{id="button-shadow"}
+
+You can add shadow and experiment with fonts and colors:
+
+<!-- https://codepen.io/uploadcare/pen/WBjNjN -->
+<CodePen defaultTab="html,result" id="WBjNjN" title="Image dimensions validation example" />
+
+### Uploading Circle Color
+{id="uploading-circle-color"}
+
+You can display the file uploading progress. The fill color can be changed via
+the CSS `color` property, while `border-color` will work for your background.
+
+<!--
+  Add Video: The circle being filled with color, original vs customized
+-->
+
+<!-- https://codepen.io/uploadcare/pen/ZNKEyB -->
+<CodePen defaultTab="html,result" id="ZNKEyB" title="Uploading circle color example #1" />
+
+Here, you can test the File Uploader with a customized uploading circle:
+
+<!-- https://codepen.io/uploadcare/pen/ZNKEqK -->
+<CodePen defaultTab="html,result" id="ZNKEqK" title="Uploading circle color example #2" />
+
+### Custom Progress Bar
+{id="custom-progress-bar"}
+
+You can replace the built-in progress bar. To do that, you need to add a
+listener to the current File Uploader instance and get it in the `onChange`
+callback. It'll be a file object for regular File Uploaders or a group object
+for multiple File Uploaders. After that, listen to the `progress` event and
+change your progress bar according to the current `uploadProgress`.
+
+The following `installProgressBar` function does all that. It receives the two
+arguments: the File Uploader instance and a progress bar DOM element. Everything
+else runs on CSS, animation included.
+
+<!-- https://codepen.io/uploadcare/pen/KLmwKW -->
+<CodePen defaultTab="js,result" id="KLmwKW" title="Custom progress bar example" />
+
+### Uploaded Image Preview
+{id="uploaded-image-preview"}
+
+The default File Uploader behavior is to show an image preview when a user
+selects an image. You might want to embed this preview on your page somewhere
+around the File Uploader button. Such a preview could be more informative than
+simply displaying file names and sizes.
+
+<!-- https://codepen.io/uploadcare/pen/wbdBzz -->
+<CodePen defaultTab="js,result" id="wbdBzz" title="Image dimensions validation example #1" />
+
+Note, you have full control over the size and position of your embed. Just use
+CSS.
+
+Image preview for a multi-file File Uploader may look differently:
+
+<!-- https://codepen.io/uploadcare/pen/NVjPyg -->
+<CodePen defaultTab="js,result" id="NVjPyg" title="Image dimensions validation example #2" />
+
+You can change the displayed images or rearrange the existing ones; all changes
+will then be reflected in the thumbnail list.
+
+### File Uploader Embed
+
+User experience means the world to us. Therefore, we provide a lot of
+customization options that cover both File Uploader appearance and behavior.
+
+The look of the File Uploader can be changed [via CSS][file-uploader-styling],
+and the [live config][file-uploader-configure] is a great starting point for
+controlling your File Uploader behavior.
+
+Another thing you can do is to embed the File Uploader as a panel as opposed to
+a default dialog window.
+
+#### Embed File Uploader Using Panel
+{id="panel"}
+
+By default, the File Uploader dialog appears on a button click. The dialog will
+appear in a lightbox, which overlays your page's content and dims the
+background.
+
+However, you might want to show the File Uploader interface right away. This
+appearance is named `panel`.
+
+```html
+<div id="uploader-placeholder">Uploading. Please wait...</div>
+<script>uploadcare.openPanel('#uploader-placeholder');</script>
+```
+
+The snippet above replaces your DOM element with the `uploadcare-placeholder` ID
+and puts it in place once a user selects a file. This can be used to indicate
+the uploading process. Also, the panel can be closed by simply selecting a file.
+
+<Panel />
+
+#### Panel Styling
+{id="panel-styling"}
+
+Similar to the File Uploader dialog, the panel can be customized.
+
+The appearance of your embed can be changed [via CSS][file-uploader-styling]. In
+this example, we remove a sharp border:
+
+```css
+#uploader-styling {
+  margin-top: 10px;
+}
+#uploader-styling .uploadcare--panel,
+#uploader-styling .uploadcare--menu__item,
+#uploader-styling .uploadcare--menu__items {
+  background-color: transparent;
+  border: 0;
+}
+#uploader-styling .uploadcare--panel {
+  flex-direction: column;
+}
+#uploader-styling .uploadcare--menu {
+  width: 100%;
+  height: 60px;
+  min-height: 60px;
+}
+#uploader-styling .uploadcare--menu__items {
+  padding-right: 0;
+  flex-direction: row;
+}
+```
+
+<CustomPanelStyles mdxFor='uploader-styling' />
+<Panel id='uploader-styling' />
+
+Some dialog elements are rendered as `iframe` by Uploadcare servers, which
+doesn't let you customize CSS. However, we provide a set of [specific methods][api-reference-js-tabs-styling]
+to inject CSS into iframes.
+
+## Image crop
+{id="crop-option"}
+
+Cropping images is one of the most common tasks, so we added it right in the
+[File Uploader][file-uploader] UI.
+
+Uploadcare File Uploader features a good bunch of crop options, including free
+crop. Adding the feature to your File Uploader instance is done by implementing
+the `data-crop` [option][file-uploader-option-crop].
+
+Note that it'll add an additional step of image editing.
+
+### How Cropping Works
+{id="how-it-works"}
+
+Technically, image cropping works as post-processing via the
+[Image Processing][feature-image-processing] feature:
+
+* Original images go to an Uploadcare project associated with a
+  [Public Key][settings-keys-public] set as your File Uploader instance.
+* The crop is applied as the [`crop`][transformations-image-crop] image
+  processing operation by injecting its URL directive into original URLs.
+* The File Uploader returns resulting CDN URLs with an injected `crop`.
+
+### Configuring Crop
+{id="crop-config"}
+
+Crop options are held inside the `data-crop` attribute as a comma-separated
+string with presets names. When you define several presets, users will be able
+to choose from the related crop options right in the UI.
+
+Each crop preset is a combination of a size or ratio definition and an optional
+keyword:
+
+* `"disabled"`, crop is disabled. It can’t be combined with other presets.
+* `""` or `"free"`, crop is enabled. Users can freely select any crop area on
+  their images.
+* `"2:3"`, any area with the aspect ratio of 2:3 can be selected for cropping.
+* `"300x200"` — same as above, but if the selected area is greater than 300x200
+  pixels, the resulting image will be downscaled to fit the dimensions.
+* `"300x200 upscale"` — same as above, but even if the selected area is smaller,
+  the resulting image gets upscaled to fit the dimensions.
+* `"300x200 minimum"` — users won’t be able to define an area smaller than
+  300x200 pixels. If an image we apply the crop to is smaller than 300x200
+  pixels, it will be upscaled to fit the dimensions.
+
+### Crop examples
+{id="crop-examples"}
+
+Free crop:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-crop=""
+/>
+```
+
+<Widget
+  crop
+  publicKey="232d896709883f79bfaf"
+  value="863c9498-2bbd-4486-9575-4730242bba76"
+/>
+
+Choosing from predefined aspect ratios:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-crop="free, 16:9, 4:3, 5:4, 1:1"
+/>
+```
+
+<Widget
+  crop="free, 16:9, 4:3, 5:4, 1:1"
+  publicKey="232d896709883f79bfaf"
+  value="863c9498-2bbd-4486-9575-4730242bba76"
+/>
+
+Fixed aspect ratio:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-crop="4:3"
+/>
+```
+
+<Widget
+  crop="4:3"
+  publicKey="232d896709883f79bfaf"
+  value="863c9498-2bbd-4486-9575-4730242bba76"
+/>
+
+Fixed size with upscaling:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-crop="400x300 upscale"
+/>
+```
+
+<Widget
+  crop="400x300 upscale"
+  publicKey="232d896709883f79bfaf"
+  value="863c9498-2bbd-4486-9575-4730242bba76"
+/>
+
+## Default files in Uploader dialog
+{id="predefined-files"}
+
+<!-- Roma: Mention that it is useful for image editing of already uploaded files. -->
+[Uploadcare File Uploader][feature-file-uploader] allows you to make specified
+files appear in the File Uploader dialog on open.
+
+Specify these files by adding the `value` attribute to your File Uploader
+`<input>` element. The attribute may either be empty or hold a file CDN URL or
+UUID.
+
+If you set the `value` externally and trigger the DOM change event, it affects
+the File Uploader. For instance, setting it to a file UUID or a CDN URL will
+result in that the file is loaded into the File Uploader. You can apply it
+anytime, and it'll take effect immediately.
+
+Here’s how you do it:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file"
+  data-public-key="demopublickey"
+  value="https://ucarecdn.com/05da8fb8-bbe9-4da1-a79c-eaf5979152db/"
+/>
+<!--
+  Also valid:
+  value="05da8fb8-bbe9-4da1-a79c-eaf5979152db"
+-->
+```
+
+You may also want to check out a live example:
+
+<Widget
+  publicKey="232d896709883f79bfaf"
+  value="05da8fb8-bbe9-4da1-a79c-eaf5979152db"
+/>
+
+## JS snippets and CSS tricks
+{id="js-snippets"}
+
+In this cookbook part, you can find popular code examples and resolutions of
+common tasks when working with File Uploader. Less words, more code!
+
+### Paste an image from the clipboard
+
+```js
+const widget = uploadcare.Widget("[role=uploadcare-uploader]");
+
+widget.onDialogOpen((dialog) => {
+  function uploadFromClipboard(e) {
+    let data = e.clipboardData;
+    if (!!data && !!data.items.length) {
+      // check if clipboard data is image
+      if (data.items[0].type.indexOf("image") != 0) {
+        alert("No image in the clipboard");
+        return;
+      }
+      let blob = e.clipboardData.items[0].getAsFile();
+      dialog.addFiles("object", [blob]);
+    }
+  }
+  window.addEventListener("paste", uploadFromClipboard);
+});
+```
+<!-- https://codepen.io/optlsnd/pen/KKMOOVb -->
+
+### Get a CDN URL of an uploaded file
+For a single-upload widget.
+
+```js
+// get a widget reference
+const widget = uploadcare.SingleWidget("[role=uploadcare-uploader]");
+
+// listen to the "upload completed" event
+widget.onUploadComplete(fileInfo => {
+  // get a CDN URL from the file info
+  console.log(fileInfo.cdnUrl);
+});
+```
+
+### Get CDN URLs of uploaded files
+For a multi-upload widget.
+
+```js
+// get a widget reference
+const widget = uploadcare.MultipleWidget("[role=uploadcare-uploader]");
+
+// listen to the "change" event
+widget.onChange(function (group) {
+  // get a list of file instances
+  group.files().forEach(file => {
+    // once each file is uploaded, get its CDN URL from the fileInfo object
+    file.done(fileInfo => {
+      console.log(fileInfo.cdnUrl);
+    });
+  });
+});
+```
+
+### Get a group CDN URL
+For a multi-upload widget.
+
+```js
+// get a widget reference
+const widget = uploadcare.MultipleWidget("[role=uploadcare-uploader]");
+
+// listen to the "upload completed" event
+widget.onUploadComplete(groupInfo => {
+  // get CDN URL from group information
+  console.log(groupInfo.cdnUrl);
+});
+```
+
+### Get a CDN URL of an uploaded file/group
+For a dialog window.
+
+```js
+// create a new dialog object
+const dialog = uploadcare.openDialog(null, '', {
+  multiple: false // set to true for multi-file uploads
+});
+
+// get a file or group instance
+dialog.done(res => {
+  // once a file or group is uploaded, get its CDN URL
+  res.promise().done(info => {
+    console.log(info.cdnUrl);
+  });
+});
+```
+
+### Get a camera-recorded video duration
+
+```js
+// get widget reference
+const widget = uploadcare.Widget("[role=uploadcare-uploader]");
+
+let cameraRecDuration = null;
+let recStart = null;
+let recEnd = null;
+
+// calculate webcam recording duration
+document.body.addEventListener("click", e => {
+  // user clicks "start recording"
+  if (e.target.classList.contains("uploadcare--camera__button_type_start-record")) {
+    recStart = new Date().getTime();
+  }
+  // user clicks "stop recording"
+  if (e.target.classList.contains("uploadcare--camera__button_type_stop-record")) {
+    recEnd = new Date().getTime();
+    cameraRecDuration = (recEnd - recStart) / 1000;
+    console.log("Duration: ", cameraRecDuration);
+  }
+});
+```
+
+### Check if a file was added or removed
+
+```js
+// get widget reference
+const widget = uploadcare.Widget("[role=uploadcare-uploader]")
+// get dialog object to access its API
+widget.onDialogOpen(dialog => {
+  // listen to "file added" event
+  dialog.fileColl.onAdd.add(file => {
+    console.log("File added", file)
+  });
+  // listen to "file removed" event
+  dialog.fileColl.onRemove.add(file => {
+    console.log("File removed", file)
+  });
+});
+```
+
+### Get the upload source
+
+```js
+// get widget reference
+const widget = uploadcare.Widget("[role=uploadcare-uploader]");
+
+// listen to the "upload completed" event
+widget.onUploadComplete(fileInfo => {
+  // get source details from file information
+  console.log(fileInfo.sourceInfo.source);
+});
+```
+
+### Add an overlay to the crop
+
+```css
+.uploadcare--jcrop-tracker::after{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  /* URL of the overlay image */
+  background-image: url(<https://i.imgur.com/hSbF6v0.png>);
+  background-size: cover;
+  background-position: center;
+}
+
+.uploadcare--jcrop-tracker:first-of-type{
+  opacity: 1 !important;
+  background-color: transparent !important;
+}
+```
+<Image uuid="492fa22a-894a-41c2-917d-b1a0c3c813a4" desc="Adding an overlay" />
+
+### Get a selected crop preset
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" id="uploadcare-file" data-crop="2:3, 5:6, 16:9" />
+```
+
+```js
+let currentPreset = '2:3';
+
+document.addEventListener('click', e => {
+  // user clicks on a crop preset icon
+  if (e.target.classList.contains('uploadcare--crop-sizes__item') || e.target.classList.contains('uploadcare--crop-sizes__icon')) {
+    // get the caption of the preset selected
+    currentPreset = document.querySelector('.uploadcare--crop-sizes__item_current').dataset.caption;
+    console.log(currentPreset);
+  }
+});
+```
+
+### Upload an image from Base64
+
+```js
+// original base64 image
+const b64data = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+
+// convert dataURI to a File object
+function dataURLtoFile(dataurl, filename) {
+  let arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, {type:mime});
+}
+
+// convert a base64 image to a File object
+const fileToUpload = dataURLtoFile(b64data, "image");
+
+// upload the file to Uploadcare
+let upload = uploadcare.fileFrom("object", fileToUpload);
+
+upload.done(fileInfo => {
+  console.log("File uploaded: ", fileInfo.cdnUrl);
+});
+```
+
+### Render the uploaded image preview
+
+```js
+// get widget reference
+const widget = uploadcare.Widget("[role=uploadcare-uploader]");
+
+widget.onUploadComplete(fileInfo => {
+  const preview = document.createElement("img");
+  // create a preview of the uploaded image of 200px width
+  preview.src = fileInfo.cdnUrl + "-/resize/200x/";
+  // add the thumbnail to the page
+  document.body.appendChild(preview);
+});
+```
+
+### Add custom names to crop presets
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" id="uploadcare-file" data-crop="free,1:1,2:3" />
+```
+
+```css
+.uploadcare--crop-sizes__item {
+  overflow: visible;
+}
+.uploadcare--crop-sizes__item:nth-child(1)::after {
+  content: "Free form";
+}
+.uploadcare--crop-sizes__item:nth-child(2)::after {
+  content: "Square";
+}
+.uploadcare--crop-sizes__item:nth-child(3)::after {
+  content: "Portrait";
+}
+```
+
+<Image uuid="e0274586-4791-49d5-b4cb-995b098ba51f" desc="Crop preset names" />
+
+### Add custom widget button labels
+
+```html
+<input type="hidden" role="uploadcare-uploader" id="uploadcare-file-1" data-btn-text="I'm the first buton" />
+<input type="hidden" role="uploadcare-uploader" id="uploadcare-file-2" data-btn-text="I'm the second one" />
+<input type="hidden" role="uploadcare-uploader" id="uploadcare-file-3" data-btn-text="And I am the third" />
+```
+
+```js
+// get an array of widget references
+const widgets = uploadcare.initialize();
+
+// update each widget button text with the data-btn-text attribute's value
+widgets.forEach(widget => {
+  widget.inputElement.nextSibling.querySelector(".uploadcare--widget__button_type_open").innerHTML = widget.inputElement.getAttribute("data-btn-text");
+});
+```
+<Image uuid="2940267e-8ff5-458c-be8e-3f0cfe862174" desc="Custom button captions" />
+
+### Reset widget after upload
+
+```js
+// get widget reference
+const widget = uploadcare.Widget("[role=uploadcare-uploader]");
+
+// once a file is uploaded, output its URL and reset the widget
+widget.onUploadComplete(fileInfo => {
+  console.log(fileInfo.cdnUrl);
+  widget.value(null);
+});
+```
+
+### Add a custom message to the dialog
+
+```css
+/* turn the "after" pseudo element of the dialog container's div into a hint */
+.uploadcare--tab__content::after {
+  content: "Wake up Neo... The Matrix has you... Follow the white rabbit🐇";
+  padding: 1em;
+  margin: 2em;
+  background-color: #000;
+  color: #00ff00;
+  border-radius: 5px;
+}
+```
+
+<Image uuid="1797428e-7695-484a-863a-538eeff595ec" desc="Custom hint message" />
+
+### Video record time limit
+
+```js
+const SECOND = 1000;
+
+// record time limit
+const TIME_LIMIT = 5 * SECOND;
+
+const widget = uploadcare.Widget("[role=uploadcare-uploader]");
+
+widget.onDialogOpen((dialog) => {
+  // Listen to a click on the Start button
+  dialog.dialogElement[0].addEventListener("click", (e) => {
+    if (
+      e.target.classList.contains(
+        "uploadcare--camera__button_type_start-record"
+      )
+    ) {
+      const stopBtn = dialog.dialogElement[0].querySelector(
+        ".uploadcare--camera__button_type_stop-record"
+      );
+
+      // Diasplay countdown on Stop button
+      let remaining = TIME_LIMIT;
+      stopBtn.innerText = `Stop (in ${remaining / 1000}s)`;
+      let counter = setInterval(() => {
+        remaining -= 1000;
+        if (remaining <= 0) {
+          clearInterval(counter);
+        }
+        stopBtn.innerText = `Stop (${remaining / 1000}s)`;
+      }, 1000);
+
+      // Click Stop button (stop recording) after TIME_LIMIT
+      setTimeout(() => {
+        stopBtn.click();
+      }, TIME_LIMIT);
+    }
+  });
+});
+```

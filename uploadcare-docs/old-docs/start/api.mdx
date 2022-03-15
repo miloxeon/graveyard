@@ -1,0 +1,142 @@
+---
+  title: 'Uploadcare API Overview'
+  description:
+    'Uploadcare API provides the single point of control for your entire file infrastructure: uploads, intelligence, transformations, and delivery of your files to your customers using the flexible and reliable API.'
+---
+
+import { VersionTable } from '@uploadcare/docs-components'
+
+# API Overview
+
+Uploadcare API provides a single point of control for the entire infrastructure:
+* [Upload API](#upload-api) — file uploads
+* [REST API](#rest-api) — work with stored files
+* [CDN operations](#cdn-operations) — on-the-fly image transformations
+* [File Uploader API](#file-uploader-api) — tweak behavior of our file uploader
+
+## Upload API
+{id="upload-api"}
+
+Key features:
+* Direct uploading
+* Multipart uploading
+* Uploading via URL
+* Secure uploading
+
+Upload API powers our [File Uploader][file-uploader].
+
+[**→** Upload API Reference][api-reference-upload]  
+[**→** Upload API clients][integrations-clients]
+
+## REST API
+{id="rest-api"}
+
+Key features:
+* Secure authorization
+* File and file groups management
+* Uploadcare projects management
+* Video processing and documents conversion
+* Object recognition
+
+[**→** REST API Reference][api-reference-rest]  
+[**→** REST API clients][integrations-clients]
+
+## CDN operations
+{id="cdn-operations"}
+
+Key features:
+* Works on-the-fly
+* Various image resizing methods, including smart crop
+* Various image compression methods, including smart compression
+* Fine control over colors
+* Various image modifications
+* File information
+
+Here is the example of using our domain-specific language so you can get the idea right away:
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/[UUID]/-/crop/200x300/center/
+```
+
+<p>
+  <img src="https://ucarecdn.com/5651bbb6-c599-44bd-9c63-1db5e67db6ad/-/crop/200x300/center/" alt="Center image and crop to size"/>
+</p>
+
+```cdn{noAutoLinker}
+https://ucarecdn.com/[UUID]/-/resize/400x/-/effect/grayscale/
+```
+
+<p>
+  <img src="https://ucarecdn.com/5651bbb6-c599-44bd-9c63-1db5e67db6ad/-/resize/400x/-/effect/grayscale/" alt="Grayscale image effect (black and white)"/>
+</p>
+
+[**→** Image transformations][transformations-image]
+
+## File Uploader API
+{id="file-uploader-api"}
+
+This is a set of tools allowing you to adjust our File Uploader
+behavior and implement advanced workflows like moderating uploaded content or
+playing with the file uploader appearance. You can also use certain methods of the API without the file uploader, as standalone components.
+
+[**→** File Uploader API Reference][api-reference-javascript]
+
+## Versioning
+
+When we introduce backward-incompatible changes into File Uploader and
+REST API, we release new major versions. Once published, such versions are
+supported for a limited time period. This section combines versions, their
+publishing dates, and support terms.
+
+The support length for each new release of Uploadcare File Uploader and REST API is
+_2 years_. The two-year support term for current versions starts when we release
+the new ones. We will update this document, our changelog, and notify you via
+email about new releases.
+
+The latest stable versions are:
+* Uploadcare File Uploader: _3.11.0_
+* REST API: _0.5_
+
+<!-- The complete log of changes can be found in the platform
+[Changelog][changelog] under the tags [“widget”][changelog-widget] (for File Uploader) and
+[“rest api”][changelog-rest]. -->
+
+### File Uploader Versioning
+{id="versioning-uploader"}
+
+<VersionTable>
+
+| Version | Date Published | Supported Until |
+|---------|----------------|-----------------|
+| 3.x     | 28 Jun 2017    | TBD             |
+| 2.x     | 20 Feb 2015    | 1 Jan 2020      |
+| 1.x     | 21 Mar 2014    | 1 Jun 2019      |
+| 0.x     | 6 Sep 2012     | 1 Jun 2019      |
+
+</VersionTable>
+
+Note, you will still be able to use any file uploader version after its support term.
+However, you will be acting at your own risk.
+
+The history of file uploader 3.x and 2.x changes can be found on
+[GitHub][file-uploader-github-changelog]. To migrate from 2.x to 3.x, check out this
+[migration guide][file-uploader-migration].
+
+### REST API Versioning
+{id="versioning-rest"}
+
+<VersionTable>
+
+| Version   | Date Published | Available Until |
+|-----------|----------------|-----------------|
+| 0.5       | 1 Apr 2016     | TBD             |
+| 0.4       | 13 Jun 2015    | 1 Sep 2019      |
+| 0.3       | 11 Jun 2013    | 1 Sep 2019      |
+| 0.2       | 7 Jun 2012     | 1 Sep 2019      |
+| 0.1       | 31 May 2012    | 1 Feb 2019      |
+| Undefined | 31 May 2012    | 1 Sep 2019      |
+
+</VersionTable>
+
+Note, you won’t be able to use any API version after its support term. Requests
+to deprecated API versions will return error messages.

@@ -1,0 +1,116 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: 'JavaScript API: Upload Dialog and Panel'
+  description:
+    This section covers controlling the upload dialog and panel via
+    JavaScript API. Upload Dialog is a modal window on top of your page.
+    It contains a set of tabs with different upload sources and file
+    preview. Find more info in Uploadcare Docs.
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# JavaScript API — Upload Dialog and Panel
+
+<Messages>
+  <WidgetV3Warning link='/docs/file-uploader-api/v2/#dialog' />
+  <Migration />
+</Messages>
+
+Upload Dialog is a modal window on top of your page. It contains a set of tabs
+with different upload sources and file preview. Upload Panel is the same thing,
+just in a non-modal form.
+
+* [Open an upload dialog](#open-dialog)
+* [Open an upload panel](#open-panel)
+* [Dialog API](#dialog-api)
+
+## Open Upload Dialog
+{id="open-dialog"}
+
+You can use `openDialog` to open a standalone upload dialog over your page:
+
+```js
+var dialog = uploadcare.openDialog(files, tab, settings);
+```
+
+Where,
+
+* `files`, a file, file array or group that will be shown as already uploaded.
+* `tab`, a name of a tab opened by default when no predefined files are present.
+* `settings`, a [settings object][file-uploader-config-object].
+
+## Open Upload Panel
+{id="open-panel"}
+
+`openPanel` is used to open an upload panel at any point on your page:
+
+```js
+var panel = uploadcare.openPanel(placeholder, files, tab, settings);
+```
+
+Where,
+
+* `placeholder`, a selector or DOM element that will be replaced with an upload
+  panel. This will be put back on your panel resolving.
+* `settings`, [settings object][file-uploader-config-object].
+
+## Dialog API
+{id="dialog-api"}
+
+Both dialog and panel instances implement the extended jQuery
+[promise interface][ext-jquery-promise-interface] showing progress on a user tab.
+
+```js
+dialog.done(function(result) {
+  // Dialog closed and a file or file group is selected.
+});
+
+dialog.fail(function(result) {
+  // Dialog closed and no file or file group was selected.
+  // The result argument is either null or the last selected file.
+});
+
+dialog.always(function() {
+  // Handles a closing dialog regardless of whether or not files were selected.
+});
+
+dialog.progress(function(tabName) {
+  // tabName is selected. progress() works when you click a tab name on the list.
+  // Technically, it would work on any dialog progress, i.e. when preview appears.
+});
+```
+
+In addition to the jQuery [promise interface][ext-jquery-promise-interface],
+dialog and panel objects have the following properties and methods,
+
++---------------------+------------+---------------------------------------------------------------------------+
+|      Property       |    Type    |                                   Value                                   |
++=====================+============+===========================================================================+
+| `resolve()`         | method     | Resolve a dialog with currently selected files.                           |
++---------------------+------------+---------------------------------------------------------------------------+
+| `reject()`          | method     | Close the dialog and discard any file selection.                          |
++---------------------+------------+---------------------------------------------------------------------------+
+| `addFiles()`        | method     | Add an array of files to your dialog result set.                          |
++---------------------+------------+---------------------------------------------------------------------------+
+| `switchTab()`       | method     | Switch your dialog to a tab with a provided name.                         |
+|                     |            | The name you provide should be present in the `settings.tabs` array.      |
++---------------------+------------+---------------------------------------------------------------------------+
+| `fileColl`          | collection | A collection of selected files. Use it to subsribe and change events.     |
++---------------------+------------+---------------------------------------------------------------------------+
+| `hideTab()`         | method     | Hide a tab with a provided name.                                          |
++---------------------+------------+---------------------------------------------------------------------------+
+| `showTab()`         | method     | Show a tab with a provided name.                                          |
++---------------------+------------+---------------------------------------------------------------------------+
+| `isTabVisible()`    | method     | Inquire if a tab with a provided name is visible.                         |
++---------------------+------------+---------------------------------------------------------------------------+
+| `onTabVisibility()` | callback   | Register a callback that will be called when tab visibility gets changed. |
+|                     |            | “hideTab()” and “showTab()” provide tab visibility changes.               |
+|                     |            | Another example of a changing visibility would be Preview Tab.            |
+|                     |            | The first argument stands for the tab name, and the second is a boolean   |
+|                     |            | related to tab visibility.                                                |
++---------------------+------------+---------------------------------------------------------------------------+
+
+You can find more customization examples
+[here][file-uploader-custom-tabs].

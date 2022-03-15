@@ -1,0 +1,56 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: File Uploader API v3 Reference
+  description:
+    File Uploader API is an extensive set of tools that allows you adjust File
+    Uploader behavior and implement various uploading worfkflows.
+---
+
+# File Uploader API v3 Reference
+
+<!--
+Rewrite
+A deep access to Uploader functions and settings. Not only GUI shit but all the stuff you could ever need to handle uploads.
+-->
+
+File Uploader API is an extensive set of tools that allows you adjust File
+Uploader behavior and implement various uploading worfkflows. For example,
+upload files from URL, moderate uploaded content, adjust File Uploader widget
+appearance to match your website or app.
+
+As stated in the [File Uploader configuration section][file-uploader-config],
+[File Uploader options][file-uploader-options] can be set in three ways.
+
+* Globally, on page load.
+* Locally, when a new File Uploader object is created.
+* By passing the `settings` object.
+
+JavaScript global variables will go in your `<script>` tag:
+
+```html
+<script>
+  UPLOADCARE_PUBLIC_KEY = 'demopublickey';
+  UPLOADCARE_LOCALE = 'ru';
+</script>
+```
+
+Local options can be set in the `<input>` element as data attributes:
+
+```html
+<input type="hidden" role="uploadcare-uploader"
+  data-public-key="demopublickey"
+  data-images-only
+/>
+```
+
+You can also pass most of the File Uploader options as an argument holding the
+`settings` [object][file-uploader-config-object] to the methods listed
+in this JavaScript API reference. For instance:
+
+```js
+uploadcare.openDialog(null, {
+  publicKey: 'demopublickey',
+  imagesOnly: true,
+  crop: '300x200'
+});
+```

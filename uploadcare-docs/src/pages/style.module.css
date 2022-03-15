@@ -1,0 +1,52 @@
+.root {
+	max-width: 50rem;
+	margin: 2rem auto;
+	padding: 1rem;
+}
+
+.h1 {
+	font-size: 3rem;
+	font-weight: 500;
+}
+
+.h2 {
+	margin-top: 2rem;
+	font-weight: 500;
+}
+
+.link {
+	padding: 1rem 1.5rem;
+	display: inline-flex;
+	align-items: center;
+	background-color: var(--ifm-footer-background-color);
+	color: inherit;
+}
+
+.link:hover {
+	text-decoration: none;
+}
+
+.linkLabel {
+	display: inline-block;
+	font-size: normal;
+	margin-left: 0.5rem;
+}
+
+.emoji {
+	margin-right: 0.5rem;
+	font-size: 1.5rem;
+	line-height: 1;
+	background: none;
+	border: none;
+}
+
+.grid {
+	display: flex;
+	flex-wrap: wrap;
+	margin: -0.5rem;
+}
+
+.grid > * {
+	margin: 0.5rem;
+	flex-grow: 2;
+}

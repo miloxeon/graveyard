@@ -1,0 +1,111 @@
+---
+  title: 'Uploadcare Quick Start'
+  description: 'Uploadcare is a hassle-free file infrastructure. We cover every aspect of your file handling.'
+---
+
+import { Widget } from "@uploadcare/widget"
+import { CdnExample } from "@uploadcare/docs-components";
+
+# Quick start
+
+Uploadcare lets you upload, store, and deliver your files to end users. Also, you can use tools to transform and optimize images, process videos, convert documents, etc. Let's do some of this without further ado.
+
+## Uploading
+{id="uploads"}
+
+You can add [File Uploader][feature-file-uploader] to your website in about five minutes. It'll work in any browser on computers and mobile devices. Upload files of any size (up to 5 TB) from local disc, social media and popular storage services (Dropbox, Google Photos, etc.).
+
+The power of an Uploadcare ecosystem is hidden behind a simple Upload button:
+
+<Widget clearable />
+
+Add File Uploader on your website by adding this code into your page's `<HEAD>`:
+
+```html
+<script>UPLOADCARE_PUBLIC_KEY = "demopublickey";</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+```
+
+Use your `UPLOADCARE_PUBLIC_KEY` instead of `demopublickey` after you sign up. It points to a [specific project][settings-keys] in your Uploadcare account.
+
+When the JS library is added on the page, use it in `<BODY>` to place an upload button:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" />
+```
+
+You can customize the button and the Uploader dialog appearance to match your website style.
+Refer to [the File Uploader documentation][file-uploader], and to the [File Uploader API][api-reference-javascript].
+
+## Storage
+{id="storage"}
+
+All uploads go to your primary [storage][storage] at Uploadcare. Every uploaded file gets its own UUID:
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/",
+    "36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd"
+  ]}
+/>
+
+All files are stored in your project until you delete them. This feature is called [Auto storing][storage-store] and it's on by default. When you switch it off, and newly uploaded files will be deleted after 24 hours. Still, you can keep individual files by explicitly storing them via API.
+
+## Delivery
+{id="delivery"}
+
+Uploadcare has a [CDN][delivery-cdn] as a basic delivery method,
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/",
+    "https://ucarecdn.com/:uuid/"
+  ]}
+/>
+
+You can apply CDN operations over the file URLs:
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/preview/640x640/image.png",
+    "https://ucarecdn.com/:uuid/-/:operation/:params/:filename"
+  ]}
+/>
+
+Transformations are be applied on the fly, at the moment of a user's request. Original media stays intact. Processed file versions get cached on the CDN nodes and don't take any space in your storage, yet they make these pages load faster in the future for similar requests.
+
+## Processing
+{id="processing"}
+
+Uploadcare provides various [transformation][transformations] and [intelligence][intelligence] features.
+
+Let's apply [smart crop][transformations-image-smart-crop], [smart compression][transformations-image-smart-compression], and [enhance][transformations-image-enhance] features,
+
+<CdnExample
+  examples={[
+    "https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/1024x1024/smart/-/format/auto/-/quality/smart/-/enhance/image.jpg",
+    "https://ucarecdn.com/:uuid/-/scale_crop/1024x1024/smart/-/format/auto/-/quality/smart/-/enhance/:filename"
+  ]}
+/>
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/preview/1280x640/-/quality/lightest/" alt="Original image, landscape orientation"/></a><br/>
+      Original, 5120x2244 13,5 MB.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/1024x1024/smart/-/format/auto/-/quality/smart/-/enhance/" target="_blank">
+        <img src="https://ucarecdn.com/36cda64e-7f8c-4e54-89f0-6a7b1d90a8dd/-/scale_crop/640x640/smart/-/format/auto/-/quality/lightest/-/enhance/" alt="Transformed image with scale, crop, and compression"/></a><br/>
+      Transformed, 1024x1024 1,8 MB.
+    </td>
+  </tr>
+</table>
+
+Try using the [Adaptive Delivery JS library][delivery-adaptive] to skip this step by automatically adapting images to user context: location, device, and browser.
+
+## Next steps
+{id="next-steps"}
+
+These are just basics of what you can do with Uploadcare. [Create an account][account-signup], check out our [integrations][integrations], [guides][guides], and [APIs][api]. Post your questions in our [Community][community] and feel free to contact us whenever you need.

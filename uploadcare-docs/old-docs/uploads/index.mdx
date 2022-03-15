@@ -1,0 +1,104 @@
+---
+  title: 'Uploading with Uploadcare'
+  description:
+    'Uploadcare provides powerful File Uploader and Upload API for your website or app with no hassle.'
+---
+
+import { Widget } from '@uploadcare/widget'
+import {
+  LeadParagraph,
+  Tabs as DocsTabs,
+  Panel as DocsTabPanel,
+  Tab as DocsTab,
+  TabsContainer as DocsTabsContainer,
+  PanelsContainer as DocsPanelsContainer
+} from '@uploadcare/docs-components'
+import CurlUrlUpload from './_templates/curl-url-upload.mdx'
+import JsUrlUpload from './_templates/js-url-upload.mdx'
+import PythonUrlUpload from './_templates/python-url-upload.mdx'
+
+# Uploading
+
+<LeadParagraph>Implement file uploading into your application.</LeadParagraph>
+
+- Built-in storage and CDN
+- Uploading acceleration network
+- Multipart uploading up to 5 TB per file
+- Authenticated uploading process
+- Unlimited scalability on demand
+
+## Upload API
+
+Build custom uploading flow using Upload API directly or with an API client.
+
+<DocsTabs defaultTab='curl'>
+  <DocsTabsContainer>
+    <DocsTab to='curl'>cUrl</DocsTab>
+    <DocsTab to='js'>JavaScript</DocsTab>
+    <DocsTab to='python'>Python</DocsTab>
+  </DocsTabsContainer>
+  <DocsPanelsContainer>
+    <DocsTabPanel tab='curl'>
+      <CurlUrlUpload />
+    </DocsTabPanel>
+    <DocsTabPanel tab='js'>
+      <JsUrlUpload />
+    </DocsTabPanel>
+    <DocsTabPanel tab='python'>
+      <PythonUrlUpload />
+    </DocsTabPanel>
+  </DocsPanelsContainer>
+</DocsTabs>
+
+Once a file is uploaded, it's available by a URL with the UUID:
+
+```cdn
+https://ucarecdn.com/017162da-e83b-46fc-89fc-3a7740db0a82/
+```
+
+[Upload API reference &rarr;][api-reference-upload]<div style="padding-bottom: 1vw;" />
+[API clients &rarr;][integrations-clients]
+
+## File Uploader
+
+We’ve built a UI that uses Upload API so you don’t have to. Integrate it in the
+page's `<head>`:
+
+```html
+<script
+  src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js">
+</script>
+```
+
+And use File Uploader in the page's `<body>`:
+
+```html
+<input
+  type="hidden"
+  role="uploadcare-uploader"
+  data-public-key="demopublickey"
+  name="my_file" />
+```
+
+The regular `<input>` element will appear like this (clickable):
+
+<Widget clearable />
+
+This responsive widget works in all modern browsers, on all devices and it has a
+plenty of features and customization options.
+
+[File Uploader &rarr;][file-uploader]
+
+## Alternative methods
+
+Transfer and deliver your existing files with Uploadcare without explicitly
+uploading:
+
+- [Proxy][delivery-proxy] — delivers files from your domain via [Uploadcare CDN][delivery-cdn].
+- [Migration tool][migro-guide] transfers your files from other platforms.
+
+## Secure uploading
+
+Control who can upload files to your account by authenticating upload
+requests.<div style="padding-bottom: 1vw;" />
+[Secure Uploading &rarr;][secure-uploads]

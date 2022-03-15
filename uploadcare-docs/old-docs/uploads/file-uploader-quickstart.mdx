@@ -1,0 +1,73 @@
+---
+  title: 'File Uploader Quick Start'
+  noindex: true
+  description:
+    'This section walks you through the basic UI-based file uploading workflow and some of the features.'
+---
+
+import { Widget } from '@uploadcare/widget'
+
+# File Uploader Quick Start
+
+Uploading is one of the fundamental concepts of Uploadcare, an end-to-end file
+handling platform. The uploading experience starts with
+[Uploadcare File Uploader][file-uploader], an ultimate File Uploader.
+This section covers how you jump straight into action.
+
+What you get in the end is a uploader button in a specific spot of your page.
+Hitting the button activates the uploading dialog driven by tabbed navigation.
+
+Here, the button goes like this,
+
+<Widget />
+
+The File Uploader allows you to choose files from over a dozen sources,
+handle multiple files in one go, implement our Distributed Upload Network, and
+more.
+
+While you can learn more about File Uploader [dependencies][file-uploader-install-dependencies] and
+[installation][file-uploader-install] in another section, the simplest implementation
+would go like this:
+
+Discover a page you would like the File Uploader to appear on. Navigate to its `<head>`,
+and put the following snippet there:
+
+```html
+<script>UPLOADCARE_PUBLIC_KEY = "YOUR_PUBLIC_KEY";</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
+```
+
+The first `<script>` element here sets the target Uploadcare project for your
+uploads by defining the `UPLOADCARE_PUBLIC_KEY` parameter.
+Replace `YOUR_PUBLIC_KEY` with a [Public API Key][settings-keys-public] of the
+project you want to use with the File Uploader. This requires you to
+[Sign Up][account-signup] and discover the API key under project settings around
+the [Dashboard][dashboard].
+You can also set `UPLOADCARE_PUBLIC_KEY` to the `"demopublickey"` value which
+points to the Uploadcare demo account and does not require signing up for
+Uploadcare. Just note we wipe out all the files on our demo account every 24
+hours.
+
+The second `<script>` in the example above performs the
+[CDN install][file-uploader-install-cdn] of the “full” File Uploader bundle, minified. You
+might want to learn more about File Uploader [bundle types][file-uploader-install-bundles] or
+available [install methods][file-uploader-install].
+
+<!-- GONE TO INDEX.MD / Uploads / Uploader / Install
+
+Once you are done setting your public key and choosing an appropriate bundle,
+look through your page `<body>` and see where you want the File Uploader button to
+appear. Place the following `<input>` element there and make sure not to miss
+the `name` attribute:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" />
+``` -->
+
+That’s it. From here, our File Uploader will work as a simple form element
+allowing folk around your page to upload files of any types and sizes. You can
+always learn more about in-depth uploader configuration [here][file-uploader-config].
+
+In case you don’t feel like putting `<script>` elements here and there, check
+out other [install methods][file-uploader-install] like [NPM][file-uploader-install-npm] or
+head straight over to our [integrations][integrations].

@@ -1,0 +1,108 @@
+---
+sidebar_position: 5
+title: Device-aware Delivery
+---
+
+import Options from '../../src/components/deviceAwareDeliveryOptions'
+
+![](https://ucarecdn.com/73453914-831a-441c-b7e2-708de27bab9c/-/preview/-/format/auto/deviceawaredelivery.jpg)
+
+Device-aware delivery is an Uploadcare's full-stack image optimization solution. It adapts images to
+user context: screen size, browser, location, and other parameters. The optimization includes lazy
+loading, smart compression, WebP, responsive images, and retina display support. Altogether, it
+speeds up page loading and improves user experience without any coding.
+
+The main advantage is that you don’t need to use `srcset`, media queries, image resizing and other
+operations. Uploadcare will handle all that automatically.
+
+## Usage
+
+Connect the Device-aware Delivery JS library:
+
+```jsx
+<script>
+	(function (src, cb) {
+		var s = document.createElement('script')
+		s.setAttribute('src', src)
+		s.onload = cb
+		(document.head || document.body).appendChild(s)
+	})('https://ucarecdn.com/libs/blinkloader/3.x/blinkloader.min.js', function () {
+		window.Blinkloader.optimize({
+			pubkey: 'YOUR_PUBLIC_KEY',
+			fadeIn: true,
+			lazyload: true,
+			smartCompression: true,
+			responsive: true,
+			retina: true,
+			webp: true,
+		})
+	})
+</script>
+```
+
+Now you can do this:
+
+```html
+<img data-blink-src="https://example.com/foo.png" alt="" />
+<div data-blink-src="https://example.com/foo.png">You can set background-image</div>
+```
+
+Image will be uploaded to Uploadcare and served via our CDN. It will be automatically optimized for
+the end device.
+
+You can also serve already uploaded images with UUIDs:
+
+```html
+<img data-blink-uuid="6493f2d1-a476-427f-bcd5-94330cc02837" alt="" />
+<div data-blink-uuid="6493f2d1-a476-427f-bcd5-94330cc02837">You can set background-image</div>
+```
+
+Setting `data-blink-src` or `data-blink-uuid` attributes onto a `div` will set its
+`background-image` property.
+
+## Configuration
+
+You can configure Device-aware Delivery by passing a configuration object to the
+`BlinkLoader.optimize()` method. Here are the supported properties:
+
+<Options />
+
+## Applying transformations
+
+You can specify transformations with either of these methods:
+
+```html
+<img
+	data-blink-ops="filter: nerion; enhance: 15; mirror"
+	data-blink-src="https://example.com/foo.png"
+	alt=""
+/>
+```
+
+```html
+<img
+	data-blink-filter="nerion"
+	data-blink-enhance="15"
+	data-blink-mirror
+	data-blink-src="https://storage.example.com/logo.png"
+	alt=""
+/>
+```
+
+Note, Device-aware Delivery adds `resize`, `format` and `quality` automatically. We don't recommend
+changing the behavior, since we calculate the transformation parameters based on the user device.
+
+Otherwise, the available transformations and their limits are the same as in URL-based approach.
+
+## Extra-large images
+
+The output [image size limit](https://uploadcare.com/docs/transformations/image/#dimensions)
+delivered with CDN is 3000 px in either dimension. JPEG images can be resized up to 5000 px. For
+that, you need to set the image format explicitly.
+
+Adaptive Delivery will resize an image up to 5000 px automatically, when:
+
+1. `data-blink-src` has a file extension `jpeg` or `jpg` (case-insensitive). For example,
+   `https://yourdomain.com/image.jpg`
+2. `data-blink-format` is `auto` or `jpeg`. When you set `webp:true` (default), `auto` is set
+   implicitly.

@@ -1,0 +1,151 @@
+---
+  layoutPreset: integrations
+  title: PHP API Client for File Upload and Management
+  description:
+    PHP Uploadcare API client for Fast & Reliable File Uploads; File, Group,
+    Project Operations; Video + Document Conversion & More.
+---
+
+# PHP API Client
+
+PHP integration handles uploads and file operations by wrapping Uploadcare
+[Upload API][api-reference-upload] and [REST API][api-reference-rest]. This
+comprehensive API client lets you use most of the Uploadcare features from within
+your PHP app.
+
+[GitHub &rarr;][php-github]
+
+Check out an [example project][php-github-sample-project]
+that we created as a showcase for various usage scenarios and tasks that you can
+resolve.
+
+## Features
+
+Upload features:
+* Upload files from local storage and URLs (up to 5 TB)
+* Multipart uploading for large files
+* Uploading network to speed uploading jobs (like CDN)
+
+File management features:
+* Get file info and perform various operations (store/delete/copy) with them
+* Work with groups of files 
+* Get info about account project
+* Manage webhooks
+* Convert documents
+* Encode and transform videos
+
+Security features:
+* Secure authentication
+* Secure uploads (signed uploads)
+* Secure delivery (authenticated URLs)
+
+## Requirements
+
+* `PHP 7.1 or later`
+* `php-curl`
+* `php-json`
+
+How to check PHP version via CLI:
+
+```bash
+php -v
+```
+
+How to check modules:
+
+```bash
+php -m
+```
+
+You should see `curl` and `json` in the list:
+
+```bash
+workstation:home user$ php -m
+[PHP Modules]
+bcmath
+...
+curl
+...
+json
+...
+
+[Zend Modules]
+```
+
+## Install
+
+Prior to installing `uploadcare-php`, get the [Composer][ext-composer-home]
+dependency manager for PHP to simplify installation.
+
+### 1. Update `composer.json`:
+
+```js
+"require": {
+    "uploadcare/uploadcare-php": "^3.0"
+}
+```
+
+### 2. Run [Composer][ext-composer-home]:
+
+```bash
+php composer.phar update
+```
+
+### 3. Define Uploadcare [API keys][settings-keys]:
+
+Add API keys to your configuration object. For example:
+
+```php
+# config.php
+$_ENV['UPLOADCARE_PUBLIC_KEY'] = '<your public key>';
+$_ENV['UPLOADCARE_PRIVATE_KEY'] = '<your private key>';
+```
+
+### 4. Include Composer's autoload file:
+
+```php
+require_once 'vendor/autoload.php';
+```
+
+### 5. Create a `configuration` object
+
+There're a few ways to create a configuration object. We recommend that you use
+this static method of the `Uploadcare\Configuration` class:
+
+```php
+$configuration = \Uploadcare\Configuration::create('<your public key>', '<your private key>');
+```
+
+Alternatively, you can create a Security signature, HTTP client, and Serializer
+classes explicitly. After that, you can create a configuration object:
+
+```php
+$sign = new \Uploadcare\Security\Signature('<your private key>', 3600); // Must be an instance of \Uploadcare\Interfaces\SignatureInterface
+$client = \Uploadcare\Client\ClientFactory::createClient(); // Must be an instance of \GuzzleHttp\ClientInterface
+$serializer = new \Uploadcare\Serializer\Serializer(new \Uploadcare\Serializer\SnackCaseConverter()); // Must be an instance of \Uploadcare\Interfaces\Serializer\SerializerInterface
+
+$configuration = new \Uploadcare\Configuration('<your public key>', $sign, $client, $serializer);
+```
+
+As you can see, the factory method is more convenient for standard usage.
+
+That's it! All further operations will use this configuration object.
+
+## Usage example
+
+Now that you have Uploadcare PHP API client up and running, you can do the
+following:
+
+* [Upload files][php-github-uploading-files]
+* [File operations][php-github-file-operations]
+* [Group operations][php-github-group-operations]
+* [Project operations][php-github-project-operations]
+* [Webhooks][php-github-webhooks]
+* [Conversion operations][php-github-conversion-operations]
+* [Secure delivery][php-github-secure-delivery]
+* [Tests][php-github-tests]
+
+## Related guides
+
+* [File Upload PHP Script for Your Website][blog-file-upload-php]
+* [PHP Image Resizing & Optimization][blog-image-optimization-php]

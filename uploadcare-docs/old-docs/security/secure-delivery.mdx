@@ -1,0 +1,205 @@
+---
+  title: 'Secure Delivery (Authenticated URLs)'
+  description:
+    'You can control who and when have access to files uploaded to your Uploadcare project. When enabled, a user will require a token to access your content.'
+---
+
+# Secure Delivery (Authenticated URLs)
+
+Control who and for how long can access files in your project via authenticated
+URLs. When enabled, a user will require a token to access your content by the
+link like this:
+
+```
+https://cdn.yourdomain.com/{uuid}/?token=exp={timestamp}~hmac={token}
+```
+
+In other words, Secure Delivery is a CDN URL with GET parameters that include
+the token and its expiration time to access protected content.
+
+## Use cases
+
+When to use Secure Delivery:
+
+* Users upload personal, medical, and other sensitive data.
+* Only an authorized client can access certain content.
+* Content access is limited in time.
+
+<!--
+# Misha: when the process is automated, do this:
+
+## Turning Secure Delivery on
+
+1. Go to [Dashboard][dashboard] for one of your projects.
+1. Select **Delivery** options from the menu on the left.
+1. Click **Integrate** where it says **Secure delivery**.
+
+<img src="https://ucarecdn.com/e4fa4a7b-b5ae-478d-9b86-f2cbcf0129c1/Securedelivery.png" alt="Turn on Secure delivery option" />
+
+Follow the instructions.
+-->
+
+## How Secure Delivery works
+{id="authenticated-urls"}
+
+[Contact us][mail-help] to enable the Secure Delivery feature.
+
+Prior to using Secure Delivery, set up [a custom CNAME][community-custom-cname].
+The URL format depends on your custom domain's CDN provider.
+
+Akamai as a primary CDN provider for Uploadcare users. Here's an example:
+
+```
+https://cdn.yourdomain.com/{uuid}/?token=exp={timestamp}~acl={acl}~hmac={token}
+```
+
+* `{uuid}` is a UUID of any file in your Uploadcare project or a URI (UUID +
+  transformations + filename), which is a URL part.
+* `{acl}` is an optional Access Control List parameter. It supports wildcards
+  (`*`, `?`). Also, it can be a string (single path) or an array (multi-paths).
+
+ACL examples to access files with a token:
+
+* `acl=/*/` –  any file in a project
+* `acl=/{uuid}/` – original file with UUID
+* `acl=/{uuid}/-/resize/640x/` – modified file version
+
+## Token generation
+{id="token"}
+
+Your backend app should take care of generating access tokens. We recommend that
+you start with ready-made Akamai solutions for popular languages:
+
+* [C#][ext-akamai-csharp]
+* [GoLang][ext-akamai-golang]
+* [Java][ext-akamai-java]
+* [Node.js][ext-akamai-node]
+* [Python][ext-akamai-python]
+* [Ruby][ext-akamai-ruby]
+
+Full Akamai implementation guide: [Auth Token 2.0 Verification and DD][ext-akamai-authenticated-urls].
+
+#### Proxy Backend example
+{id="proxy-backend"}
+
+The proxy backend is an API endpoint of your application. The app needs to
+resolve the following tasks:
+
+* Accept escaped preview URL as a GET parameter.
+* Check user authorization.
+* Generate expiring access tokens for that URL.
+* Append access tokens to the URL.
+* Redirect to that URL.
+
+Don’t forget to check user credentials on your backend. Make sure not to
+authenticate anonymous user requests. Otherwise using Secure Delivey don't make
+any sense.
+
+Here is a basic proxy backend Node.js app:
+
+```javascript
+app.get('/preview', (req, res) => {
+  const url = req.query.url
+  const user = req.user
+
+  if (!user) {
+    res.status(403).send('Authorization failed')
+    return
+  }
+
+  const expire = Math.round(Date.now() / 1000) + 120
+  const token = generateToken(url, expire)
+
+  const secureUrl = url + `?token=${token}&expire=${expire}`
+
+  res.redirect(secureUrl)
+})
+```
+
+## Show Image Previews in File Uploader
+{id="image-previews"}
+
+After uploading, File Uploader loads image previews from the CDN:
+
+```
+-> (GET) https://ucarecdn.com/{uuid}/
+```
+
+With Secure Delivery on, File Upload can't show previews because authenticated
+URLs include a token part. To work that around, you can load images through a
+proxy backend, where it can hook up the token info:
+
+```
+-> (GET) https://domain.com/preview?url=https%3A%2F%2Fcdn.domain.com%2F{uuid}%2F
+-> (Redirect) https://cdn.domain.com/{uuid}/?token={token}&expire={expire}
+```
+
+Here are two options that can help you show image previews over Secure Delivery:
+
+* [`previewProxy`][file-uploader-option-preview-proxy]. It proxies the data
+  related to image previews.
+* [`previewUrlCallback`][file-uploader-option-preview-url-callback]. It works if
+  you need to send extra data like [JWT tokens][ext-jwt-tokens-about].
+
+### Option `previewProxy`
+{id="preview-proxy"}
+
+Implementing the `previewProxy` option works best for these cases:
+
+* Your application uses cookie-based authorization.
+* Your proxy backend and your app are located in the same domain
+  (otherwise, cookies won't be sent).
+* You don’t need any other image-related data beside URLs.
+
+To use `previewProxy` option, specify your proxy backend endpoint URL, and
+you're good to go:
+
+```javascript{noAutoLinker}
+UPLOADCARE_PREVIEW_PROXY = 'https://domain.com/preview?'
+```
+
+It'll let File Uploader load image previews via the following URL:
+
+```{noAutoLinker}
+https://domain.com/preview?url=https%3A%2F%2Fcdn.domain.com%2F{uuid}%2F
+```
+
+It appends a query parameter with image preview URL to `previewProxy`:
+
+```javascript
+newPreviewUrl = previewProxy + 'url={previewUrl}'
+```
+
+By default, the uploader uses `url` as the query parameter name, but you
+can have a custom naming as well:
+
+```javascript{noAutoLinker}
+'https://domain.com/preview?' + 'url={previewUrl}'
+'https://domain.com/preview?foo=bar' + '&url={previewUrl}'
+'https://domain.com/preview?foo=bar&myUrl=' + '{previewUrl}'
+```
+
+### Option `previewUrlCallback`
+{id="preview-url-callback"}
+
+This option provides you with explicit control over the File Uploader preview
+URLs. In code, `previewUrlCallback` is a function with a signature:
+
+```
+(previewUrl, fileInfo) => previewUrl
+```
+
+Example:
+
+```javascript{noAutoLinker}
+UPLOADCARE_PREVIEW_URL_CALLBACK = function(previewUrl, fileInfo) {
+    const jwtToken = getJWTToken()
+    return `https://domain.com/preview?` +
+      `url=${encodeURIComponent(previewUrl)}&` +
+      `uuid=${fileInfo.uuid}&` +
+      `token=${jwtToken}`
+}
+```
+
+Note, `previewUrlCallback` overrides `previewProxy`, and the latter option will
+be ignored.

@@ -1,0 +1,8 @@
+```python
+from pyuploadcare import File, conf
+
+conf.pub_key = 'demopublickey'
+
+with open('sample-image.jpeg', 'rb') as f:
+    uploaded_file = File.upload(f)
+```

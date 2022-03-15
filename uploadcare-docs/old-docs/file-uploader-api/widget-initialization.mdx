@@ -1,0 +1,73 @@
+---
+  layoutPreset: fileUploaderAPI
+  title: File Uploader Initialization
+  description:
+    'Get more control over how Uploadcare File Uploader behaves during your page load:
+    this article comes in handy when you want to alter the default file uploader
+    initialization behavior. To use the feature, learn more information
+    in Uploadcare docs.'
+  withBreadcrumbs: false
+---
+
+import { Messages, Migration, WidgetV3Warning } from '@uploadcare/docs-components'
+
+# File Uploader Initialization
+
+<Messages>
+  <WidgetV3Warning link='/docs/uploads/v2/#initialization' />
+  <Migration />
+</Messages>
+
+This article comes in handy when you want to alter the default file uploader
+initialization behavior. That can be done to get more control over file uploader on
+your system and has to do with the two following boolean parameters:
+
+* `UPLOADCARE_MANUAL_START`, the [option][file-uploader-option-manual-start] which
+  defaults to `false` and controls the start of file uploader initialization.
+* `UPLOADCARE_LIVE`, the [option][file-uploader-option-live] which defaults to `true`
+  and controls the character of that initialization.
+
+This means that by default file uploaders are initialized during your page load. And,
+every ~100 ms we check if there are any new inputs with the specific role
+`[role=uploadcare-uploader]`.
+
+## Automatic vs manual init
+{id="autoinit"}
+
+All file uploaders on your page are initialized during its load, which may not be the
+desired behavior when you want to do something before the page load. That is
+when the [`UPLOADCARE_MANUAL_START`][file-uploader-option-manual-start] option comes in
+together with `uploadcare.start()`.
+You should pass the `settings` [object][file-uploader-config-object]
+into `uploadcare.start()` to override [global settings][file-uploader-config-globals].
+However, you can still pass any global settings, but keep in mind that
+`settings` keys are `camelCased`, not `CAPITALIZED_WITH_UNDERSCORES`:
+
+```js
+UPLOADCARE_MANUAL_START = true;
+
+jQuery(function($) {
+  var $.getJSON('/uploadcare.json', function(data) {
+    uploadcare.start({
+      publicKey: data.publicKey, // overrides UPLOADCARE_PUBLIC_KEY
+      crop: data.crop // overrides UPLOADCARE_CROP
+    });
+  });
+});
+```
+
+See [`UPLOADCARE_PUBLIC_KEY`][file-uploader-option-pubkey] and
+[`UPLOADCARE_CROP`][file-uploader-option-crop] for details about the snippet above.
+
+## Checking for new inputs
+{id="new-inputs"}
+
+By default, new `[role=uploadcare-uploader]` elements on your page are
+initialized as file uploaders in every ~100 ms. Such behavior is caused by a single
+JavaScript timer. It shouldn’t have any performance impact in typical
+applications.
+
+However, if you would like to alter this behavior, consider disabling the
+[`UPLOADCARE_LIVE`][file-uploader-option-live] option. Then, you will have to
+[manually init][api-reference-javascript] any new inputs with the specified
+role.

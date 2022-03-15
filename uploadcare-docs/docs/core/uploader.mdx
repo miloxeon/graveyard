@@ -1,0 +1,743 @@
+---
+title: Uploader
+sidebar_position: 3
+---
+
+import ConfigurationOptions from '../../src/components/configurationOptions'
+import { FileInfo, OriginalImageInfo, FileGroupInfo, UploadInfo } from '../../src/components/types'
+
+## Glossary
+
+-  **Widget** is a form element, a button that says "Choose files":
+
+<img
+	src="https://ucarecdn.com/37f2b572-29ac-43e4-8b31-a139ed378b9a/-/preview/-/format/auto/widget.png"
+	alt="Uploadcare Widget"
+	width={440}
+/>
+
+-  A click on the widget usually opens the **Uploader Dialog** — a modal window that allows file
+   selection from multiple sources, optional file editing and much more with custom tabs:
+
+![Uploader UI](https://ucarecdn.com/5f1a177a-404a-42cf-951a-d1f2b9aed79e/-/preview/-/format/auto/uploaderui.png)
+
+-  Dialog can be opened programmatically. A Dialog can also be opened without a widget, in that case
+   it's called **Standalone Dialog**.
+-  A Dialog can be opened in embedded mode, just rendering its contents not into a modal but into an
+   arbitrary HTML element. An embedded dialog is called **Panel**.
+-  Dialog and Panel have identical APIs.
+
+## Installation options
+
+### Global installation
+
+If you want to use the Uploader as an HTML input, presumably on a static webpage without any
+framework, it's better to load Uploadcare globally.
+
+Include this into the `<head>`:
+
+```html
+<script>
+	UPLOADCARE_PUBLIC_KEY = 'demopublickey'
+</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+```
+
+If you already use jQuery, you can use the alternative bundle that comes without jQuery, so you
+won't download it twice:
+
+```html
+<script>
+	UPLOADCARE_PUBLIC_KEY = 'demopublickey'
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.min.js"></script>
+```
+
+Now you can use the Uploader:
+
+```jsx
+<input type="hidden" role="uploadcare-uploader" name="my_file_input" />
+```
+
+That way, you can configure the Uploader with **global variables** and **data-attributes**:
+
+```html
+<input type="hidden" role="uploadcare-uploader" data-public-key="demopublickey" data-images-only />
+```
+
+```html
+<script>
+	UPLOADCARE_PUBLIC_KEY = 'demopublickey'
+	UPLOADCARE_LOCALE = 'ru'
+</script>
+```
+
+For every option we provide, there exists either a global variable, a data-attribute or both. **The
+full list of options** is available below.
+
+### NPM
+
+If you want to seamlessly integrate Uploadcare into your project and want to retain full control
+over Uploadcare widget UI, it's better to install our NPM library.
+
+```jsx
+npm install uploadcare-widget
+
+import uploadcare from 'uploadcare-widget'
+```
+
+You can display and hide the Uploader programmatically. You also can configure it with
+**configuration object**:
+
+```jsx
+uploadcare.openDialog(null, {
+	publicKey: 'demopublickey',
+	imagesOnly: true,
+	crop: '300x200',
+})
+```
+
+**The full list of options** is available below.
+
+## Configuration
+
+You can configure the Uploader the easy way by using the
+[File Uploader Configurator](https://uploadcare.com/widget/configure).
+
+<ConfigurationOptions />
+
+## Types
+
+### `fileInfo`
+
+<FileInfo />
+
+### `originalImageInfo`
+
+<OriginalImageInfo />
+
+### `fileGroupInfo`
+
+<FileGroupInfo />
+
+### `uploadInfo`
+
+<UploadInfo />
+
+## Controlling the UI programmatically
+
+### Initialization
+
+```jsx
+const widgets = uploadcare.initialize('#my-form')
+> [widget1, widget2, ...]
+```
+
+Accepts an optional selector of the root element. Looks for `[role="uploadcare-uploader"]` child
+elements of the root. Returns an array of Uploader objects. Called automatically on page load unless
+the **Manual start** parameter is `true`.
+
+### Getting the Uploader
+
+```jsx
+const widget = uploadcare.Widget('#uploader')
+```
+
+Accepts a selector, returns an Uploader object.
+
+If you want to target either Single or Multiple uploaders exclusively, you can use the respective
+methods:
+
+```jsx
+const multiWidget = uploadcare.MultipleWidget('#uploader')
+const singleWidget = uploadcare.SingleWidget('#uploader')
+```
+
+A Multiple Uploader is an uploader with `data-multiple` set to `true` or otherwise initialized with
+that option. If a `MultipleWidget()` encounters a single-file uploader or `SingleWidget()`
+encounters a multi-file one, an exception is thrown.
+
+### Getting a value
+
+```jsx
+const file = widget.value()
+```
+
+Returns a File instance, a FileGroup instance or `null`.
+
+### Setting a value
+
+```jsx
+singleWidget.value(file)
+singleWidget.value('9dd2f080-cc52-442d-aa06-1d9eec7f40d1')
+singleWidget.value(null)
+```
+
+A Single Uploader object `value` method accepts either a File instance, a UUID of a file. Passing a
+`null` will reset the uploader.
+
+```jsx
+multiWidget.value(fileGroup)
+multiWidget.value([file1, file2, '9dd2f080-cc52-442d-aa06-1d9eec7f40d1'])
+multiWidget.value('cdf2fe62-3d43-47d4-9288-c3951561f5c7~2')
+multiWidget.value(null)
+```
+
+A Multiple Uploader accepts an instance of FileGroup, a UUID of a file group or an array of values
+that can be individually passed to a single uploader.
+
+### Setting a value via HTML
+
+If you set a new `value` attribute in HTML, you should do the following next:
+
+```jsx
+widget.reloadInfo()
+```
+
+This will propagate the new value to everywhere it needs to be.
+
+### Opening the Uploader dialog
+
+```jsx
+const dialog = widget.openDialog(tab)
+```
+
+`tab` is a name of the tab that will be opened by default. Here are available built-in tabs:
+
+-  `camera` is for a webcam;
+-  `url` is for direct uploads with any URL;
+-  `facebook` is for [Facebook](https://facebook.com/);
+-  `gdrive` is for [Google Drive](https://drive.google.com/);
+-  `gphotos` is for [Google Photos](https://photos.google.com/);
+-  `dropbox` is for [Dropbox](https://www.dropbox.com/);
+-  `instagram` is for [Instagram](http://instagram.com/);
+-  `evernote` is for [Evernote](https://evernote.com/);
+-  `flickr` is for [Flickr](https://www.flickr.com/);
+-  `onedrive` is for [OneDrive](https://onedrive.live.com/);
+-  `box` is for [Box](http://www.box.com/), off by default;
+-  `vk` is for [VK](http://vk.com/), off by default;
+-  `huddle` is for [Huddle](https://www.huddle.com/), off by default.
+
+### Opening the Uploader dialog without a widget
+
+A dialog without a widget is called **standalone**.
+
+```jsx
+const dialog = uploadcare.openDialog(files, tab)
+const dialog = uploadcare.openDialog(files, tab, settings)
+```
+
+Accepts the following arguments:
+
+-  `tab` — a name of the tab opened by default;
+-  `files` — a File instance, a FileGroup instance or an array of File instances. The files will be
+   shown as if they were already uploaded;
+-  `settings` — a Settings object.
+
+Returns a DialogApi instance.
+
+### Opening the Uploader Dialog in embedded mode
+
+You can open the Uploader dialog in an **embedded mode**. It will be rendered right onto your
+webpage and not inside a modal.
+
+```jsx
+const dialog = uploadcare.openPanel(placeholder, files, tab, settings)
+```
+
+`placeholder` is a string containing a selector of the element to be replaced with the Uploader
+dialog. After the dialog is resolved (e.g. files uploaded), the placeholder element is put back.
+
+Other parameters are similar to those of `uploadcare.openDialog()`.
+
+Returns a DialogApi instance.
+
+### Resolving a dialog
+
+```jsx
+dialog.resolve()
+```
+
+Resolve a dialog with currently selected files.
+
+### Discarding a dialog
+
+```jsx
+dialog.reject()
+```
+
+Close the dialog and discard any file selection.
+
+### Adding files to a dialog
+
+```jsx
+dialog.addFiles([file1, file2, file3])
+```
+
+Add an array of files to your dialog result set. The argument should be an array of File instances.
+
+### Getting dialog files list
+
+```jsx
+const files = dialog.fileColl.__items
+```
+
+This field contains an array of files that are currently present in the Dialog.
+
+### Dialog tabs
+
+```jsx
+dialog.switchTab('facebook')
+```
+
+Switches a dialog to a tab of provided name. The name you provide should be present in the
+`settings.tabs` array.
+
+```jsx
+dialog.showTab('facebook')
+dialog.hideTab('facebook')
+```
+
+Hides or shows a tab of provided name.
+
+```jsx
+const isFacebookVisible = dialog.isTabVisible('facebook')
+```
+
+Returns `true` if a tab of provided name is visible.
+
+## Internationalization and changing text labels
+
+```jsx
+UPLOADCARE_LOCALE = 'en'
+```
+
+Supported locales are:
+
+-  `ar` — Arabic
+-  `az` — Azeri
+-  `ca` — Catalan
+-  `cs` — Czech
+-  `da` — Danish
+-  `de` — German
+-  `el` — Greek
+-  `en` — English
+-  `es` — Spanish
+-  `et` — Estonian
+-  `fr` — French
+-  `he` — Hebrew
+-  `it` — Italian
+-  `ja` — Japanese
+-  `ko` — Korean
+-  `lv` — Latvian
+-  `nb` — Norwegian
+-  `nl` — Dutch
+-  `pl` — Polish
+-  `pt` — Portuguese
+-  `ro` — Romanian
+-  `ru` — Russian
+-  `sk` — Slovak
+-  `sr` — Serbian
+-  `sv` — Swedish
+-  `tr` — Turkish
+-  `uk` — Ukrainian
+-  `vi` — Vietnamese
+-  `zhTW` — Chinese (Taiwan)
+
+You can use your own, custom translation on top of an existing locale, or even design your own
+translation from the ground up:
+
+```jsx
+UPLOADCARE_LOCALE = 'en'
+UPLOADCARE_LOCALE_TRANSLATIONS = {
+	buttons: {
+		cancel: 'Cancel',
+		remove: 'Remove',
+		choose: {
+			files: {
+				one: 'Choose a file',
+				other: 'Pick files',
+			},
+		},
+	},
+	file: {
+		one: 'Only one file! :(',
+		some: 'Only %1 files. Upload more.',
+		many: "%1 files!! That's a lot.",
+	},
+}
+```
+
+You can override only some text labels of the locale you choose.
+
+`%1` in text labels will be replaced with a number that's being displayed. Uploadcare supports
+Unicode pluralization rules, hence `one`, `some` and `many`. English, as a language of the Germanic
+family, only has two plural forms (one and many). Other languages may have more.
+
+You can define your own pluralization function:
+
+```jsx
+UPLOADCARE_LOCALE_PLURALIZE = function (n) {
+	if (n === 1) return 'one'
+	if (n > 1 && n <= 10) return 'some'
+	return 'many'
+}
+```
+
+You can use our
+[locales catalog](https://github.com/uploadcare/uploadcare-widget/tree/master/src/locales) on GitHub
+as a reference.
+
+## Uploading without Uploader with JavaScript API
+
+### Single file
+
+Create a File instance:
+
+```jsx
+const file = uploadcare.fileFrom('url', 'https://example.com/image.png')
+const file = uploadcare.fileFrom('object', input.files[0])
+const file = uploadcare.fileFrom('input', input)
+const file = uploadcare.fileFrom('uploaded', '61783708-7090-4d6a-b82b-81f98e40a327')
+```
+
+`fileFrom` supports the following descriptors:
+
+-  URL strings;
+-  Native file objects from `<input type="file">`;
+-  HTML inputs;
+-  UUIDs of already uploaded files.
+
+Uploading process will start automatically.
+
+Also, `fileFrom` accepts an optional `settings` object as the third argument.
+
+Here's how to cancel the upload:
+
+```jsx
+file.cancel()
+```
+
+### Multiple files
+
+Create a FileGroup instance:
+
+```jsx
+const fileGroup = uploadcare.FileGroup([file1, fileGroup1, file2])
+```
+
+`FileGroup()` method accepts an array of File or FileGroup instances. You can combine multiple
+groups in one.
+
+You can also load a group from the CDN:
+
+```jsx
+uploadcare
+	.loadFileGroup('cdf2fe62-3d43-47d4-9288-c3951561f5c7~2')
+	.done(fileGroup => {})
+	.fail(error => {})
+```
+
+You can get a list of files in the group like this:
+
+```jsx
+const files = fileGroup.files()
+```
+
+This method returns an array of File instances.
+
+## Events
+
+### File
+
+```jsx
+file.done(fileInfo => {})
+file.progress(uploadInfo => {})
+file.fail((error, fileInfo) => {})
+```
+
+-  `done` is fired when the upload is successfully completed and the file is ready;
+-  `progress` is fired periodically as the file is being uploaded. It fires at least once, the first
+   fire happens right after the callback is attached;
+-  `fail` is fired when there was an error when uploading a file. It accepts the following error
+   statuses:
+   -  `'baddata'` if an invalid argument passed to the file constructor;
+   -  `'size'` if the file size is too large;
+   -  `'upload'` if there was a network error during upload;
+   -  `'user'` if the upload was cancelled by user;
+   -  `'info'` if there was an error while fetching file information;
+   -  `'deleted'` if the file was deleted. Works best with file groups.
+
+### FileGroup
+
+```jsx
+const groupPromise = fileGroup.promise()
+
+groupPromise.done(fileGroupInfo => {})
+groupPromise.progress(uploadInfo => {})
+groupPromise.fail((error, fileGroupInfo) => {})
+```
+
+Events are the same as in the File instance.
+
+### Widget
+
+```jsx
+widget.onChange(file => {})
+widget.onUploadComplete(fileInfo => {})
+widget.onDialogOpen(dialogApi => {})
+```
+
+-  `onChange` is fired when an Uploader value changes. It receives a File or a FileGroup instance
+   for Single and Multiple uploaders, respectively.
+-  `onUploadComplete` is fired when a value changes and the files are uploaded to Uploadcare and
+   available via their UUID. It receives an fileInfo or fileGroupInfo object for Single and Multiple
+   uploaders, respectively.
+-  `onDialogOpen` is fired when a user clicks the "Upload" button or a dialog is shown via the
+   JavaScript API. It receives a DialogApi instance.
+
+You can unsubscribe like that:
+
+```jsx
+widget.onChange(foo)
+widget.onChange.remove(foo)
+```
+
+It works for every event.
+
+### Dialog and Panel
+
+```jsx
+dialog.done(files => {})
+dialog.fail(lastSelected => {})
+dialog.always(() => {})
+
+dialog.onTabVisibility((tabName, isVisible) => {})
+dialog.progress(tabName => {})
+```
+
+-  `done` is fired when a dialog is closed and some files are selected. It accepts either File or
+   FileGroup for Single or Multiple uploaders, respectively.
+-  `fail` is fired when a dialog is closed without any files selected. Accepts the last selected
+   File or FileGroup.
+-  `always` is fired in both cases when `done` and `fail` is fired. Accepts nothing.
+-  `onTabVisibility` is fired when tab visibility changes. For example, it fires when `hideTab` or
+   `showTab` is called. Accepts two arguments:
+   -  `tabName` — string, a name of the tab that is subject to a visibility change;
+   -  `isVisible` — boolean, whether the tab of `tabName` became visible.
+
+### File Collection (Dialog and Panel)
+
+```jsx
+dialog.fileColl.onAdd.add(file => {}}
+dialog.fileColl.onRemove.add(file => {})
+dialog.fileColl.onReplace.add((oldFile, newFile) => {})
+dialog.fileColl.onSort.add(() => {})
+```
+
+For technical reasons, `fileColl` events use a slightly different API for adding event listeners.
+However, the unsubscribe API is the same:
+
+```jsx
+const foo = () => {}
+
+// subscribe
+dialog.fileColl.onAdd.add(foo)
+
+// unsubscribe
+dialog.fileColl.onAdd.remove(foo)
+```
+
+---
+
+-  `onAdd` is fired when a file is added to the Dialog. Accepts a File instance.
+-  `onRemove` is fired when a file is removed from the Dialog. Accepts a File instance.
+-  `onReplace` is fired when a file is replaced. A replace event can happen when you have a crop
+   enabled, and the user changes the crop on an existing image. Accepts two File instances, one
+   represents a file before the replacement, and another is the same file after.
+-  `onSort` is fired when user changes file order with drag and drop. Accepts nothing.
+
+## Styling
+
+Uploader uses a CSS methodology and can be easily customized. Every UI element has a class name
+prefixed with `uploadcare--`.
+
+You can stylize Uploader just by adding a plain CSS file where you override and extend the default
+styles of respective Uploader UI elements.
+
+If Uploader is opened inside an iframe and is out of a global CSS scope, you can inject CSS this
+way:
+
+```jsx
+const style = `
+	.uploadcare--panel__content {
+		font-size: small;
+	}
+`
+uploadcare.tabsCss.addStyle(style)
+```
+
+You can also provide an HTTPS link to the stylesheet:
+
+```jsx
+uploadcare.tabsCss.addUrl('https://yourdomain.com/uploadcare.css')
+```
+
+HTTP links are not supported. If you want to inject a file with `addUrl`, you should use HTTPS.
+
+## Validating user uploads
+
+```jsx
+widget.validators.push(fileInfo => {})
+```
+
+You can provide multiple validator functions. Each function receives an object of `fileInfo` type as
+a first argument.
+
+If a validator function throws, validation is considered failed. If it doesn't, validation is
+passed.
+
+Typical validators are already built-in and are accessible using Uploader options.
+
+## Letting users crop images before upload
+
+You should set `data-crop` attribute:
+
+```html
+<input type="hidden" role="uploadcare-uploader" name="my_file" data-crop="" />
+```
+
+Possible values are:
+
+-  `disabled`
+-  `free` or empty string — free crop
+-  `A:B`, e.g. `2:3`, `3:4`, `16:9`, etc. — crop to certain aspect ratio
+-  `AxB`, e.g. `200x200`, etc. — same as the above, but if a larger area is selected, resulting
+   image will be downscaled
+-  `AxB upscale`, e.g. `200x200 upscale`, etc. — same as the above, but if a smaller area is
+   selected, resulting image will be upscaled
+-  `AxB minimum`, e.g. `800x600 minimum` — user won't be able to select an area smaller than 800x600
+   pixels. If an uploaded image is smaller, it will be upscaled before the crop UI is shown.
+
+You can specify multiple allowed aspect ratios:
+
+```html
+data-crop="free, 1:1, 3:4, 16:9"
+```
+
+Arbitrary ratios are also allowed:
+
+```html
+data-crop="3:4, 13:14, 101:102, 25:27"
+```
+
+## Adding custom tabs
+
+First, you need to define a tab constructor function and register the tab:
+
+```jsx
+const customTab = (container, button, api, settings, name) => {}
+uploadcare.registerTab('foo', customTab)
+```
+
+The constructor is called every time the Uploader is opened. Here are the arguments:
+
+-  `container` — jQuery object of your tab's container. Tab's content should be rendered here.
+-  `button` — jQuery object of your tab's button.
+-  `api` — dialogApi instance of the opened Uploader. You can control uploading workflow from here.
+-  `settings` — settings object that was passed to `uploadcare.openDialog` when this very Uploader
+   was opened.
+-  `name` — the custom tab's name which it was registered with. In this example, it will be `foo`.
+
+## Securing uploads
+
+With Secure uploads, you can control who and when can upload files to your project storage. To use
+this feature, **your app will need a backend**. Every call to the Upload API from now on should be
+signed, and the signatures should be generated at your backend.
+
+#### Enabling
+
+To enable Secure uploading, go to your Dashboard and select your project. Next to _Secure
+Uploading_, click _Enable_.
+
+After that, go to _API Keys_ and click _Add secret key_. This key will be used for signing uploads.
+
+#### Signing uploads
+
+To create a signature, you should do the following:
+
+1. Generate an expiry date.
+2. Create a SHA256 HMAC of that expiry date and your secret key.
+3. Get a hex digest of that HMAC. This is your signature.
+4. Convert the expiry date to Unix time
+5. Transfer that signature and the expiry date to the frontend securely.
+
+Here's an example for NodeJS:
+
+```jsx
+const crypto = require('crypto')
+
+// 120 seconds from now
+const expire = (Math.round(Date.now() / 1000) + 120).toString()
+const secret = 'project_secret_key'
+const hmac = crypto.createHmac('sha256', secret)
+hmac.update(expire)
+
+const signature = hmac.digest('hex')
+```
+
+Now you can use that signature in multiple ways:
+
+-  By setting the `UPLOADCARE_SECURE_SIGNATURE` and `UPLOADCARE_SECURE_EXPIRE` global variables;
+-  By setting the `data-secure-signature` and `data-secure-expire` data-attributes of your Uploader;
+-  By specifying the `secureSignature` and `secureExpire` keys in your Uploader settings object if
+   you're using JavaScript API;
+-  By passing `signature` and `expire` parameters along with a REST API request.
+
+## Handling previews when using Secure Delivery
+
+After uploading, File Uploader loads image previews from the CDN:
+
+```jsx
+> (GET) https://ucarecdn.com/:uuid/
+```
+
+With Secure Delivery on, File Upload can't show previews like that, because requests need to be
+signed.
+
+To enable preview, there are two options:
+
+-  `previewProxy`, which makes Uploader send requests to a custom URL you defined. It works best if
+   you have a cookie-based authentication, and both your proxy backend and your app are located on
+   the same domain (otherwise cookies won't be sent).
+-  `previewUrlCallback`, which allows passing a function to generate URLs on the client side. Note
+   that this option overrides `previewProxy`.
+
+#### `previewProxy`
+
+Enable it by setting `UPLOADCARE_PREVIEW_PROXY` global variable, `data-preview-proxy` data-attribute
+or `previewProxy` configuration object key:
+
+```jsx
+UPLOADCARE_PREVIEW_PROXY = 'https://domain.com/preview?'
+```
+
+Uploader will make a request to this URL, passing the original image URL as a `url` query parameter.
+
+#### `previewUrlCallback`
+
+The callback signature is `(originalUrl, fileInfo) => previewUrl`.
+
+Enable it by setting `UPLOADCARE_PREVIEW_URL_CALLBACK` global variable or `previewUrlCallback`
+configuration object key:
+
+```jsx
+UPLOADCARE_PREVIEW_URL_CALLBACK = (originalUrl, fileInfo) => {
+	return (
+		`https://domain.com/preview?` +
+		`originalUrl=${encodeURIComponent(originalUrl)}&` +
+		`uuid=${fileInfo.uuid}`
+	)
+}
+```

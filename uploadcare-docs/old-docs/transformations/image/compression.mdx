@@ -1,0 +1,278 @@
+---
+  title: 'Uploadcare Image Transformations — compression'
+  description:
+    'Uploadcare allows applying Image Transformations on the fly with a set of CDN operations that can change image size, compression, colors, as various image modifications.'
+---
+
+import { Video } from "@uploadcare/docs-components";
+
+
+# Compression
+{id="compression"}
+
+Optimizing images means making them load faster at a minimum visual quality
+loss. This mainly includes manipulating image [format](#operation-format) and
+[quality](#operation-quality). A right balance of those helps improving
+conversions and bounce rates.
+
+## Format
+{id="operation-format"}
+
+`cdn›-/format/:format/`
+
+Converts an image to one of the following formats:
+
+* `jpeg` is a lossy image format (good compression for photos). JPEG doesn’t
+  support an alpha channel; hence you can use the
+  [`setfill`][transformations-image-setfill] operation that sets a background
+  color. All browsers support JPEG.
+* `png` is a lossless format (good compression only for graphics) with
+  alpha channel support. PNG is supported by all browsers.
+* `webp` is a modern format with more efficient compression than JPEG and with
+  alpha channel support. It works well for all images, yet [not all][ext-caniuse-webp]
+  browsers and OSs support it.
+* `auto` is an automatic image format selection based on alpha channel presence
+  and a client's device and browser.
+
+### How `auto` works and prioritize image formats
+
+First, the algorythm checks the `Accept` header with MIME types to figure out
+what image format a client browser supports.
+
+* WebP is a primary option. It's used when `image/webp` is one of the supported
+  MIME types.
+* JPEG is used when the original image is fully opaque.
+* PNG is used when the source image has an alpha channel with non-opaque pixels.
+
+Note: `auto` works when you use primary Uploadcare [storage][storage-uc] (not S3
+Bucket) and the default [CDN][delivery-cdn] domain `ucarecdn.com`.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/png/" target="_blank">
+        <img src="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/png/" alt="PNG image with transparency"/></a><br/>
+      400x301 <code>png</code> 116Kb<br/>
+      Transparent
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/jpeg/" target="_blank">
+        <img src="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/jpeg/" alt="JPEG image, opaque"/></a><br/>
+      400x301 <code>jpeg</code> 16Kb<br/>
+      Opaque
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/webp/" target="_blank">
+        <picture>
+          <source srcSet="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/webp/" type="image/webp"/>
+          <img src="https://ucarecdn.com/6ad747ff-dda6-4508-8864-5fc83f7fe645/-/setfill/ece3d2/-/format/auto/" alt="WEBP image with transparency, 10 times smaller file size than JPG"/>
+        </picture></a><br/>
+      400x301 <code>webp</code> 15Kb<br/>
+      Transparent, size is equal<br/>
+      to the opaque one.
+    </td>
+  </tr>
+</table>
+
+### HTML5 image auto format example
+
+You can use `<picture>` tag to render WebP image on client when possible. Place
+`<img>` within `<picture>` and add `<source>` with `type="image/webp"`.
+
+```html{noAutoLinker}
+<picture>
+  <source srcset="//ucarecdn.com/:uuid/:operations/-/format/webp/" type="image/webp"/>
+  <img src="//ucarecdn.com/:uuid/:operations/-/format/jpeg/"/>
+</picture>
+```
+
+Browsers that support WebP will load this image version, while others will
+display JPEG or PNG instead.
+
+## Quality
+{id="operation-quality"}
+
+`cdn›-/quality/:value/`
+
+Sets output JPEG and WebP quality. Higher quality will result in a larger output
+file. Uploadcare recognizes the quality of an input image, and setting
+quality higher than the original won't increase file size.
+
+* `normal` — the default setting, suits most cases.
+* `better` — can be used to render relatively small and detailed previews. ≈125%
+  file size compared to `normal`.
+* `best` — can be used to deliver images close to their pristine quality (e.g.,
+  for artwork). ≈170% file size.
+* `lighter` — useful when applied to relatively large images to save traffic
+  without significant quality loss. ≈80% file size.
+* `lightest` — highest compression ratio for high pixel ratio. ≈50% file size.
+* `smart` — adjusts compression and format automatically to preserve visual
+  quality while minimizing the file size.
+* `smart_retina` — similar to `smart`, yet optimized for high pixel ratios.
+
+### Smart compression
+
+Smart quality modes analyze input images using content-aware algorythms to
+determine maximum compression that won't cause noticeable visual artifacts.
+
+Prior to compression, a smart mode selects an output image format. It can be PNG
+for images with flat colors (like graphs, charts or web graphics). You can
+define [`format`](#operation-format) explicitly while using `smart` and
+`smart_retina`. In this case, the image format won't be adjusted, but the
+compression will. For example:
+
+`cdn›-/quality/:smart/-/format/:jpeg/`
+
+### Optimizing for high pixel ratios
+
+A great optimization technique is to increase resolution and reduce quality
+at the same time. Compared to just increasing quality, images will look clearer
+on higher pixel ratios with nearly the same file size.
+
+<table className="cdn-operation-sample cdn-operation-sample-3cols">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/220x220/-/quality/best/" target="_blank">
+        <img src="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/220x220/-/quality/best/" alt="Best quality, max file size"/></a><br/>
+      1x <code>best</code> 16Kb<br/>
+      Blurry on retina.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/330x330/-/quality/lighter/" target="_blank">
+        <img src="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/330x330/-/quality/lighter/" alt="Smaller file size for all screens"/></a><br/>
+      1.5x <code>lighter</code> 16Kb<br/>
+      Fits all screens.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/440x440/-/quality/lightest/" target="_blank">
+        <img src="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/440x440/-/quality/lightest/" alt="Even smaller file size, useful for retina"/></a><br/>
+      2x <code>lightest</code> 16Kb<br/>
+      Perfect for retina.
+    </td>
+  </tr>
+</table>
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/220x220/-/quality/smart/" target="_blank">
+        <img src="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/220x220/-/quality/smart/" alt="Smart compression, content aware"/></a><br/>
+      1x <code>smart</code> 9.6Kb<br/>
+      Optimized size for 1x.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/440x440/-/quality/smart_retina/" target="_blank">
+        <img src="https://ucarecdn.com/c5b7dd84-c0e2-48ff-babc-d23939f2c6b4/-/preview/440x440/-/quality/smart_retina/" alt="Smart compression for higher pixel ratios, content aware"/></a><br/>
+      2x <code>smart_retina</code> 16Kb<br/>
+      Optimized size for retina displays.
+    </td>
+  </tr>
+</table>
+
+## Progressive JPEG
+{id="operation-progressive"}
+
+`cdn›-/progressive/yes/`<br/>
+`cdn›-/progressive/no/`
+
+Returns a progressive image. In progressive images, data are compressed in
+multiple passes of progressively higher detail. This is ideal for large images
+that will be displayed while downloading over a slow connection allowing a
+reasonable preview after receiving only a portion of the data.
+The operation does not affect non-JPEG images; does not force image formats
+to `JPEG`.
+
+<table className="cdn-operation-sample">
+  <tr>
+    <td>
+      <a href="https://ucarecdn.com/ec8850a1-7d02-4af0-ad92-dbac0d169408/-/preview/-/quality/best/" target="_blank">
+        <Video>
+          <source src="https://ucarecdn.com/e1c1c3bc-117f-4b09-9043-f97dec2af74f/gif2video/-/format/webm/baseline.gif" type="video/webm"/>
+          <source src="https://ucarecdn.com/e1c1c3bc-117f-4b09-9043-f97dec2af74f/gif2video/-/format/mp4/baseline.gif" type="video/mp4"/>
+        </Video></a><br/>
+      Baseline loading.
+    </td>
+    <td>
+      <a href="https://ucarecdn.com/ec8850a1-7d02-4af0-ad92-dbac0d169408/-/preview/-/quality/best/-/progressive/yes/" target="_blank">
+        <Video>
+          <source src="https://ucarecdn.com/d101ac3a-f8ed-434e-a11e-150a99f075b5/gif2video/-/format/webm/progressive.gif" type="video/webm"/>
+          <source src="https://ucarecdn.com/d101ac3a-f8ed-434e-a11e-150a99f075b5/gif2video/-/format/mp4/progressive.gif" type="video/mp4"/>
+        </Video></a><br/>
+      Progressive loading.
+    </td>
+  </tr>
+</table>
+
+## GIF to Video
+{id="operation-gif-to-video"}
+
+Uploadcare Image Transformations features GIF to Video conversion that provides
+better loading times thus reducing your bounce rate. The feature is available on
+_[paid plans][pricing] only_.
+
+GIF to Video [workflow][transformations-image-gif-to-video] is the same as with other image
+transformations. The only difference is the `gif2video` URL directive should be
+included after the `/` separator, not `/-/`.
+
+`cdn›/:uuid/gif2video/`
+
+`gif2video` converts GIF files to video on the fly. Video files are much smaller
+than GIFs, without any quality loss. Their delivery to end users is much faster.
+In case your source file is not an animated GIF or the conversion feature is
+disabled for your project, you’ll get an HTTP 400 error.
+
+Please note, even though you don’t use `/-/` after `:uuid` with the `gif2video`
+directive, the separator is used with specific operations designed for the GIF
+to Video workflow: `format` and `quality`. We use such approach for our parser
+to tell the `format` and `quality` operations related to GIF to Video from their
+general versions.
+
+### Set Output Video Format, `format`
+{id="gif2video-format"}
+
+`cdn›-/format/:value/`
+
+Converts an animated GIF to one of the following formats:
+
+* `mp4` — H.264 video format. The format is supported by all major browsers.
+  When no format is specified, `mp4` is used by default.
+* `webm` — WebM video format. [Supported][ext-caniuse-webm] in Google Chrome,
+  Firefox, and Opera.
+
+When embedding videos, the best practice is to specify both formats and let
+clients choose a more suitable one:
+
+```html
+<video width="384" height="216" autoplay loop muted webkit-playsinline playsinline>
+  <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/webm/road.gif" type="video/webm"/>
+  <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/mp4/road.gif" type="video/mp4"/>
+</video>
+```
+
+<Video fullWidth>
+  <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/webm/road.gif" type="video/webm"/>
+  <source src="https://ucarecdn.com/af0136cc-c60a-49a3-a10f-f9319f0ce7e1/gif2video/-/format/mp4/road.gif" type="video/mp4"/>
+</Video>
+
+Original GIF: 6.5MB, MP4: 251KB, WebM: 202KB
+
+### Set Output Video Quality, `quality`
+{id="gif2video-quality"}
+
+`cdn›-/quality/:value/`
+
+Sets both quality and compression ratio for the output video.
+There are five `:value` levels: from better compression to better quality:<br/>
+`lightest`, `lighter`, `normal`, `better`, `best`.
+
+When `quality` is not explicitly specified, `normal` is used by default.
+
+## Automatic compression with Adaptive Delivery
+
+The operations described on this page can be applied to a particular image and
+to groups of images. If you want set it and forget it option, use
+[Adaptive Delivery][delivery-adaptive] and it'll take care of
+balancing compression for all images delivered with Uploadcare.
+
+When Adaptive Delivery is on, you can still tweak individual images to apply
+certain compression and format options.
