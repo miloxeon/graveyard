@@ -2,6 +2,10 @@
 
 Here reside the projects of the past.
 
+Also, check out
+[the complete list of things I ever did](https://uyouthe.notion.site/uyouthe/dc3958c3b0d04e03be8c12c0eb3ce1a3?v=e46ca61f82ba48c19ed67bbe99457cff),
+alive _and_ dead!
+
 -  `2048` — 2048 game implementation in C++.
 -  `alpine-curl-bash` — Bizon docker config that got 500,000+ downloads.
    [Hosted forever](https://github.com/bizongroup/alpine-curl-bash) because of lost password.
@@ -21,6 +25,8 @@ Here reside the projects of the past.
    on GitHub as a purely frontend demo. Supports CRDT sync.
 -  `emoji` — successful test task for Openland (now defunct), emoji picker in React.
 -  `first-c-attempts` — my C exercises from 2011.
+-  `freenounproject` — a browser extension that disabled The Noun Project's forced copyright system
+   that prevent perfectly legal things.
 -  `gol` — Game of Life done in Python + PyGame.
 -  `kardinal` — a CSS framework that was never meant to be.
 -  `kurmak` — study materials from Lera Kurmak's accessibility course. Made according to
@@ -30,6 +36,7 @@ Here reside the projects of the past.
 -  `martians` — Evil Martians failed interview: the test task.
 -  `nebenan` — failed test task for Nebenan.de
 -  `rektandex` — a browser extension to remove ads from auto.ru that was acquired by Yandex.
+-  `rfprnhb` — a browser extension to remove annoyances from Russian PornHub.
 -  `node-alpine-advanced` — Bizon docker config.
    [Hosted forever](https://github.com/bizongroup/node-alpine-advanced) because of lost password.
 -  `smo_js` — a coding task from uni.

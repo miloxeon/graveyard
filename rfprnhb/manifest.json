@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "rfprnhb",
+  "version": "1.0.0",
+  "description": "Remove annoyances from russian pornhub",
+  "minimum_chrome_version": "68",
+  "content_scripts": [{
+    "matches": [
+      "http://pornhub.com/*",
+      "https://pornhub.com/*",
+      "http://www.pornhub.com/*",
+      "https://www.pornhub.com/*"
+    ],
+    "css": [
+      "style.css"
+    ]
+  }]
+}
