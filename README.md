@@ -23,12 +23,16 @@ Here reside the projects of the past.
 -  `first-c-attempts` — my C exercises from 2011.
 -  `gol` — Game of Life done in Python + PyGame.
 -  `kardinal` — a CSS framework that was never meant to be.
+-  `kurmak` — study materials from Lera Kurmak's accessibility course. Made according to
+   [this mockup](https://www.figma.com/file/TAuhy5Uaoh6VSyhwB9RDxU/%D0%A6%D0%B8%D1%84%D1%80%D0%BE%D0%B2%D0%B0%D1%8F-%D0%B4%D0%BE%D1%81%D1%82%D1%83%D0%BF%D0%BD%D0%BE%D1%81%D1%82%D1%8C---%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-%D0%B4%D0%BB%D1%8F-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%BE%D0%B2?node-id=0%3A1),
+   hosted on [Surge](https://quixotic-verse.surge.sh/).
 -  `martians-demo` — Evil Martians failed interview: performance-related questions.
 -  `martians` — Evil Martians failed interview: the test task.
 -  `nebenan` — failed test task for Nebenan.de
 -  `node-alpine-advanced` — Bizon docker config.
    [Hosted forever](https://github.com/bizongroup/node-alpine-advanced) because of lost password.
 -  `smo_js` — a coding task from uni.
+-  `uploadcare-docs` — the draft of better documentation for Uploadcare that was never meant to be.
 -  `sneaker.js` — script that is meant to cripple web browser upon injection.
 -  `ss.js` — SegmentStream failed interview: pure Lispy goodness.
 -  `ss2.js` — SegmentStream failed interview: config file draft.

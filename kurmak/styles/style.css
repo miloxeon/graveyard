@@ -1,0 +1,376 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	line-height: 1.5;
+	backface-visibility: hidden;
+}
+
+:root {
+	font-variant-ligatures: common-ligatures;
+	text-rendering: optimizeLegibility;  
+	font-family:
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Fira Sans",
+		"Droid Sans",
+		"Helvetica Neue",
+		sans-serif,
+		"Apple Color Emoji",
+		"Segoe UI Emoji",
+		"Segoe UI Symbol";
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+img,
+canvas,
+iframe,
+video,
+svg,
+select,
+textarea {
+	max-width: 100%;
+}
+
+[hidden] {
+	display: none;
+}
+
+.ih {
+	clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap; 
+    width: 1px;
+}
+
+
+:root {
+	width: 100%;
+	--background: rgb(255, 255, 255);
+	--foreground: rgb(0, 0, 0);
+
+	--background-accent-light: rgb(241, 241, 241);
+	--foreground-accent-light: rgb(0, 0, 0);
+
+	--background-accent-medium: rgb(199, 210, 233);
+	--background-accent-medium-half: rgb(199, 210, 233, .5);
+	--foreground-accent-medium: rgb(0, 0, 0);
+
+	--background-accent-heavy: rgb(93, 22, 213);
+	--background-accent-heavy-half: rgba(93, 22, 213, .5);
+	--foreground-accent-heavy: rgb(255, 255, 255);
+}
+
+body {
+	max-width: 60rem;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+a:focus {
+	outline: 2px solid var(--background-accent-heavy);
+	outline-offset: 2px;
+}
+
+.page-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: -.5rem;
+	padding-top: 1em;
+}
+
+.page-header > * {
+	margin: .5rem;
+}
+
+.page-header__logo {
+	margin-right: auto;
+}
+
+.page-header__wedge {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 0;
+}
+
+.page-header__wedge > * {
+	margin: .5rem;
+}
+
+@media (max-width: 60rem) {
+	.page-header__wedge {
+		width: 100%;
+		order: 2;
+	}
+}
+
+.page-header__login {
+	background: none;
+	border: none;
+	padding: .5em;
+	border-radius: .2em;
+	line-height: 0;
+	transition:
+		color .3s,
+		box-shadow .3s;
+}
+
+.page-header__login:hover {
+	color: var(--background-accent-heavy);
+	transition-duration: 0s;
+}
+
+.page-header__login:focus {
+	outline: none;
+	box-shadow: 0 0 0 .2rem var(--background-accent-heavy);
+	transition-duration: 0s;
+}
+
+.tab,
+input[role="tab"] + label {
+	display: inline-block;
+	padding: .5em .8em;
+	border-radius: .2em;
+	color: var(--foreground);
+
+	transition:
+		background .3s,
+		box-shadow .3s;
+}
+
+.tab[href]:hover,
+input[role="tab"] + label:hover {
+	background: var(--background-accent-medium-half);
+	transition-duration: 0s;
+}
+
+.tab[href]:focus {
+	outline: none;
+	box-shadow: 0 0 0 .2rem var(--background-accent-heavy);
+	transition-duration: 0s;
+}
+
+input[role="tab"]:focus + label {
+	outline: 2px solid var(--background-accent-heavy);
+	outline-offset: 2px;
+}
+
+.tab:not([href]),
+input[role="tab"]:checked + label {
+	background: var(--background-accent-medium);
+	color: var(--foreground-accent-medium);
+}
+
+.search-form {
+	position: relative;
+}
+
+.search-form__field {
+	font-size: medium;
+	padding: .5em .8em;
+	padding-right: 2.5em;
+	border: 1px solid var(--background-accent-medium);
+	border-radius: 2em;
+	width: 100%;
+
+	transition:
+		background .3s,
+		box-shadow .3s;
+}
+
+.search-form__field:focus {
+	outline: none;
+	box-shadow: 0 0 0 .2rem var(--background-accent-heavy);
+	transition-duration: 0s;
+}
+
+.search-form__submit {
+	background: none;
+	border: none;
+	padding: .7em;
+	border-radius: 100%;
+	display: inline-block;
+	line-height: 0;
+
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: .35em;
+
+	transition: background .3s;
+}
+
+.search-form__submit:hover,
+.search-form__submit:focus {
+	outline: none;
+	background: var(--background-accent-heavy-half);
+	transition-duration: 0s;
+}
+
+input[role="tab"][aria-controls="events-all-content"]:not(:checked) ~ #events-all-content,
+input[role="tab"][aria-controls="events-today-content"]:not(:checked) ~ #events-today-content,
+input[role="tab"][aria-controls="events-tomorrow-content"]:not(:checked) ~ #events-tomorrow-content,
+input[role="tab"][aria-controls="about-buildings-content"]:not(:checked) ~ #about-buildings-content,
+input[role="tab"][aria-controls="about-history-content"]:not(:checked) ~ #about-history-content {
+	display: none;
+}
+
+nav {
+	width: calc(100% + 2rem);
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	padding: 1rem 0;
+	margin: 3rem -1rem 0;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+nav:focus {
+	outline: 2px solid var(--background-accent-heavy);
+}
+
+nav::-webkit-scrollbar {
+	display: none;
+}
+
+nav .tape {
+	width: max-content;
+	padding: 0 1rem;
+}
+
+nav .tape > a {
+	color: var(--foreground);
+}
+
+nav .tape > a + a {
+	margin-left: 1rem;
+}
+
+h2 {
+	font-size: xx-large;
+	font-weight: 400;
+}
+
+h3 {
+	font-size: x-large;
+	font-weight: 400;
+}
+
+.row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin: 0 -1rem;
+}
+
+.row > * {
+	max-width: calc(312px - 1.5rem);
+	flex-grow: 2;
+	margin: 1rem;
+}
+
+.yt-wrapper {
+	position: relative;
+	padding-bottom: 56.25%;
+	height: 0;
+	overflow: hidden;
+	margin: 1rem 0 2rem;
+	background-color: var(--background-accent-medium);
+}
+
+.yt-wrapper > iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-width: 0;
+	outline-width: 0;
+}
+
+[role="dialog"] {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0;
+	z-index: 2;
+	background-color: rgba(0, 0, 0, .3);
+}
+
+[role="dialog"] > * {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	width: 100%;
+	max-width: 30rem;
+	margin: 0 auto;
+	padding: 1rem 6rem 3rem;
+	/* min-height: 70vh; */
+
+	background-color: var(--background);
+}
+
+.login-form {
+	display: flex;
+	flex-direction: column;
+}
+
+.login-form label {
+	display: flex;
+	flex-direction: column;
+	font-size: large;
+	margin-bottom: 1rem;
+}
+
+.login-form input {
+	margin-top: .5rem;
+	padding: .5em;
+	font-size: large;
+	background-color: var(--background-accent-light);
+	border: none;
+	border-radius: 5px;
+}
+
+.close-modal,
+.login-form button {
+	margin-top: 1rem;
+	padding: .5em;
+	font-size: large;
+	background-color: var(--background-accent-medium);
+	border: none;
+	border-radius: 5px;
+}
+
+.close-modal:focus,
+.login-form input:focus,
+.login-form button:focus {
+	outline: 2px solid var(--background-accent-heavy);
+	outline-offset: 2px;
+}
+
+.close-modal {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	margin-top: 0;
+	font-size: small;
+}
