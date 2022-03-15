@@ -1,4 +1,4 @@
-# Welcome to Milo's graveyard!
+# 🪦 Welcome to Milo's graveyard!
 
 Here reside the projects of the past.
 
