@@ -1,0 +1,27 @@
+{
+  "name": "bacon.css",
+  "version": "2.1.0",
+  "description": "Custom CSS reset for 8-Point grid systeb. Inspired by Normalize.css.",
+  "main": "bacon.css",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bizongroup/bacon.git"
+  },
+  "keywords": [
+    "css",
+    "reset",
+    "normalize",
+    "8px-grid",
+    "8-point-grid",
+    "grid"
+  ],
+  "author": "Miloslav Voloskov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bizongroup/bacon/issues"
+  },
+  "homepage": "https://github.com/bizongroup/bacon#readme"
+}

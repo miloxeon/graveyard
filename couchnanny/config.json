@@ -1,0 +1,6 @@
+{
+  "repo": {
+    "folder": "./backuptest/",
+    "source": "https://github.com/DmitryVengerov/backuptest.git"
+  }
+}
