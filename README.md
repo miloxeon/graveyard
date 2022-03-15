@@ -29,6 +29,7 @@ Here reside the projects of the past.
 -  `martians-demo` — Evil Martians failed interview: performance-related questions.
 -  `martians` — Evil Martians failed interview: the test task.
 -  `nebenan` — failed test task for Nebenan.de
+-  `rektandex` — a browser extension to remove ads from auto.ru that was acquired by Yandex.
 -  `node-alpine-advanced` — Bizon docker config.
    [Hosted forever](https://github.com/bizongroup/node-alpine-advanced) because of lost password.
 -  `smo_js` — a coding task from uni.
