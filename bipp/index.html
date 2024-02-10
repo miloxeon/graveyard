@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Bipp — the canned glitter for your HTML.</title>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mvoloskov/aniro/aniro.min.css">
+		<link rel="stylesheet" href="bipp.css">
+		<script src="https://cdn.jsdelivr.net/gh/mvoloskov/image-butter/dist/image-butter.min.js"></script>
+		<!-- <script>
+			imageButter()
+		</script> -->
+	</head>
+	<body>
+		<header>
+			<h1>
+				There is no need to be upset.
+			</h1>
+			<p>
+				The canned glitter for your HTML.
+			</p>
+			<p>
+				This is a test page filled with common HTML elements to be used to provide visual feedback whilst building CSS systems and frameworks.
+			</p>
+		</header>
+		<main>
+			<h2>Text</h2>
+			<h1>Heading 1</h1>
+			<h2>Heading 2</h2>
+			<h3>Heading 3</h3>
+			<p>
+				A paragraph (from the Greek paragraphos, “to write beside” or “written beside”) is a self-contained unit of a discourse in writing dealing with a particular point or idea. A paragraph consists of one or more sentences. Though not required by the syntax of any language, paragraphs are usually an expected part of formal writing, used to organize longer prose.
+			</p>
+			<p>
+				A paragraph (from the Greek paragraphos, “to write beside” or “written beside”) is a self-contained unit of a discourse in writing dealing with a particular point or idea. A paragraph consists of one or more sentences. Though not required by the syntax of any language, paragraphs are usually an expected part of formal writing, used to organize longer prose.
+			</p>
+			<p>
+				A paragraph (from the Greek paragraphos, “to write beside” or “written beside”) is a self-contained unit of a discourse in writing dealing with a particular point or idea. A paragraph consists of one or more sentences. Though not required by the syntax of any language, paragraphs are usually an expected part of formal writing, used to organize longer prose.
+			</p>
+			<blockquote>
+				See, you not only have to be a good coder to create a system like Linux, you have to be a sneaky bastard too.
+				<cite>
+					Linus Torvalds
+				</cite>
+			</blockquote>
+			<h2>Navigation</h2>
+			<nav>
+				<ul>
+					<li>
+						<a href="#">Any nav</a>
+					</li>
+					<li>
+						<a href="#">with ul inside</a>
+					</li>
+					<li>
+						<a href="#">becomes a menu</a>
+					</li>
+				</ul>
+			</nav>
+			<h2>Buttons</h2>
+			<style>
+				.grid {
+					display: flex;
+					flex-wrap: wrap;
+					margin: -.5rem;
+				}
+
+				.grid > * {
+					margin: .5rem;
+				}
+			</style>
+			<div class="grid">
+				<button type="button">
+					Buttons
+				</button>
+				<button type="button">
+					With
+				</button>
+				<button type="button">
+					Dynamic
+				</button>
+				<button type="button">
+					Colors
+				</button>
+				<button type="submit">
+					Submit
+				</button>
+				<button type="reset">
+					Reset
+				</button>
+				<button aria-busy="true" tabindex="-1">
+					Busy
+				</button>
+				<button type="button" disabled>
+					Disabled
+				</button>
+			</div>
+			<h2>Lists</h3>
+			<ol>
+				<li>List Item 1</li>
+				<li>List Item 2</li>
+				<li>List Item 3</li>
+				<li>
+					See a list of questions in the training courses. There are definitely some impressive ideas for future research. Be interested not in what you have already learned, but in what you have not yet dealt with.
+				</li>
+				<li>
+					Read textbooks and magazines in your discipline. You just need to find a clue that will encourage the development of your idea.
+				</li>
+				<li>
+					See a list of questions in the training courses. There are definitely some impressive ideas for future research.
+				</li>
+			</ol>
+			<ul>
+				<li>List Item 1</li>
+				<li>List Item 2</li>
+				<li>List Item 3</li>
+				<li>
+					See a list of questions in the training courses. There are definitely some impressive ideas for future research. Be interested not in what you have already learned, but in what you have not yet dealt with.
+				</li>
+				<li>
+					Read textbooks and magazines in your discipline. You just need to find a clue that will encourage the development of your idea.
+				</li>
+				<li>
+					See a list of questions in the training courses. There are definitely some impressive ideas for future research.
+				</li>
+			</ul>
+			<h2>Tables</h2>
+			<table>
+				<caption>Table of 2 columns</caption>
+				<thead>
+					<tr>
+						<th>Table Heading 1</th>
+						<th>Table Heading 2</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+					</tr>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+					</tr>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+					</tr>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="sticky">
+				<caption>Table of 5 columns, sticky <code>&lt;thead&gt;</code></caption>
+				<thead>
+					<tr>
+						<th>Table Heading 1</th>
+						<th>Table Heading 2</th>
+						<th>Table Heading 3</th>
+						<th>Table Heading 4</th>
+						<th>Table Heading 5</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+						<td>Table Cell 3</td>
+						<td>Table Cell 4</td>
+						<td>Table Cell 5</td>
+					</tr>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+						<td>Table Cell 3</td>
+						<td>Table Cell 4</td>
+						<td>Table Cell 5</td>
+					</tr>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+						<td>Table Cell 3</td>
+						<td>Table Cell 4</td>
+						<td>Table Cell 5</td>
+					</tr>
+					<tr>
+						<td>Table Cell 1</td>
+						<td>Table Cell 2</td>
+						<td>Table Cell 3</td>
+						<td>Table Cell 4</td>
+						<td>Table Cell 5</td>
+					</tr>
+				</tbody>
+			</table>
+			<h2>Blocks of code with <code>&lt;pre&gt;</code> tag</h2>
+			<pre>function checkParent (src, dest) {
+	while (src != null) {
+		if (src.tagName == dest) return src
+		src = src.parentElement
+	}
+	return null
+}</pre>
+			<p>
+				This is a paragraph with <code>inline code</code>. Some more text and a really long inline code: <code>This is a really long text link. A paragraph (from the Greek paragraphos, “to write beside” or “written beside”) is a self-contained unit of a discourse in writing dealing with a particular point or idea. A paragraph consists of one or more sentences. Though not required by the syntax of any language, paragraphs are usually an expected part of formal writing, used to organize longer prose</code>.
+			</p>
+			<h2>Inline elements</h2>
+			<p>
+				<a href="#">
+					This is a really long text link. A paragraph (from the Greek paragraphos, “to write beside” or “written beside”) is a self-contained unit of a discourse in writing dealing with a particular point or idea. A paragraph consists of one or more sentences. Though not required by the syntax of any language, paragraphs are usually an expected part of formal writing, used to organize longer prose
+				</a>.
+			</p>
+			<p>
+				<a href="#">This is a text link</a>.
+			</p>
+			<p>
+				<a href="https://miloslav.website">External link</a>.
+			</p>
+			<p>
+				<strong>Strong is used to indicate strong importance.</strong>
+			</p>
+			<p>
+				<em>This text has added emphasis.</em>
+			</p>
+			<p>
+				The <b>b element</b> is stylistically different text from normal text, without any specialimportance.
+			</p>
+			<p>
+				<del>This text is deleted.</del>
+			</p>
+			<h2>Images</h2>
+			<img src="https://source.unsplash.com/480x480" width="480" height="480" alt="Generic image example">
+			<figure>
+				<img src="https://source.unsplash.com/900x480" width="900" height="480" alt="Generic image example">
+				<figcaption>Generic Figure Caption</figcaption>
+			</figure>
+			<h2>Forms</h2>
+			<form>
+				<label>
+					Full Name<br>
+					<input type="text" placeholder="Neil Alden Armstrong">
+				</label>
+				<fieldset>
+					<legend>Gender</legend>
+					<label>
+						<input type="radio" name="gender" value="male" checked>
+						Male
+					</label>
+					<label>
+						<input type="radio" name="gender" value="female" checked>
+						Female
+					</label>
+				</fieldset>
+				<label>
+					Date of birth<br>
+					<input type="date" value="1930-08-05">
+				</label>
+				<label>
+					Email<br>
+					<input type="email" value="neil.armstrong@nasa.com">
+				</label>
+				<label>
+					Phone number<br>
+					<input type="tel" placeholder="+14001112233">
+				</label>
+				<label>
+					Country<br>
+					<select>
+						<option value="china">China</option>
+						<option value="russia">Russia</option>
+						<option value="usa" selected>USA</option>
+					</select>
+				</label>
+				<label>
+					Tell us about yourself<br>
+					<textarea></textarea>
+				</label>
+				<label>
+					Photo<br>
+					<input type="file">
+				</label>
+				<label>
+					Eyes color <small>(just kidding)</small><br>
+					<input type="color" value="#000000">
+				</label>
+				<label>
+					Password<br>
+					<input type="password" placeholder="******">
+				</label>
+				<label>
+					<input type="checkbox" checked>I have put my watch on.
+				</label>
+				<footer>
+					<button type="submit">
+						Submit
+					</button>
+					<button type="reset">
+						Reset
+					</button>
+				</footer>
+			</form>
+		</main>
+		<script src="bipp.js"></script>
+		<script src="https://cdn.jsdelivr.net/gh/mvoloskov/fast-image-zoom/dist/fast-image-zoom.js"></script>
+		<script src="https://cdn.jsdelivr.net/gh/mvoloskov/aniro/aniro.min.js"></script>
+		<script>
+			imageZoom({
+				cb: () => aniro({
+					selector: 'main > *',
+					line: (document.documentElement.clientHeight / 3) * 2
+				})
+			})
+		</script>
+	</body>
+</html>

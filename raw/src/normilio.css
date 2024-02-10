@@ -1,0 +1,156 @@
+/*! normilio v1.0.0-rc1 | BSL-1.0 License | github.com/mvoloskov/normilio */
+
+/* commons */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	line-height: 1.5;
+	backface-visibility: hidden;
+	text-decoration: inherit;
+	vertical-align: inherit;
+}
+
+/* root element */
+:root {
+	font-variant-ligatures: common-ligatures;
+	text-rendering: optimizeLegibility;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+		'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif, 'Apple Color Emoji', 'Emoji';
+
+	min-height: 100%;
+	width: 100%;
+	/* display: flex; */
+	/* flex-direction: column; */
+
+	--background: #2f333e;
+	--background--light: #3a4256;
+	--background--lighter: #414b61;
+	--background--lightest: #5b6987;
+	--background--dark: #232730;
+	--background--half: #2f333edd;
+	--background--dark--half: #23273077;
+
+	--text: #ffffff;
+	--text--ghost: #7d8aa4;
+	--text--weak: #bac2d4;
+
+	--accent: #5769ff;
+	--accent--half: #5769ff77;
+
+	/* used mostly in Select */
+	--accent--75: #707eff;
+	--accent--50: #a3acff;
+	--accent--25: #d6daff;
+
+	--error: #e66777;
+	--error--light: #f4bdc5;
+
+	--error--half: #e6677777;
+	--success: #00bb74;
+	--success--half: #00bb7477;
+	--warning: #ffa200;
+	--info: #4283fe;
+
+	--gradient: linear-gradient(90deg, #0d50ff 0%, #ff7afc 100%);
+	--gradient--orange: linear-gradient(45deg, #f45a6d 0%, #f0894f 100%);
+
+	--border-radius: 0.6rem;
+}
+
+/* default HTML elements */
+
+body {
+	margin: 0;
+	background-color: var(--background);
+	color: var(--text);
+}
+
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: inherit;
+} */
+
+img,
+canvas,
+iframe,
+video,
+svg,
+select,
+textarea {
+	max-width: 100%;
+}
+
+img {
+	display: block;
+	height: auto;
+	user-select: none;
+}
+
+input {
+	font-family: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+br {
+	line-height: inherit;
+}
+
+textarea {
+	resize: vertical;
+}
+
+hr {
+	border: none;
+	height: 1px;
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='.5'%3E%3Crect x='0' y='0' width='1' height='.5' fill='rgba(255, 255, 255, .06)'/%3E%3C/svg%3E");
+	background-repeat: repeat-x;
+}
+
+code,
+pre {
+	tab-size: 3;
+	font-family: monospace;
+}
+
+script {
+	display: none !important;
+}
+
+/* attributes */
+
+[hidden] {
+	display: none !important;
+}
+
+[aria-busy='true'] {
+	cursor: progress;
+}
+
+[disabled],
+[aria-disabled='true'] {
+	cursor: not-allowed;
+}
+
+[aria-controls] {
+	cursor: pointer;
+}
+
+/* helpers */
+
+.ih {
+	clip: rect(0 0 0 0);
+	clip-path: inset(100%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}

@@ -1,0 +1,23 @@
+{
+	"name": "ssi",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "gulp",
+		"build": "gulp compile",
+		"test": "exit 0"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"del": "^6.0.0",
+		"gulp": "^4.0.2",
+		"gulp-concat-css": "^3.1.0",
+		"gulp-connect": "^5.7.0",
+		"gulp-csso": "^4.0.1",
+		"gulp-htmlmin": "^5.0.1",
+		"gulp-ssi": "^0.1.5",
+		"gulp-twig": "^1.2.0"
+	}
+}
