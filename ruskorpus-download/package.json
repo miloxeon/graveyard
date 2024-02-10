@@ -1,0 +1,26 @@
+{
+  "name": "ruskorpus-download",
+  "version": "1.0.1",
+  "description": "Bare minimum browser extension boilerplate.",
+  "source": "src/index.js",
+  "main": "app.js",
+  "scripts": {
+    "build": "parcel build src/index.js --no-source-maps",
+    "package": "npm run build && zip -r ruskorpus-download.zip app.js manifest.json icon.png",
+    "package-all": "zip -r ruskorpus-review.zip README.md package.json package-lock.json manifest.json icon.png LICENSE app.js src",
+    "submit": "npm run package && npm run package-all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvoloskov/ruskorpus-download.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mvoloskov/ruskorpus-download/issues"
+  },
+  "homepage": "https://github.com/mvoloskov/ruskorpus-download#readme",
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.2"
+  }
+}

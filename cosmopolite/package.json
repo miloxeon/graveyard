@@ -1,0 +1,31 @@
+{
+  "name": "cosmopolite",
+  "version": "2.3.1",
+  "description": "🤝 Make a ES Module for NPM and a dist file for <script> at the same time",
+  "repository": "git@github.com:mvoloskov/cosmopolite.git",
+  "main": "src/index.js",
+  "author": "mvoloskov",
+  "license": "BSL-1.0",
+  "files": [
+    "/src"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c --watch",
+    "test": "exit 0",
+    "devserver": "serve",
+    "dev": "concurrently npm:watch npm:devserver"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build && git add dist"
+    }
+  },
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "husky": "^4.2.5",
+    "rollup": "^2.26.10",
+    "rollup-plugin-delete": "^2.0.0",
+    "serve": "^11.3.2"
+  }
+}

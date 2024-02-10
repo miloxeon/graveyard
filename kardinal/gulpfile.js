@@ -1,10 +1,10 @@
 var gulp = require('gulp'),
-	sass = require('gulp-sass'),
 	concat = require('gulp-concat'),
 	autoprefixer = require('gulp-autoprefixer'),
 	cleanCSS = require('gulp-clean-css'),
 	browserSync = require('browser-sync').create();
 
+const sass = require('gulp-sass')(require('node-sass'));
 
 gulp.task('style', function () {
 	return gulp.src('./sass/kardinal.scss')

@@ -1,0 +1,16 @@
+{
+  "name": "aniro",
+  "version": "1.1.0",
+  "description": "Animate your page effortlessly",
+  "main": "aniro.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvoloskov/aniro.git"
+  },
+  "author": "Miloslav Voloskov",
+  "license": "BSL-1.0",
+  "bugs": {
+    "url": "https://github.com/mvoloskov/aniro/issues"
+  },
+  "homepage": "https://miloslav.website/aniro"
+}

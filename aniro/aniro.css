@@ -1,0 +1,25 @@
+.aniro_hidden {
+  opacity: 0;
+  backface-visibility: hidden; /* blurry text fix */
+}
+
+.aniro_active {
+  will-change: opacity transform;
+
+  transition-property: opacity;
+  transition-duration: .5s;
+
+  animation-name: aniro;
+  animation-duration: .5s;
+  animation-timing-function: cubic-bezier(.25, .8, .25, 1);
+  
+  opacity: 1;
+}
+
+@keyframes aniro {
+  from {
+    transform: translateY(50px) perspective(1px); /* blurry text fix */
+  } to {
+    transform: translateY(0) perspective(1px); /* blurry text fix */
+  }
+}

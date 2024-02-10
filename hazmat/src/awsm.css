@@ -1,0 +1,290 @@
+
+/*!
+ * a fork of awsm.css (https://igoradamenko.github.io/awsm.css/)
+ * Copyright 2015 Igor Adamenko <mail@igoradamenko.com> (https://igoradamenko.com)
+ * 2021 Miloslav Voloskov <hello@miloslav.website> (https://miloslav.website)
+ * Originally licensed under MIT (https://github.com/igoradamenko/awsm.css/blob/master/LICENSE.md)
+ */
+
+:root {
+  --c-background: #fff;
+  --c-text: #000;
+  --c-text-shy: #aaa;
+  --c-link: #0064c1;
+  --c-link-hover: #3000c1;
+
+  --c-button: #0079d3;
+  --c-button-text: #fff;
+  --c-button-hover: #1484d7;
+  --c-input: #f6f7f8;
+  --c-input-text: #1c1c1c;
+  --c-input-border: #edeff1;
+  --c-input-border-focus: #0079d3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-background: #1a1a1b;
+    --c-text: #fff;
+    --c-text-shy: #eee;
+    --c-link: #487fb3;
+    --c-link-hover: #7592ad;
+
+    --c-button: #d7dadc;
+    --c-button-text: #1a1a1b;
+    --c-button-hover: #e3e6e7;
+    --c-input: #272729;
+    --c-input-text: #edeff1;
+    --c-input-border: #343536;
+    --c-input-border-focus: #edeff1;
+  }
+}
+
+html {
+  font-size: 100%;
+  line-height: 1.6;
+  background: var(--c-background);
+  color: var(--c-text);
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  margin: 1em;
+  font-size: 1rem;
+}
+
+@media (min-width: 20rem) {
+  body {
+    font-size: calc(1rem + 0.0125 * (100vw - 20rem));
+  }
+}
+
+@media (min-width: 40rem) {
+  body {
+    font-size: 1.25rem;
+  }
+}
+
+body header,
+body main,
+body footer,
+body article {
+  position: relative;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+body>header {
+  margin-bottom: 3.5em;
+}
+
+body>header h1 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+body>header p {
+  margin: 0;
+  font-size: .85em;
+}
+
+body>footer {
+  margin-top: 4.5em;
+  padding-bottom: 1.5em;
+  text-align: center;
+  font-size: .8rem;
+  color: var(--c-text-shy);
+}
+
+ul,
+ol {
+  margin-top: 0;
+  padding-top: 0;
+  padding-left: 2.5em;
+}
+
+p {
+  margin: 1em 0;
+  hyphens: auto;
+}
+
+p:first-child {
+  margin-top: 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+p+ul,
+p+ol {
+  margin-top: -.75em;
+}
+
+p img,
+p picture {
+  float: right;
+  margin-bottom: .5em;
+  margin-left: .5em;
+}
+
+p img img,
+p picture img {
+  float: none;
+  margin: 0;
+}
+
+blockquote {
+  margin: 0;
+  padding-left: 2.5em;
+}
+
+aside {
+  margin: .5em 0;
+  font-style: italic;
+  color: var(--c-text-shy);
+}
+
+section+section {
+  margin-top: 2em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 1.25em 0 0;
+  line-height: 1.2;
+}
+
+h1+p,
+h1+details,
+h2+p,
+h2+details,
+h3+p,
+h3+details,
+h4+p,
+h4+details,
+h5+p,
+h5+details,
+h6+p,
+h6+details {
+  margin-top: .5em;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+h4 {
+  font-size: 1.15em;
+}
+
+h5 {
+  font-size: 1em;
+}
+
+h6 {
+  margin-top: 1em;
+  font-size: 1em;
+  color: var(--c-text-shy);
+}
+
+article+article {
+  margin-top: 5em;
+}
+
+article header p {
+  font-size: .7em;
+  color: var(--c-text-shy);
+}
+
+article header p+h1,
+article header p+h2 {
+  margin-top: -.25em;
+}
+
+article header h1+p,
+article header h2+p {
+  margin-top: .25em;
+}
+
+article>footer {
+  margin-top: 1.5em;
+  font-size: .85em;
+}
+
+a {
+  text-decoration: none;
+  color: var(--c-link);
+  transition: color 300ms ease-out, box-shadow 300ms ease-out;
+  background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect x="0" y="0.5" width="1" height="0.5" fill="rgba(72, 127, 179, 0.35)"/%3E%3C/svg%3E') left bottom repeat-x;
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  a {
+    background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(72, 127, 179, 0.35)"/%3E%3C/svg%3E') left bottom repeat-x;
+  }
+}
+
+a:visited {
+  color: var(--c-link);
+}
+
+a:hover,
+a:active {
+  outline-width: 0;
+}
+
+a:hover {
+  box-shadow: inset 0px -1px var(--c-link-hover);
+  color: var(--c-link-hover);
+  transition: color 0s, box-shadow 0s;
+}
+
+abbr {
+  margin-right: -.075em;
+  hyphens: none;
+  letter-spacing: .075em;
+  font-size: .9em;
+}
+
+img,
+picture {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+code,
+kbd,
+var,
+samp {
+  font-family: monospace;
+  font-style: normal;
+}
+
+pre {
+  overflow-x: auto;
+  font-size: .8em;
+  background: linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%) 0 0, linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%) 100% 0;
+  background-attachment: scroll, scroll;
+  background-size: 1px 100%, 1px 100%;
+  background-repeat: no-repeat, no-repeat;
+}
+
+input, button {
+  font-family: inherit;
+  font-size: small;
+}

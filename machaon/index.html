@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+		<title>Machaon</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mvoloskov/normilio/normilio.min.css" />
+		<link rel="stylesheet" href="fonts.css" />
+		<link rel="stylesheet" href="style.css" />
+	</head>
+
+	<body>
+		<svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+			<symbol id="forward" viewBox="0 0 400 480">
+				<path
+					d="M260 310l100-90-100-90 0 70-40 0q-69 2-114 46-44 45-46 114l40 0q1-51 35-85 34-34 85-35l40 0 0 70z"
+				/>
+			</symbol>
+			<symbol id="reply" viewBox="0 0 400 480">
+				<path
+					d="M140 310l0-70 40 0q51 1 85 35 34 34 35 85l40 0q-2-69-46-114-45-44-114-46l-40 0 0-70-100 90 100 90z"
+				/>
+			</symbol>
+		</svg>
+		<div class="container">
+			<div class="left">
+				<div class="left__left">
+					<ol class="websites">
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/amazon.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Amazon</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/google.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Google</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/hashnode.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Hashnode</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/instagram.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Instagram</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/linkedin.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">LinkedIn</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/mailchimp.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Mailchimp</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/netflix.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Netflix</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/netlify.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Netlify</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/reddit.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Reddit</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/twitter.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Twitter</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/vimeo.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Vimeo</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/wikipedia.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Wikipedia</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/amazon.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Amazon</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/google.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Google</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/hashnode.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Hashnode</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/instagram.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Instagram</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/linkedin.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">LinkedIn</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/mailchimp.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Mailchimp</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/netflix.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Netflix</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/netlify.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Netlify</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/reddit.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Reddit</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/twitter.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Twitter</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/vimeo.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Vimeo</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/wikipedia.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Wikipedia</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/amazon.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Amazon</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/google.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Google</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/hashnode.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Hashnode</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/instagram.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Instagram</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/linkedin.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">LinkedIn</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/mailchimp.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Mailchimp</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/netflix.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Netflix</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/netlify.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Netlify</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/reddit.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Reddit</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/twitter.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Twitter</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/vimeo.ico"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Vimeo</span>
+							</a>
+						</li>
+						<li class="website">
+							<a class="website__link" href="#">
+								<img
+									class="website__icon"
+									src="website-icons/wikipedia.png"
+									width="16"
+									height="16"
+									alt=""
+								/>
+								<span class="website__title">Wikipedia</span>
+							</a>
+						</li>
+					</ol>
+				</div>
+				<div class="left__right">
+					<ol class="emails">
+						<!-- <li class="email">Celine_Runolfsson@hotmail.com</li>
+						<span><li class="email">Lois.Schowalter89@gmail.com</li></span>
+						<li class="email">Wilton_Hauck@yahoo.com</li>
+						<li class="email">Olin.Kunde@yahoo.com</li>
+						<li class="email">Felicia.Moen61@yahoo.com</li>
+						<li class="email">Nicholaus_Swaniawski@yahoo.com</li>
+						<li class="email">Leanne_Raynor@hotmail.com</li>
+						<li class="email">Leda_Kovacek@yahoo.com</li>
+						<li class="email">Priscilla.Will18@yahoo.com</li>
+						<li class="email">Noemi63@yahoo.com</li> -->
+
+						<li class="email" id="e1">
+							<a class="email__link" href="#e1">
+								<div class="email__markers"></div>
+								<span class="email__name">Wilfrid Schowalter</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									The XML system is down, input the redundant matrix so we can synthesize the JSON
+									microchip
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e2">
+							<a class="email__link" href="#e2">
+								<div class="email__markers"></div>
+								<span class="email__name">Zackary Conroy Sr.</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									If we synthesize the capacitor, we can get to the RSS matrix through the mobile
+									AGP bandwidth!
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e3">
+							<a class="email__link" href="#e3">
+								<div class="email__markers">
+									<svg class="email__marker" width="1em" viewBox="0 0 400 480">
+										<use href="#forward"></use>
+									</svg>
+								</div>
+								<span class="email__name">Alba Yost</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									Compressing the alarm won't do anything, we need to override the online THX
+									circuit
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e4">
+							<a class="email__link" href="#e4">
+								<div class="email__markers"></div>
+								<span class="email__name">Lina Rutherford</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">We need to generate the neural EXE array</span>
+							</a>
+						</li>
+						<li class="email" id="e5">
+							<a class="email__link" href="#e5">
+								<div class="email__markers">
+									<svg class="email__marker" width="1em" viewBox="0 0 400 480">
+										<use href="#reply"></use>
+									</svg>
+								</div>
+								<span class="email__name">Doyle Powlowski</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									You can't quantify the card without parsing the haptic SQL circuit
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e6">
+							<a class="email__link" href="#e6">
+								<div class="email__markers"></div>
+								<span class="email__name">Teresa Raynor</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									Quantifying the alarm won't do anything, we need to reboot the open-source FTP
+									alarm
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e7">
+							<a class="email__link" href="#e7">
+								<div class="email__markers"></div>
+								<span class="email__name">Leopold Marks</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									Use the wireless THX application, then you can transmit the optical protocol
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e8">
+							<a class="email__link" href="#e8">
+								<div class="email__markers"></div>
+								<span class="email__name">Emmy Monahan</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									I'll hack the virtual ADP feed, that should matrix the EXE alarm
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e9">
+							<a class="email__link" href="#e9">
+								<div class="email__markers"></div>
+								<span class="email__name">Camron Dach</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									If we bypass the port, we can get to the CSS alarm through the multi-byte HDD
+									driver
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e10">
+							<a class="email__link" href="#e10">
+								<div class="email__markers"></div>
+								<span class="email__name">Elmore Roob</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									The HDD matrix is down, generate the open-source microchip so we can hack the CSS
+									card
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e11">
+							<a class="email__link" href="#e11">
+								<div class="email__markers">
+									<svg class="email__marker" width="1em" viewBox="0 0 400 480">
+										<use href="#reply"></use>
+									</svg>
+								</div>
+								<span class="email__name">Doyle Powlowski</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									You can't quantify the card without parsing the haptic SQL circuit
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e12">
+							<a class="email__link" href="#e12">
+								<div class="email__markers"></div>
+								<span class="email__name">Teresa Raynor</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									Quantifying the alarm won't do anything, we need to reboot the open-source FTP
+									alarm
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e13">
+							<a class="email__link" href="#e13">
+								<div class="email__markers"></div>
+								<span class="email__name">Leopold Marks</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									Use the wireless THX application, then you can transmit the optical protocol
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e14">
+							<a class="email__link" href="#e14">
+								<div class="email__markers"></div>
+								<span class="email__name">Emmy Monahan</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									I'll hack the virtual ADP feed, that should matrix the EXE alarm
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e15">
+							<a class="email__link" href="#e15">
+								<div class="email__markers"></div>
+								<span class="email__name">Camron Dach</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									If we bypass the port, we can get to the CSS alarm through the multi-byte HDD
+									driver
+								</span>
+							</a>
+						</li>
+						<li class="email" id="e16">
+							<a class="email__link" href="#e16">
+								<div class="email__markers"></div>
+								<span class="email__name">Elmore Roob</span>
+								<span class="email__date">05/10/2022</span>
+								<span class="email__subject"> Account confirmation </span>
+								<span class="email__preview">
+									The HDD matrix is down, generate the open-source microchip so we can hack the CSS
+									card
+								</span>
+							</a>
+						</li>
+					</ol>
+				</div>
+			</div>
+			<div class="right" contenteditable="true">letter content</div>
+		</div>
+	</body>
+</html>

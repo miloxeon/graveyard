@@ -1,0 +1,16 @@
+{
+	"name": "push",
+	"version": "1.0.0",
+	"description": "Simplest example of Web Push API usage. Send notifications to users even when your page is not open.",
+	"main": "index.js",
+	"scripts": {
+		"start": "node -r dotenv/config server.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"web-push": "^3.5.0"
+	}
+}

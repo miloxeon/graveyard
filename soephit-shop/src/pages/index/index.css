@@ -1,0 +1,167 @@
+@import url('../../commons/normilio.css');
+
+@keyframes lush {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@media (any-pointer: coarse) {
+	:root::after {
+		display: block;
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-image: url('https://ucarecdn.com/63e1cb97-1d50-4b28-b952-24fff3fe41fb/-/format/webp/');
+		background-size: 100%;
+		background-position: center;
+		z-index: -2;
+	}
+}
+
+body {
+	position: static !important;
+	overflow: hidden visible !important;
+}
+
+canvas {
+	pointer-events: none;
+	z-index: -1;
+	position: fixed !important;
+}
+
+.h1-wrapper {
+	display: flex;
+	align-items: flex-start;
+	overflow: hidden;
+	height: 26vw;
+	line-height: 1;
+}
+
+.h1 {
+	margin: 0;
+	font-size: 30vw;
+	/*z-index: 2;*/
+}
+
+/*.h1__heart {
+	position: relative;
+	z-index: -1;
+}
+
+.h1__heart::after {
+	display: block;
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 1em;
+	height: 1em;
+	border-radius: 100%;
+	background-color: rgb(255, 53, 127);
+	z-index: -1;
+
+	animation: pulse 4s infinite alternate ease-in-out;
+}
+
+@keyframes pulse {
+	from {
+		transform: translate(-50%, -50%) scale(0.8);
+	}
+	to {
+		transform: translate(-50%, -50%) scale(1.1);
+	}
+}*/
+
+.menu__ul {
+	list-style-type: none;
+	padding: 0;
+	/*z-index: 3;*/
+	/*position: relative;*/
+}
+
+.menu__li {
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+}
+
+.menu__li--fragrances {
+	height: 13vw;
+}
+
+.menu__li--poetry {
+	height: 20vw;
+}
+
+.menu__li--about {
+	height: 28vw;
+}
+
+.menu__link {
+	color: black;
+	position: relative;
+	line-height: 1;
+
+	transition: color 0s;
+}
+
+.menu__link:focus-visible {
+	outline: none;
+	color: transparent;
+	background-clip: text;
+	background-image: linear-gradient(
+		-45deg,
+		rgb(59, 173, 227) 0%,
+		rgb(87, 111, 230) 25%,
+		rgb(152, 68, 183) 51%,
+		rgb(255, 53, 127) 100%
+	);
+	background-size: 300% 300%;
+	animation: lush 5s ease infinite;
+
+	transition: color 200ms;
+}
+
+.menu__link::after {
+	display: block;
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 0;
+	height: 0.1em;
+	transform: translateY(-50%) scaleX(0);
+	background-color: black;
+	width: 100vw;
+	pointer-events: none;
+
+	transition: transform 0.2s ease;
+}
+
+.menu__link:hover::after,
+.menu__link:focus::after {
+	transform: translateY(-50%) scaleX(1);
+}
+
+.menu__link--fragrances {
+	font-size: 16.6vw;
+}
+
+.menu__link--poetry {
+	font-size: 28vw;
+}
+
+.menu__link--about {
+	font-size: 38vw;
+}

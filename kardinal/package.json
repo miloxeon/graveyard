@@ -11,6 +11,9 @@
     "grid",
     "framework"
   ],
+  "overrides": {
+    "graceful-fs": "^4.2.10"
+  },
   "author": "Miloslav Voloskov",
   "license": "MIT",
   "repository": "https://github.com/kardinalframework/kardinal.git",
@@ -19,7 +22,10 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-clean-css": "^3.0.3",
-    "gulp-concat": "^2.6.1",
-    "gulp-sass": "^3.1.0"
+    "gulp-concat": "^2.6.1"
+  },
+  "dependencies": {
+    "gulp-sass": "^5.1.0",
+    "node-sass": "^8.0.0"
   }
 }

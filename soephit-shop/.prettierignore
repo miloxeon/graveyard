@@ -1,0 +1,7 @@
+# dotfiles
+.cache
+.husky
+.env
+.netlify
+.github
+package-lock.json

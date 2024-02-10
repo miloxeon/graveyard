@@ -1,0 +1,34 @@
+{
+  "name": "cheetah",
+  "version": "1.0.0",
+  "description": "Universal, performant NodeJS CRUD server",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npm i -g pm2",
+    "start": "pm2-runtime index.js -i 0 --name cheetah",
+    "dev": "pm2 start index.js --name cheetah --watch",
+    "test": "standard",
+    "lint": "standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvoloskov/cheetah.git"
+  },
+  "author": "Miloslav Voloskov",
+  "license": "unlicense",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.14",
+    "nanoid": "^2.0.1",
+    "pm2": "^3.3.1",
+    "redis": "^2.8.0",
+    "require-all": "^3.0.0"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  }
+}

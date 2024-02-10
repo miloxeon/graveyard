@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Aniro demo</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:500,700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mvoloskov/normilio/normilio.min.css">
+
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="aniro.css">
+  </head>
+  <body>
+    <header>
+      <h1>Aniro</h1>
+    </header>
+    <main data-aniro_root>
+      <section class="page">
+        <div>
+          <img data-aniro data-aniro_now src="assets/1.gif" alt="">
+          <p data-aniro data-aniro_now>
+            Aniro is the library that allows you to animate your page effortlessly. Just install the library and add the aniro tag to the body – your page will be brought to life instanlty.
+          </p>
+        </div>
+      </section>
+      <section class="page">
+        <div class="pillbox">
+          <article class="advantage">
+            <h3 data-aniro>Simple</h3>
+            <img data-aniro src="assets/2-1.gif" alt="">
+            <p data-aniro>
+              Just plug the library in – the under-hood magic will do the rest.
+            </p>
+          </article>
+          <article class="advantage">
+            <h3 data-aniro data-aniro_delay='150'>Easy</h3>
+            <img data-aniro data-aniro_delay='150' src="assets/2-2.gif" alt="">
+            <p data-aniro data-aniro_delay='150'>
+              You don't need to write the animation code anymore.
+            </p>
+          </article>
+          <article class="advantage">
+            <h3 data-aniro data-aniro_delay='300'>Declarative</h3>
+            <img data-aniro data-aniro_delay='300' src="assets/2-3.gif" alt="">
+            <p data-aniro data-aniro_delay='300'>
+              Configuration is mandatory and really easy though. Just visit <a href="https://github.com/uyouthe/aniro" target="_blank" rel="noopener noreferrer">the docs page</a> for instructions.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="page">
+        <div>
+          <h2 data-aniro>Author</h2>
+          <p data-aniro>
+            I make <a href="https://github.com/uyouthe" target="_blank" rel="noopener noreferrer">Open Source</a> and write <a href="https://dev.to/uyouthe" target="_blank" rel="noopener noreferrer">articles</a>. Feel free to reach me out if you have any questions.
+          </p>
+          <img data-aniro src="assets/3.gif" alt="">
+        </div>
+      </section>
+    </main>
+    <footer>
+      &copy; <a href="https://miloslav.website" target="_blank" rel="noopener noreferrer">Miloslav Voloskov</a>
+    </footer>
+    <script src="aniro.js"></script>
+    <script>
+      aniro()
+    </script>
+  </body>
+</html>

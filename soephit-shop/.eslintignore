@@ -1,0 +1,15 @@
+# dotfiles
+.cache
+.husky
+.env
+.netlify
+.github
+package-lock.json
+
+# filetypes
+*.svg
+*.css
+*.otf
+
+# build
+public

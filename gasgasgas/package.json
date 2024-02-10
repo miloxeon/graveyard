@@ -1,0 +1,32 @@
+{
+  "name": "gasgasgas",
+  "version": "1.0.1",
+  "description": "Keeps your dependencies updated and gives it a bleeding-edge touch.",
+  "main": "index.js",
+  "bin": {
+    "gasgasgas": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvoloskov/gasgasgas.git"
+  },
+  "preferGlobal": true,
+  "keywords": [
+    "npm",
+    "node",
+    "dependencies",
+    "yarn",
+    "bower",
+    "js",
+    "modules"
+  ],
+  "author": "Miloslav Voloskov",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/mvoloskov/gasgasgas/issues"
+  },
+  "homepage": "https://github.com/mvoloskov/gasgasgas#readme",
+  "dependencies": {
+    "npm-check-updates": "^2.15.0"
+  }
+}

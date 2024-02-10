@@ -1,0 +1,195 @@
+/*.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}*/
+
+html {
+	height: 100%;
+	display: flex;
+	--rvert: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Crect x='0' y='0' width='0.5' height='1' fill='rgba(0, 0, 0, 0.2)'/%3E%3C/svg%3E");
+	--rhor: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='18'%3E%3Crect x='0' y='0' width='1' height='0.5' fill='rgba(0, 0, 0, 1)'/%3E%3C/svg%3E");
+	/*	background-image: var(--rhor);*/
+	--scrollbar-compensation: 12px;
+}
+
+body {
+	display: flex;
+	flex-grow: 2;
+	/*	font-family: 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,*/
+	/*		Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;*/
+	font-family: 'Open Sans', sans-serif;
+	/*	font-family: 'Inter', sans-serif;*/
+}
+
+.container {
+	display: flex;
+	flex-grow: 2;
+}
+
+.left {
+	--padding-bias: 1.5em;
+	--pl: calc(var(--padding-bias) * 0.618 * 2.5);
+	/*	--pl: calc(var(--padding-bias) * 0.618);*/
+	--pv: calc(var(--padding-bias) * 0.618 / 2);
+	--pr: calc(var(--padding-bias) * 0.618);
+
+	/*	background: #f0f0f0;*/
+	width: 38.2%;
+	flex-shrink: 0;
+	display: flex;
+	min-width: 30em;
+}
+
+.left__left {
+	/*	background: #f0f0f0;*/
+	/*	width: calc(38.2% - var(--pl));*/
+	width: 38.2%;
+	flex-shrink: 0;
+	/*	background-image: var(--rvert);
+	background-repeat: repeat-y;
+	background-position: right;*/
+	flex-grow: 2;
+	overflow: auto;
+	scroll-behavior: smooth;
+	padding-right: var(--scrollbar-compensation);
+}
+
+.left__right {
+	flex-grow: 2;
+	overflow: auto;
+	scroll-behavior: smooth;
+	padding-right: var(--scrollbar-compensation);
+}
+
+.right {
+	flex-grow: 2;
+}
+
+.websites {
+	list-style-type: none;
+	margin: 0;
+	padding: 0.3em 0 0.3em 0.3em;
+	font-size: 0.9em;
+}
+
+.website__link {
+	color: inherit;
+	display: flex;
+	align-items: center;
+	gap: 0.618em;
+	padding: var(--pv) var(--pr) var(--pv) var(--pr);
+	position: relative;
+}
+
+.website__link::before {
+	display: block;
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: url('./squircle.svg#alt');
+	z-index: -1;
+	opacity: 0;
+	transition: opacity 50ms;
+}
+
+.website__link:hover::before {
+	opacity: 1;
+	transition-duration: 0s;
+}
+
+.website__title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.emails {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.email {
+	font-size: 0.9em;
+	line-height: 1.3em;
+
+	padding: var(--pv) var(--pr) var(--pv) 0;
+	margin-top: calc(var(--padding-bias) * 0.15);
+}
+
+.email:target {
+	background-image: url('./squircle.svg');
+}
+
+.email__link {
+	color: black;
+	display: grid;
+	grid-template-columns: min-content auto min-content;
+	align-items: end;
+}
+
+.email__markers {
+	width: var(--pl);
+	height: 100%;
+	padding-left: 0.35em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.email__name {
+	font-weight: 550;
+}
+
+.email__date {
+	color: #0007;
+	font-size: 0.85em;
+}
+
+.email__subject {
+	--line-clamp: 1;
+	grid-column: 2 / 4;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: var(--line-clamp);
+	line-clamp: var(--line-clamp);
+	overflow: hidden;
+	font-size: 0.9em;
+}
+
+.email__preview {
+	--line-clamp: 1;
+	grid-column: 2 / 4;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: var(--line-clamp);
+	line-clamp: var(--line-clamp);
+	overflow: hidden;
+	font-size: 0.8em;
+	line-height: inherit;
+
+	/*	display: none;*/
+}
+
+.right {
+	padding: 1em;
+}
+
+/*
+- Amazon
+- Google
+- Hashnode
+- Instagram
+- LinkedIn
+- Mailchimp
+- Netflix
+- Netlify
+- Reddit
+- Twitter
+- Vimeo
+- Wikipedia
+*/

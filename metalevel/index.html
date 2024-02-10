@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Metalevel.js — isomorphic meta-context for more efficient JS runtime performance</title>
+
+    <style>
+      span {
+        display: inline-block;
+        padding: 2px;
+        border: 1px dotted black;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="metalevel.js" type="module"></script>
+    <script type="module">
+      import Metalevel from './metalevel.js'
+      const meta = new Metalevel()
+
+      const limit = parseInt(prompt('How much nodes? 10000 is fine') || 10000)
+
+      for (let i = 1; i <= limit; i++) {
+        meta.push(text => {
+          const span = document.createElement('span')
+          span.innerHTML = i
+          document.body.appendChild(span)
+        }, [i])
+      }
+    </script>
+  </body>
+</html>
