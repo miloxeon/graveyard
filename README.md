@@ -3,7 +3,7 @@
 Here reside the projects of the past.
 
 Also, check out
-[the complete list of things I ever did](https://uyouthe.notion.site/uyouthe/dc3958c3b0d04e03be8c12c0eb3ce1a3?v=e46ca61f82ba48c19ed67bbe99457cff),
+[the complete list of things I ever did](https://miloxeon.notion.site/dc3958c3b0d04e03be8c12c0eb3ce1a3?v=e46ca61f82ba48c19ed67bbe99457cff),
 alive _and_ dead!
 
 - `2048` — 2048 game implementation in C++.
@@ -21,7 +21,7 @@ alive _and_ dead!
 - `couchnanny` — yet another Bizon project, was meant to simplify CouchDB management.
   [Hosted forever](https://github.com/bizongroup/couchnanny) because of lost password.
 - `cs101` — my university coding tasks.
-- `dolphin` — full-stack version of [Dolphin](https://github.com/mvoloskov/dolphin) that is hosted
+- `dolphin` — full-stack version of [Dolphin](https://github.com/miloxeon/dolphin) that is hosted
   on GitHub as a purely frontend demo. Supports CRDT sync.
 - `electronic-design` — my university logic gate / same electronic stuff tasks.
 - `emoji` — successful test task for Openland (now defunct), emoji picker in React.
