@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+		<title>Articles :: Milo's new website</title>
+
+		<link rel="stylesheet" href="/assets/fonts.css" />
+		<link rel="stylesheet" href="/assets/normilio.css" />
+		<link rel="stylesheet" href="/assets/style.css" />
+		<link rel="stylesheet" href="/assets/styles/articles.css" />
+	</head>
+
+	<body>
+		<header class="main-header">
+			<div class="container">
+				<img
+					class="main-header__logo"
+					src="/assets/images/logo.svg"
+					width="136"
+					height="131"
+					alt="Five equispaced lines going from the center outwards"
+				/>
+				<nav class="breadcrumbs">
+					<a class="breadcrumbs__link" href="/">Home</a>
+					<a class="breadcrumbs__link">Articles</a>
+				</nav>
+			</div>
+		</header>
+
+		<main class="subpage">
+			<div class="container">
+				<h1 class="subpage__heading">Articles</h1>
+				<ul class="articles">
+					{{#articles}}
+					<li>
+						<span class="date">{{date}}</span>
+						<span class="emoji">{{emoji}}</span>
+						<a class="title" href="{{href}}">{{title}}</a>
+					</li>
+					{{/articles}}
+				</ul>
+			</div>
+		</main>
+
+		<footer class="main-footer">
+			<div class="container">
+				<section class="newsletter">
+					<div class="newsletter__left">
+						<h2 class="newsletter__heading">One email at year (at best)</h2>
+						<p class="newsletter__text">
+							Occasionally <i>(very occasionally)</i>, I send updates via email. You'll receive a
+							letter when a new open source project is published on GitHub, a new article is
+							released, or something exciting is going to happen on my Product Hunt very soon.
+						</p>
+					</div>
+					<div class="newsletter__right">
+						<form
+							class="newsletter__form"
+							action="https://buttondown.email/api/emails/embed-subscribe/milo"
+							method="post"
+							target="popupwindow"
+							onsubmit="window.open('https://buttondown.email/milo', 'popupwindow')"
+						>
+							<input
+								class="newsletter__field"
+								type="email"
+								name="email"
+								placeholder="why@not.com"
+							/>
+							<button class="newsletter__button">Subscribe</button>
+						</form>
+					</div>
+				</section>
+				<small class="main-footer__small">© Milo 🏳️‍⚧️</small>
+			</div>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,10 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: -8px;
+}
+
+.item {
+  margin: 8px;
+}

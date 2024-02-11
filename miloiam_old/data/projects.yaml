@@ -1,0 +1,1016 @@
+- Creation date: 'July 23, 2022'
+  Name: '[classified]'
+  What it is: '[classified]'
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: ''
+
+- Creation date: 'February 7, 2022'
+  Name: eslint-config-neutral
+  What it is: ESLint config that catches strictly the errors and nothing more
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/eslint-config-neutral'
+
+- Creation date: 'November 15, 2021'
+  Name: Magnum
+  What it is: Good React input and button
+  Why it failed: ''
+  Tags: "\U0001F6A7"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'November 12, 2021'
+  Name: Formilio
+  What it is: Declarative React forms from JSON
+  Why it failed: Couldn’t find a balance between simplicity and flexibility
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'September 13, 2021'
+  Name: Serenity
+  What it is: Private investment fund
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://miloslav.website/serenity'
+
+- Creation date: 'July 10, 2021'
+  Name: Essays by Mioslav Voloskov
+  What it is: Personal blog (because dev to and hashnode have censorship)
+  Why it failed: ''
+  Tags: ☝️
+  Launched: 'Yes'
+  Link: 'https://miloslav.website/blog'
+
+- Creation date: 'June 12, 2021'
+  Name: Pixelhunter
+  What it is: Social media image resizer (sponsored by Uploadcare)
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://pixelhunter.io'
+
+- Creation date: 'May 18, 2021'
+  Name: Download selected Google Fonts
+  What it is: >-
+    A website that allow you select google fonts in batches and download them as
+    a one archive
+  Why it failed: Too much hassle with Github api
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'May 9, 2021'
+  Name: Hazmat
+  What it is: Browser extension to ban subreddits you don't like from your feed
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/hazmat'
+
+- Creation date: 'April 24, 2021'
+  Name: ruskorpus-download
+  What it is: >-
+    Browser extension to improve the main linguistical knowledge source about
+    Russian language
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/ruskorpus-download'
+
+- Creation date: 'December 19, 2020'
+  Name: image-butter
+  What it is: Makes images load smoothly on the web
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/image-butter'
+
+- Creation date: 'November 23, 2020'
+  Name: fast-image-zoom
+  What it is: 'Zooms image on click as seen on Medium, but better'
+  Why it failed: ''
+  Tags: "\U0001F496"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/fast-image-zoom'
+
+- Creation date: 'October 8, 2020'
+  Name: Potion
+  What it is: >-
+    CSS file that makes your website look like it was made in a famous rich text
+    editor
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/potion'
+
+- Creation date: 'September 18, 2020'
+  Name: FoxyQL
+  What it is: GraphiQL for Firefox
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://addons.mozilla.org/en-US/firefox/addon/foxyql/'
+
+- Creation date: 'September 6, 2020'
+  Name: Regulatio
+  What it is: High-performance input validator
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/regulatio'
+
+- Creation date: 'September 5, 2020'
+  Name: Cosmopolite
+  What it is: ESM → IIFC builder
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/cosmopolite'
+
+- Creation date: 'September 4, 2020'
+  Name: ''
+  What it is: >-
+    Telegram bot that makes a majestic looking quote out of message and puts it
+    in a golden frame to make a meme
+  Why it failed: Too hard for a joke project
+  Tags: "\U0001F921"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'August 31, 2020'
+  Name: Anton Ziga
+  What it is: Stickerpack
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://t.me/addstickers/AntonZiga'
+
+- Creation date: 'August 30, 2020'
+  Name: Productive tip of the day
+  What it is: >-
+    Joke project created to prove that everything could be explained and
+    rationalized
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://miloslav.website/productive/'
+
+- Creation date: 'August 21, 2020'
+  Name: ''
+  What it is: My own newsletter
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://miloslav.website/newsletter'
+
+- Creation date: 'August 20, 2020'
+  Name: ''
+  What it is: Color palettes curated by me
+  Why it failed: ''
+  Tags: "\U0001F496"
+  Launched: 'Yes'
+  Link: 'https://coolors.co/u/mvoloskov'
+
+- Creation date: 'August 15, 2020'
+  Name: Extensio
+  What it is: Browser extension boilerplate
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/extensio'
+
+- Creation date: 'July 23, 2020'
+  Name: ''
+  What it is: QlockTwo chrome extension
+  Why it failed: Patent problems with QlockTwo
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'July 20, 2020'
+  Name: Mobius strip-shaped wifi router
+  What it is: Wifi password is on the back of the router
+  Why it failed: Too much work for just a meme
+  Tags: "\U0001F921"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 1, 2019'
+  Name: Modulus
+  What it is: Web app boilerplate
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/modulus'
+
+- Creation date: 'September 27, 2019'
+  Name: Sleeep
+  What it is: It tells you when to go to bed to wake up not tired
+  Why it failed: ''
+  Tags: ☝️
+  Launched: 'Yes'
+  Link: 'https://www.producthunt.com/posts/sleeep'
+
+- Creation date: 'August 18, 2019'
+  Name: ''
+  What it is: 'My own configs for html, css and js'
+  Why it failed: '"All defaults" ideology'
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'August 15, 2019'
+  Name: Be like everyone else
+  What it is: The chrome extension which opens the first search result as you google
+  Why it failed: Moved on
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'August 14, 2019'
+  Name: Formie
+  What it is: Get the form with all values as JSON
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/formie'
+
+- Creation date: 'July 30, 2019'
+  Name: React newsletter
+  What it is: A server that parses React blog and sends you new articles over email
+  Why it failed: >-
+    Lack of approval from Facebook (I didn't want a lawsuit or something like
+    that)
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'July 27, 2019'
+  Name: Bipp
+  What it is: Plug it into your HTML and it instantly looks great
+  Why it failed: ''
+  Tags: "\U0001F496, \U0001F915"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/bipp'
+
+- Creation date: 'July 8, 2019'
+  Name: Easy ORM
+  What it is: Creates forms and tables for arbitrary data
+  Why it failed: Google forms exist
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'June 23, 2019'
+  Name: Normilio
+  What it is: Good modern normalize
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/normilio'
+
+- Creation date: 'June 23, 2019'
+  Name: Aniro
+  What it is: Plug it in and your website is beautifully animated
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/aniro'
+
+- Creation date: 'June 18, 2019'
+  Name: PWAGYM
+  What it is: Always up to date PWA checklist
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://pwagym.com'
+
+- Creation date: 'June 6, 2019'
+  Name: Sneaker
+  What it is: A tiny script to console.log every browser api function you call
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: ''
+
+- Creation date: 'May 27, 2019'
+  Name: Noo
+  What it is: 'Offline password manager that syncs without any connection '
+  Why it failed: ''
+  Tags: "☝️, \U0001F496, \U0001F6A7"
+  Launched: 'Yes'
+  Link: 'https://noo.js.org'
+
+- Creation date: 'May 14, 2019'
+  Name: HRTable
+  What it is: >-
+    HR enters a set of technologies and get a list of similar technologies to
+    improve their hunt
+  Why it failed: Wasn't useful enough in real world
+  Tags: ''
+  Launched: 'No'
+  Link: 'https://hrtable.js.org'
+
+- Creation date: 'March 28, 2019'
+  Name: The Code of Conduct Generator
+  What it is: >-
+    You check some boxes according to your ideology and the code of conduct
+    emerges
+  Why it failed: ''
+  Tags: ☝️
+  Launched: 'Yes'
+  Link: 'https://www.producthunt.com/posts/the-code-of-conduct-generator'
+
+- Creation date: 'March 17, 2019'
+  Name: WebRTC Internet
+  What it is: Distributed websites over WebRTC
+  Why it failed: 'Too hard, too many standards to set'
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 6, 2019'
+  Name: Speeed
+  What it is: A 3D game in the browser just to prove that it's possible
+  Why it failed: 'Too hard, lost motivation'
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 25, 2019'
+  Name: Rektandex
+  What it is: Blocks yandex ads
+  Why it failed: Found an adblock workaround left  yandex services altogether
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/rektandex'
+
+- Creation date: 'February 23, 2019'
+  Name: Cheetah
+  What it is: Scalable nodejs backend
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/cheetah'
+
+- Creation date: 'February 18, 2019'
+  Name: Rhittm
+  What it is: Tells you when to post on Instagram to get the most momentum
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://www.producthunt.com/posts/rhittm'
+
+- Creation date: 'February 14, 2019'
+  Name: Decider
+  What it is: Better classnames package
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/decider'
+
+- Creation date: 'February 13, 2019'
+  Name: Rfprnhb
+  What it is: Blocks pornhub country lock in russia
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/rfprnhb'
+
+- Creation date: 'February 10, 2019'
+  Name: Productivity dashboard
+  What it is: A superapp of commonly used productivity tools
+  Why it failed: Depression
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'January 24, 2019'
+  Name: Re-leaf
+  What it is: react inspired by re-frame
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'January 20, 2019'
+  Name: Ultrasonicspace
+  What it is: >-
+    You submit your Algol code, it compiles in two weeks and you can see the
+    results. Should've emulated the development experience of the past, with all
+    that rad design and everything
+  Why it failed: Depression
+  Tags: "\U0001F921"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'January 18, 2019'
+  Name: Cold.css
+  What it is: css framework for ui prototyping
+  Why it failed: Built while being manic. Nobody needed it in the first place
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/QRRBNe'
+
+- Creation date: 'January 13, 2019'
+  Name: Una11y.css
+  What it is: Everything is horribly inaccessible
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/JqqBYN'
+
+- Creation date: 'January 13, 2019'
+  Name: Bliss
+  What it is: Everything is gradients
+  Why it failed: ''
+  Tags: "\U0001F496, \U0001F921"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/bliss'
+
+- Creation date: 'January 13, 2019'
+  Name: Froggo
+  What it is: html elements run away from your cursor
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/VOOBwr'
+
+- Creation date: 'January 11, 2019'
+  Name: Gasgasgas
+  What it is: Forcefully updates all your dependencies. Breaks your project
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/gasgasgas'
+
+- Creation date: 'January 5, 2019'
+  Name: Tritium solar battery
+  What it is: Tie a tritium light rods to a solar panel
+  Why it failed: 'https://www.youtube.com/watch?v=KKdzhPiOqqg'
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'December 28, 2018'
+  Name: Thepresence (originally Project Orca)
+  What it is: Website builder with modernist design
+  Why it failed: 'https://www.failory.com/interview/thepresence'
+  Tags: "☝️, \U0001F496, \U0001F915"
+  Launched: 'No'
+  Link: 'https://miloslav.website/thepresence'
+
+- Creation date: 'December 22, 2018'
+  Name: Metameta
+  What it is: 'Render huge data inside a setTimeout, configurable'
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/metameta'
+
+- Creation date: 'December 19, 2018'
+  Name: Eightilize
+  What it is: Everything is aligned to an eight-pixel grid
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/BeePdE'
+
+- Creation date: 'December 19, 2018'
+  Name: Reseight
+  What it is: Resets absolutely everything so you can build an eight-pixel grid
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/XwwBgp'
+
+- Creation date: 'December 18, 2018'
+  Name: ''
+  What it is: Better Momentum Dash
+  Why it failed: Lack of ideas how to make something better
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'December 16, 2018'
+  Name: Crema Today
+  What it is: Curated coffee shop list
+  Why it failed: My heart problems
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://crema.surge.sh/'
+
+- Creation date: 'October 14, 2018'
+  Name: Super precise ruler
+  What it is: >-
+    Alternating indication instead of marks, so the space between two units has
+    zero width
+  Why it failed: >-
+    Focus on software rather than utilitarian hardware, obsession with mass
+    production back then
+  Tags: "\U0001F496"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 11, 2018'
+  Name: ''
+  What it is: Labelling system for large amounts of data
+  Why it failed: There is no need to reinvent a database
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 7, 2018'
+  Name: Chaaat
+  What it is: WebRTC chat
+  Why it failed: 'OAuth was too hard, lost motivation. Amazing team tho'
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 4, 2018'
+  Name: Superhighway
+  What it is: Graphql-like tool over websockets with CRDT sync
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'August 14, 2018'
+  Name: Seoblock
+  What it is: Blocks certain search results and you can configure what to block
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/seoblock'
+
+- Creation date: 'June 18, 2018'
+  Name: ''
+  What it is: Pay a fee and talk to huge companies
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'June 10, 2018'
+  Name: Universe Emulator
+  What it is: Simple artificial lifeforms
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/arrKQN'
+
+- Creation date: 'June 2, 2018'
+  Name: Impress
+  What it is: Good fullscreen menu in CSS
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/yWWqPO'
+
+- Creation date: 'May 20, 2018'
+  Name: Feedback
+  What it is: Form constructor
+  Why it failed: Merged with Thepresence
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 18, 2018'
+  Name: Swiss
+  What it is: Plug it in and your website has Swiss design
+  Why it failed: Evolved into Bipp
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 10, 2018'
+  Name: Pantonize
+  What it is: 'Make Pantone palette by a single color, convert Pantone values to RGB'
+  Why it failed: Moved on
+  Tags: "\U0001F496"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 3, 2018'
+  Name: ''
+  What it is: My own Raspberry PI satellite
+  Why it failed: Too much work
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 26, 2018'
+  Name: Home of startups
+  What it is: >-
+    A page with all the important data of your project like passwords, setup
+    manuals and credentials. Useful for onboarding
+  Why it failed: Notion exists
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 14, 2018'
+  Name: Omnidigger
+  What it is: Web mapper that can map jodi org
+  Why it failed: 'Things changed fast back then, moved on'
+  Tags: "\U0001F496"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 12, 2018'
+  Name: Couchnanny
+  What it is: Agent for making life easier with CouchDB
+  Why it failed: The company where I used it failed and I don't use CoucnDB anyway
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 11, 2018'
+  Name: OpenJotter
+  What it is: CRDT no-cloud personal PWA notebook
+  Why it failed: Harder than it needs to be
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 10, 2018'
+  Name: cljs-sjcl
+  What it is: >-
+    Stanford JavaScript Crypto Library bindings for ClojureScript. Decided to
+    build it just for the name
+  Why it failed: >-
+    Too much work for something that should be built just because of the cool
+    name
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 6, 2018'
+  Name: ''
+  What it is: No-BS simple mobile phone with MINIX os and a great camera
+  Why it failed: Hardware is hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'November 23, 2017'
+  Name: alpine-curl-bash
+  What it is: Docker starter that got >100k pulls
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://hub.docker.com/r/bizongroup/alpine-curl-bash'
+
+- Creation date: 'November 2, 2017'
+  Name: ''
+  What it is: Interactive map about mystical legendary places of Saint-Petersburg
+  Why it failed: Too complicated
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 8, 2017'
+  Name: Intl Swatches
+  What it is: >-
+    Common phrases translated from Russian to English to obliterate horrible
+    intls people do themselves
+  Why it failed: ''
+  Tags: "\U0001F6A7"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 7, 2017'
+  Name: Bacon.css
+  What it is: CSS reset for component development
+  Why it failed: Evolved into Normilio
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'September 28, 2017'
+  Name: Remark
+  What it is: Re-frame but with MarkoJS
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'September 24, 2017'
+  Name: Unconventional photo editor
+  What it is: Photo editor with strange filters like pixel sorting
+  Why it failed: Too hard for a product that probably no one is going to use
+  Tags: "\U0001F921"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'September 14, 2017'
+  Name: Umusic
+  What it is: 'SoundCloud, Bandcamp and YouTube music search from one app'
+  Why it failed: Legal problems
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'September 12, 2017'
+  Name: Baumeister Manual
+  What it is: A manual about how to use Baumeister and bootstrap
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://uyouthe.gitbooks.io/baumeister-manual/content/'
+
+- Creation date: 'August 10, 2017'
+  Name: ''
+  What it is: React and Redux boilerplate
+  Why it failed: 'create-react-app exists, Redux become obsolete'
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'August 8, 2017'
+  Name: '#GetRidOfPsd campaign'
+  What it is: A campaign about why making mockups in Photoshop is bad
+  Why it failed: Figma became more popular
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'June 11, 2017'
+  Name: ''
+  What it is: The tool that syncs your data via WebRTC without cloud
+  Why it failed: NAS exists
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'June 5, 2017'
+  Name: WebRTC CRDT
+  What it is: CRDT that works over WebRTC
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'May 21, 2017'
+  Name: Dolphin
+  What it is: SVG UML WYSIWYG
+  Why it failed: ''
+  Tags: "☝️, \U0001F496, \U0001F915"
+  Launched: 'Yes'
+  Link: 'https://dolphin.js.org/'
+
+- Creation date: 'April 25, 2017'
+  Name: Ampersand Adventure
+  What it is: A simple console game in C
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/ampersand-adventure'
+
+- Creation date: 'April 24, 2017'
+  Name: Bemstrap
+  What it is: Bootstrap with BEM
+  Why it failed: Lost my faith in BEM
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'April 23, 2017'
+  Name: Onelangchallenge
+  What it is: A todo list built with five languages in a single file
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/onelangchallenge'
+
+- Creation date: 'April 12, 2017'
+  Name: Pigeon Emulator
+  What it is: Simple pigeon logic emulator
+  Why it failed: ''
+  Tags: "\U0001F921"
+  Launched: 'Yes'
+  Link: 'https://codepen.io/uyouthe/pen/MddXGM'
+
+- Creation date: 'April 12, 2017'
+  Name: ''
+  What it is: GitHub CMS
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'April 10, 2017'
+  Name: ''
+  What it is: Websites from Markdown
+  Why it failed: Jekyll exists
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'April 4, 2017'
+  Name: ''
+  What it is: Headless CMS
+  Why it failed: Strapi exists
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 19, 2017'
+  Name: Album
+  What it is: CSS framework focused on responsiveness
+  Why it failed: Lack of design skills back then
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 18, 2017'
+  Name: Humane Linux
+  What it is: Easy to use Linux distro
+  Why it failed: Too hard
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 11, 2017'
+  Name: Glass jukebox
+  What it is: A MIDI jukebox that plays your melodies on glass pipes
+  Why it failed: 'Moved on, great idea tho'
+  Tags: "\U0001F496"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 1, 2017'
+  Name: ''
+  What it is: A CLI tool where you enter a repo link and it's used as a boilerplate
+  Why it failed: GitHub introduced template repos
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 16, 2017'
+  Name: Kardinal Framework
+  What it is: A CSS framework that is both flexible and axiomatic
+  Why it failed: Conceptual impossibility
+  Tags: "☝️, \U0001F496, \U0001F915"
+  Launched: 'No'
+  Link: 'https://github.com/mvoloskov/graveyard/tree/master/kardinal'
+
+- Creation date: 'December 27, 2016'
+  Name: Personal website
+  What it is: My personal website
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://miloslav.website'
+
+- Creation date: 'December 11, 2016'
+  Name: ''
+  What it is: >-
+    A vertical LED bar that shows gradient from the sky color above you at the
+    top to the sky color on the opposite side of earth at the bottom
+  Why it failed: 'Saw the same project elsewhere, too much work'
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'November 16, 2016'
+  Name: Pics
+  What it is: A photo gallery with Mongo and Express
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/pics'
+
+- Creation date: 'November 10, 2016'
+  Name: ''
+  What it is: Arbitrary length JS computational library
+  Why it failed: BigJS exists
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 14, 2016'
+  Name: ''
+  What it is: Optical guitar pickup
+  Why it failed: 'LightWave exists, lack of skill to build such thing'
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'October 1, 2016'
+  Name: Doklade
+  What it is: The multipurpose app for public talks
+  Why it failed: “Nah”
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'September 19, 2016'
+  Name: JS Battle
+  What it is: Simple PVP game on JS
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'https://miloslav.website/js-battle/'
+
+- Creation date: 'August 13, 2016'
+  Name: EEE PC 701 Manual
+  What it is: A manual of how to use EEE PC 701
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: 'http://www.eee-pc.ru/forum/read/78/533102'
+
+- Creation date: 'March 26, 2016'
+  Name: ''
+  What it is: Stylish text editor theme
+  Why it failed: '"All defaults" ideology'
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'March 12, 2016'
+  Name: Game of Life
+  What it is: Game of Life in PyGame
+  Why it failed: ''
+  Tags: "☝️, \U0001F496"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/graveyard/tree/master/gol'
+
+- Creation date: 'February 9, 2016'
+  Name: ''
+  What it is: IDE with built-in Git
+  Why it failed: Atom exists
+  Tags: "\U0001F6B2"
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 3, 2016'
+  Name: Brodsky OS
+  What it is: Simple OS example in ASM
+  Why it failed: ''
+  Tags: ''
+  Launched: 'Yes'
+  Link: ''
+
+- Creation date: 'November 10, 2015'
+  Name: Bold Stepper
+  What it is: 2D scroll-shooter
+  Why it failed: ''
+  Tags: "☝️, \U0001F496"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/boldstepper'
+
+- Creation date: 'April 25, 2015'
+  Name: Fiendfx Fuzz
+  What it is: Guitar fuzz pedal
+  Why it failed: ''
+  Tags: "\U0001F496"
+  Launched: 'Yes'
+  Link: 'https://soundcloud.com/fiendfx/fiend-fuzz-demo'
+
+- Creation date: 'September 1, 2013'
+  Name: CPU
+  What it is: My own fully-fledged CPU in LabView
+  Why it failed: ''
+  Tags: "☝️, \U0001F496"
+  Launched: 'Yes'
+  Link: 'https://github.com/mvoloskov/graveyard/tree/master/CPU'
+
+- Creation date: 'July 20, 2012'
+  Name: RfiList
+  What it is: Export links from HTML file
+  Why it failed: Lack of knowledge
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'May 29, 2012'
+  Name: ''
+  What it is: A laptop with smartphone internals and a huge battery
+  Why it failed: MacBook 12 emerged years later
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'May 2, 2011'
+  Name: Perfect lock screen
+  What it is: A lockscreen concept for android
+  Why it failed: It was awful. Also lack of skill to build such app
+  Tags: ''
+  Launched: 'No'
+  Link: ''
+
+- Creation date: 'February 1, 2011'
+  Name: ''
+  What it is: A clock that works on residue charge buildup of two alternating batteries
+  Why it failed: Physical impracticality
+  Tags: "\U0001F496"
+  Launched: 'No'
+  Link: ''

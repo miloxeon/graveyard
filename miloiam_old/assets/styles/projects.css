@@ -1,0 +1,69 @@
+.projects-wrapper {
+	width: 100%;
+	overflow: auto;
+}
+
+.projects {
+	--border-color: #0003;
+	min-width: 100%;
+	border-collapse: collapse;
+	border-top: 1px solid var(--border-color);
+	font-size: 0.9em;
+	margin-top: 2em;
+}
+
+.projects td {
+	border-bottom: 1px solid var(--border-color);
+	padding: 5px 8px 6px;
+	min-width: 100px;
+}
+
+.projects td:not(:last-child) {
+	border-right: 1px solid var(--border-color);
+}
+
+.projects th {
+	text-align: left;
+	border-bottom: 1px solid var(--border-color);
+	padding: 5px 8px 6px;
+	font-weight: normal;
+	opacity: 0.5;
+}
+
+.projects th:hover {
+	color: black;
+	opacity: 1;
+}
+
+.projects th:not(:last-child) {
+	border-right: 1px solid var(--border-color);
+}
+
+/* Creation date */
+.projects td:nth-child(1) {
+	min-width: 11em;
+}
+
+/* Name */
+.projects td:nth-child(2) {
+	min-width: 15em;
+}
+
+/* What it is */
+.projects td:nth-child(3) {
+	min-width: 15em;
+}
+
+/* Tags */
+.projects td:nth-child(5) {
+	min-width: 6em;
+}
+
+/* Link */
+.projects td:nth-child(7) {
+	min-width: 30em;
+}
+
+.projects .tag + .tag {
+	margin-left: 0.5em;
+}

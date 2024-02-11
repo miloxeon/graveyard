@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+		<title>{{title}} :: Milo's new website</title>
+
+		<link rel="stylesheet" href="/assets/fonts.css" />
+		<link rel="stylesheet" href="/assets/normilio.css" />
+		<link rel="stylesheet" href="/assets/style.css" />
+		<link rel="stylesheet" href="/assets/styles/article.css" />
+	</head>
+
+	<body>
+		<header class="main-header">
+			<div class="container">
+				<img
+					class="main-header__logo"
+					src="/assets/images/logo.svg"
+					width="136"
+					height="131"
+					alt="Five equispaced lines going from the center outwards"
+				/>
+				<nav class="breadcrumbs">
+					<a class="breadcrumbs__link" href="/">Home</a>
+					<a class="breadcrumbs__link" href="/articles">Articles</a>
+					<a class="breadcrumbs__link">{{title}}</a>
+				</nav>
+			</div>
+		</header>
+
+		<main class="container subpage">
+			<div class="article">
+				<h1 class="article__title">{{title}}</h1>
+				{{html}} {{#comingSoon}} (coming soon) {{/comingSoon}}
+			</div>
+		</main>
+
+		<footer class="main-footer">
+			<div class="container">
+				<section class="newsletter">
+					<div class="newsletter__left">
+						<h2 class="newsletter__heading">One email at year (at best)</h2>
+						<p class="newsletter__text">
+							Occasionally <i>(very occasionally)</i>, I send updates via email. You'll receive a
+							letter when a new open source project is published on GitHub, a new article is
+							released, or something exciting is going to happen on my Product Hunt very soon.
+						</p>
+					</div>
+					<div class="newsletter__right">
+						<form
+							class="newsletter__form"
+							action="https://buttondown.email/api/emails/embed-subscribe/milo"
+							method="post"
+							target="popupwindow"
+							onsubmit="window.open('https://buttondown.email/milo', 'popupwindow')"
+						>
+							<input
+								class="newsletter__field"
+								type="email"
+								name="email"
+								placeholder="why@not.com"
+							/>
+							<button class="newsletter__button">Subscribe</button>
+						</form>
+					</div>
+				</section>
+				<small class="main-footer__small">© Milo 🏳️‍⚧️</small>
+			</div>
+		</footer>
+	</body>
+</html>
