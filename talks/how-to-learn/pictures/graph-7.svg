@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#10DDFF;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#231F20;stroke-width:5;stroke-miterlimit:10;}
+	.st2{fill:#231F20;}
+	.st3{font-family:'CambriaMath';}
+	.st4{font-size:24px;}
+	.st5{fill:none;stroke:#D125D6;stroke-width:3;stroke-miterlimit:10;}
+</style>
+<line class="st0" x1="529" y1="184.3" x2="529" y2="297.7"/>
+<g>
+	<g>
+		<line class="st1" x1="55.6" y1="297.6" x2="784.2" y2="297.6"/>
+		<g>
+			<polygon class="st2" points="774.3,306.1 782.7,297.6 774.3,289.2 781.5,289.2 789.9,297.6 781.5,306.1 			"/>
+		</g>
+	</g>
+</g>
+<line class="st1" x1="202" y1="297.6" x2="202" y2="155.9"/>
+<line class="st1" x1="202" y1="297.6" x2="202" y2="439.4"/>
+<line class="st1" x1="509" y1="297.6" x2="509" y2="439.4"/>
+<line class="st1" x1="509" y1="297.6" x2="509" y2="155.9"/>
+<text transform="matrix(1 0 0 1 215 447.98)" class="st3 st4">22.00</text>
+<text transform="matrix(1 0 0 1 523 447.98)" class="st3 st4">7.00</text>
+<path class="st5" d="M11,152.6c14.6,2.3,44,6.9,82,12.7c52.7,7.9,63.3,9.1,74.5,19c13,11.5,9.4,19.3,26.1,91
+	c4,17,11.5,46.8,26.8,106.3c5.6,21.8,8.4,32.7,9.8,35c39.9,64.9,237.6,42.1,262-24.1c1.6-4.2,3.8-17.4,8.3-43.8
+	c4.4-25.6,5.2-35.2,10.5-66c1-5.8,1.3-7.6,6-33c12-65.3,11.8-64.9,12-65.5c6.4-22.4,54.3-45.7,247.3-44"/>
+</svg>
